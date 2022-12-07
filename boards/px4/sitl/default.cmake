@@ -86,6 +86,9 @@ px4_add_board(
 		rover_steering_control # Rover example app
 		uuv_example_app
 		work_item
+		get_data_for_nn
+		get_data_for_nn_tmp
+		send_cmd_to_motor
 	)
 
 set(config_sitl_viewer jmavsim CACHE STRING "viewer for sitl")

@@ -352,6 +352,7 @@ int create_symlinks_if_needed(std::string &data_path)
 	}
 
 	PX4_INFO("Creating symlink %s -> %s", src_path.c_str(), dest_path.c_str());
+	PX4_INFO("TESTEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
 
 	// create sym-link
 	int ret = symlink(src_path.c_str(), dest_path.c_str());
