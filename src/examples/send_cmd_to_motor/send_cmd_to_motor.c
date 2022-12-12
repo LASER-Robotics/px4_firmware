@@ -50,8 +50,6 @@ __EXPORT int send_cmd_to_motor_main(int argc, char *argv[]);
 
 int send_cmd_to_motor_main(int argc, char *argv[])
 {
-	PX4_INFO("Hello Sky!");
-
     struct actuator_controls_s cmd;
 	memset(&cmd, 0, sizeof(cmd));
 	orb_advert_t cmd_pub = orb_advertise(ORB_ID(actuator_controls_0), &cmd);
@@ -66,19 +64,25 @@ int send_cmd_to_motor_main(int argc, char *argv[])
 
     time_t start, end;
     double elapsed;
-    double duration = 5.0;
-    start = time(NULL);
-    int terminate = 1;
+    double duration = 3.0;
+    double control_step = 0.25;
 
-    while (terminate){
-        end = time(NULL);
-        elapsed = difftime(end, start);
-        if(elapsed >= duration){
-            terminate = 0;
-        } else {
-            orb_publish(ORB_ID(actuator_controls_0), cmd_pub, &cmd);
+    for(int i=1; i < 5; i++){
+        start = time(NULL);
+        int terminate = 1;
+        cmd.control[3] = 0.45;
+        cmd.control[2] = i*control_step;
+        PX4_INFO("Executing commands: %.6f %.6f %.6f %.6f", (double)cmd.control[0], (double)cmd.control[1], (double)cmd.control[2], (double)cmd.control[3]);
+        while (terminate){
+            end = time(NULL);
+            elapsed = difftime(end, start);
+            if(elapsed >= duration){
+                terminate = 0;
+            } else {
+                orb_publish(ORB_ID(actuator_controls_0), cmd_pub, &cmd);
+            }
         }
+        PX4_INFO("Command ended");
     }
-
 	return OK;
 }
