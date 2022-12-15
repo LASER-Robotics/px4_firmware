@@ -7,11 +7,11 @@ int nn_example_main(int argc, char *argv[])
 {
 	PX4_INFO("Hello, I am a dynamically loaded module.");
 
-	PX4_INFO("Argv:");
-
-	for (int i = 0; i < argc; ++i) {
-		PX4_INFO("  %d: %s", i, argv[i]);
-	}
+	const auto model = fdeep::load_model("fdeep_model.json");
+    const auto result = model.predict(
+        {fdeep::tensor(fdeep::tensor_shape(static_cast<std::size_t>(4)),
+        std::vector<float>{1, 2, 3, 4})});
+    std::cout << fdeep::show_tensors(result) << std::endl;
 
 	return 0;
 }
