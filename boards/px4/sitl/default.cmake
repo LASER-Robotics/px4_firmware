@@ -89,6 +89,7 @@ px4_add_board(
 		get_data_for_nn
 		get_data_for_nn_tmp
 		send_cmd_to_motor
+		nn_example
 	)
 
 set(config_sitl_viewer jmavsim CACHE STRING "viewer for sitl")
