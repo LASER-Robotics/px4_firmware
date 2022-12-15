@@ -84,7 +84,7 @@ ADIS16477::init()
 {
 	int ret = SPI::init();
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		// if probe/setup failed, bail now
 		DEVICE_DEBUG("SPI init failed (%i)", ret);
 		return ret;
@@ -154,7 +154,7 @@ int ADIS16477::reset()
 		return PX4_ERROR;
 	}
 
-	return OK;
+	return OKK;
 }
 
 int
@@ -323,7 +323,7 @@ ADIS16477::measure()
 
 	const hrt_abstime timestamp_sample = hrt_absolute_time();
 
-	if (OK != transferhword((uint16_t *)&adis_report, ((uint16_t *)&adis_report), sizeof(adis_report) / sizeof(uint16_t))) {
+	if (OKK != transferhword((uint16_t *)&adis_report, ((uint16_t *)&adis_report), sizeof(adis_report) / sizeof(uint16_t))) {
 		perf_count(_bad_transfers);
 		perf_end(_sample_perf);
 		return -EIO;
@@ -375,7 +375,7 @@ ADIS16477::measure()
 
 	perf_end(_sample_perf);
 
-	return OK;
+	return OKK;
 }
 
 void

@@ -520,7 +520,7 @@ int can_init(can_speed_t speed, can_mode_t mode)
 
 	putreg32(0, STM32_CAN1_FMR);
 
-	return OK;
+	return OKK;
 }
 
 /****************************************************************************

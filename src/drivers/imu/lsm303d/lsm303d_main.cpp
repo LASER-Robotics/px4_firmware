@@ -63,7 +63,7 @@ I2CSPIDriverBase *LSM303D::instantiate(const BusCLIArguments &cli, const BusInst
 		return nullptr;
 	}
 
-	if (OK != instance->init()) {
+	if (OKK != instance->init()) {
 		delete instance;
 		return nullptr;
 	}

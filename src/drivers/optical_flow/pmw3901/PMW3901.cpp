@@ -222,7 +222,7 @@ PMW3901::init()
 	SPI::set_lockmode(LOCK_THREADS);
 
 	/* do SPI init (and probe) first */
-	if (SPI::init() != OK) {
+	if (SPI::init() != OKK) {
 		return PX4_ERROR;
 	}
 
@@ -244,7 +244,7 @@ PMW3901::probe()
 
 	// Test the SPI communication, checking chipId and inverse chipId
 	if (data[0] == 0x49) {
-		return OK;
+		return OKK;
 	}
 
 	// not found on any address
@@ -260,7 +260,7 @@ PMW3901::readRegister(unsigned reg, uint8_t *data, unsigned count)
 
 	int ret = transfer(&cmd[0], &cmd[0], count + 1);
 
-	if (OK != ret) {
+	if (OKK != ret) {
 		perf_count(_comms_errors);
 		DEVICE_LOG("spi::transfer returned %d", ret);
 		return ret;
@@ -282,7 +282,7 @@ PMW3901::writeRegister(unsigned reg, uint8_t data)
 
 	ret = transfer(&cmd[0], nullptr, 2);
 
-	if (OK != ret) {
+	if (OKK != ret) {
 		perf_count(_comms_errors);
 		DEVICE_LOG("spi::transfer returned %d", ret);
 		return ret;
@@ -375,7 +375,7 @@ PMW3901::readMotionCount(int16_t &deltaX, int16_t &deltaY, uint8_t &qual)
 
 	int ret = transfer(&data[0], &data[0], 12);
 
-	if (OK != ret) {
+	if (OKK != ret) {
 		qual = 0;
 		perf_count(_comms_errors);
 		DEVICE_LOG("spi::transfer returned %d", ret);
@@ -393,7 +393,7 @@ PMW3901::readMotionCount(int16_t &deltaX, int16_t &deltaY, uint8_t &qual)
 		qual = data[11];
 	}
 
-	ret = OK;
+	ret = OKK;
 
 	return ret;
 }

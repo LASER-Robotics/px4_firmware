@@ -119,7 +119,7 @@ TEST_PPM::init()
 {
 	px4_arch_configgpio(TEST_PPM_PIN);
 	start();
-	return OK;
+	return OKK;
 }
 
 
@@ -192,7 +192,7 @@ start(unsigned  channels)
 		goto fail;
 	}
 
-	if (OK != g_test->init()) {
+	if (OKK != g_test->init()) {
 		goto fail;
 	}
 

@@ -335,12 +335,12 @@ uORB::DeviceNode::ioctl(cdev::file_t *filp, int cmd, unsigned long arg)
 			}
 		}
 
-		return OK;
+		return OKK;
 
 	case ORBIOCISADVERTISED:
 		*(unsigned long *)arg = _advertised;
 
-		return OK;
+		return OKK;
 
 	default:
 		/* give it to the superclass */

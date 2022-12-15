@@ -74,27 +74,27 @@ MS5611::init()
 
 	while (true) {
 		/* do temperature first */
-		if (OK != measure()) {
+		if (OKK != measure()) {
 			ret = -EIO;
 			break;
 		}
 
 		px4_usleep(MS5611_CONVERSION_INTERVAL);
 
-		if (OK != collect()) {
+		if (OKK != collect()) {
 			ret = -EIO;
 			break;
 		}
 
 		/* now do a pressure measurement */
-		if (OK != measure()) {
+		if (OKK != measure()) {
 			ret = -EIO;
 			break;
 		}
 
 		px4_usleep(MS5611_CONVERSION_INTERVAL);
 
-		if (OK != collect()) {
+		if (OKK != collect()) {
 			ret = -EIO;
 			break;
 		}
@@ -130,7 +130,7 @@ MS5611::init()
 			break;
 		}
 
-		ret = OK;
+		ret = OKK;
 
 		break;
 	}
@@ -165,7 +165,7 @@ MS5611::RunImpl()
 		/* perform collection */
 		ret = collect();
 
-		if (ret != OK) {
+		if (ret != OKK) {
 			if (ret == -6) {
 				/*
 				 * The ms5611 seems to regularly fail to respond to
@@ -193,7 +193,7 @@ MS5611::RunImpl()
 	/* measurement phase */
 	ret = measure();
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		/* issue a reset command to the sensor */
 		_interface->ioctl(IOCTL_RESET, dummy);
 		/* reset the collection state machine and try again */
@@ -223,7 +223,7 @@ MS5611::measure()
 	 */
 	int ret = _interface->ioctl(IOCTL_MEASURE, addr);
 
-	if (OK != ret) {
+	if (OKK != ret) {
 		perf_count(_comms_errors);
 	}
 
@@ -330,7 +330,7 @@ MS5611::collect()
 
 	perf_end(_sample_perf);
 
-	return OK;
+	return OKK;
 }
 
 void MS5611::print_status()

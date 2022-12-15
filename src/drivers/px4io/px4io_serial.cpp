@@ -136,7 +136,7 @@ PX4IO_serial::write(unsigned address, void *data, unsigned count)
 		result = _bus_exchange(_io_buffer_ptr);
 
 		/* successful transaction? */
-		if (result == OK) {
+		if (result == OKK) {
 
 			/* check result in packet */
 			if (PKT_CODE(*_io_buffer_ptr) == PKT_CODE_ERROR) {
@@ -154,7 +154,7 @@ PX4IO_serial::write(unsigned address, void *data, unsigned count)
 
 	px4_sem_post(&_bus_semaphore);
 
-	if (result == OK) {
+	if (result == OKK) {
 		result = count;
 	}
 
@@ -189,7 +189,7 @@ PX4IO_serial::read(unsigned address, void *data, unsigned count)
 		result = _bus_exchange(_io_buffer_ptr);
 
 		/* successful transaction? */
-		if (result == OK) {
+		if (result == OKK) {
 
 			/* check result in packet */
 			if (PKT_CODE(*_io_buffer_ptr) == PKT_CODE_ERROR) {
@@ -222,7 +222,7 @@ PX4IO_serial::read(unsigned address, void *data, unsigned count)
 
 	px4_sem_post(&_bus_semaphore);
 
-	if (result == OK) {
+	if (result == OKK) {
 		result = count;
 	}
 

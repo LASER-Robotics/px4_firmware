@@ -264,7 +264,7 @@ __EXPORT int board_app_initialize(uintptr_t arg)
 
 	int ret = fmuk66_sdhc_initialize();
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		board_autoled_on(LED_RED);
 		return ret;
 	}
@@ -280,7 +280,7 @@ __EXPORT int board_app_initialize(uintptr_t arg)
 #ifdef CONFIG_SPI
 	ret = fmuk66_spi_bus_initialize();
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		board_autoled_on(LED_RED);
 		return ret;
 	}
@@ -303,5 +303,5 @@ __EXPORT int board_app_initialize(uintptr_t arg)
 
 #endif
 
-	return OK;
+	return OKK;
 }

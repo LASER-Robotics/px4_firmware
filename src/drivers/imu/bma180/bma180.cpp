@@ -195,7 +195,7 @@ int BMA180::init()
 	int ret = PX4_ERROR;
 
 	/* do SPI init (and probe) first */
-	if (SPI::init() != OK) {
+	if (SPI::init() != OKK) {
 		goto out;
 	}
 
@@ -232,7 +232,7 @@ int BMA180::init()
 	}
 
 	if (read_reg(ADDR_CHIP_ID) == CHIP_ID) {
-		ret = OK;
+		ret = OKK;
 
 	} else {
 		ret = PX4_ERROR;
@@ -253,7 +253,7 @@ int BMA180::probe()
 	read_reg(ADDR_CHIP_ID);
 
 	if (read_reg(ADDR_CHIP_ID) == CHIP_ID) {
-		return OK;
+		return OKK;
 	}
 
 	return -EIO;
@@ -454,7 +454,7 @@ I2CSPIDriverBase *BMA180::instantiate(const BusCLIArguments &cli, const BusInsta
 		return nullptr;
 	}
 
-	if (OK != instance->init()) {
+	if (OKK != instance->init()) {
 		delete instance;
 		return nullptr;
 	}

@@ -227,7 +227,7 @@ __EXPORT int board_app_initialize(uintptr_t arg)
 	px4_platform_init();
 
 
-	if (OK == board_determine_hw_info()) {
+	if (OKK == board_determine_hw_info()) {
 		syslog(LOG_INFO, "[boot] Rev 0x%1x : Ver 0x%1x %s\n", board_get_hw_revision(), board_get_hw_version(),
 		       board_get_hw_type_name());
 
@@ -279,12 +279,12 @@ __EXPORT int board_app_initialize(uintptr_t arg)
 #ifdef CONFIG_MMCSD
 	int ret = stm32_sdio_initialize();
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		led_on(LED_RED);
 		return ret;
 	}
 
 #endif /* CONFIG_MMCSD */
 
-	return OK;
+	return OKK;
 }

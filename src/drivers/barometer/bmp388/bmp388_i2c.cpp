@@ -101,7 +101,7 @@ calibration_s *BMP388_I2C::get_calibration(uint8_t addr)
 {
 	const uint8_t cmd = (uint8_t)(addr);
 
-	if (transfer(&cmd, sizeof(cmd), (uint8_t *)&_cal, sizeof(struct calibration_s)) == OK) {
+	if (transfer(&cmd, sizeof(cmd), (uint8_t *)&_cal, sizeof(struct calibration_s)) == OKK) {
 		return &(_cal);
 
 	} else {

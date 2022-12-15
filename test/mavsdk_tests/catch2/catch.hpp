@@ -8660,7 +8660,7 @@ namespace detail {
         }
 
         ~ResultValueBase() override {
-            if( m_type == Ok )
+            if( m_type == OKK )
                 m_value.~T();
         }
 

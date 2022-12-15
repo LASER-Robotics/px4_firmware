@@ -132,7 +132,7 @@ int uORB::Manager::orb_exists(const struct orb_metadata *meta, int instance)
 
 	ret = uORB::Utils::node_mkpath(path, meta, &inst);
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		errno = -ret;
 		return PX4_ERROR;
 	}
@@ -347,7 +347,7 @@ int uORB::Manager::node_open(const struct orb_metadata *meta, bool advertiser, i
 		 */
 		ret = uORB::Utils::node_mkpath(path, meta, instance);
 
-		if (ret != OK) {
+		if (ret != OKK) {
 			errno = -ret;
 			return PX4_ERROR;
 		}
@@ -436,7 +436,7 @@ int16_t uORB::Manager::process_add_subscription(const char *messageName, int32_t
 	int ret = uORB::Utils::node_mkpath(nodepath, messageName);
 	DeviceMaster *device_master = get_device_master();
 
-	if (ret == OK && device_master) {
+	if (ret == OKK && device_master) {
 		uORB::DeviceNode *node = device_master->getDeviceNode(nodepath);
 
 		if (node == nullptr) {
@@ -462,7 +462,7 @@ int16_t uORB::Manager::process_remove_subscription(const char *messageName)
 	int ret = uORB::Utils::node_mkpath(nodepath, messageName);
 	DeviceMaster *device_master = get_device_master();
 
-	if (ret == OK && device_master) {
+	if (ret == OKK && device_master) {
 		uORB::DeviceNode *node = device_master->getDeviceNode(nodepath);
 
 		// get the node name.
@@ -487,7 +487,7 @@ int16_t uORB::Manager::process_received_message(const char *messageName, int32_t
 	int ret = uORB::Utils::node_mkpath(nodepath, messageName);
 	DeviceMaster *device_master = get_device_master();
 
-	if (ret == OK && device_master) {
+	if (ret == OKK && device_master) {
 		uORB::DeviceNode *node = device_master->getDeviceNode(nodepath);
 
 		// get the node name.

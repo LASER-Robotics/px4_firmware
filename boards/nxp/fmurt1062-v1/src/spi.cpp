@@ -210,7 +210,7 @@ __EXPORT int imxrt1062_spi_bus_initialize(void)
 		}
 	}
 
-	return OK;
+	return OKK;
 
 }
 

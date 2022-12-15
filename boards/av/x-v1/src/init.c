@@ -183,7 +183,7 @@ __EXPORT int board_app_initialize(uintptr_t arg)
 
 	int ret = stm32_sdio_initialize();
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		syslog(LOG_ERR, "[boot] SDIO init failed\n");
 		return ret;
 	}
@@ -192,7 +192,7 @@ __EXPORT int board_app_initialize(uintptr_t arg)
 
 	configure_switch();
 
-	return OK;
+	return OKK;
 }
 
 /************************************************************************************

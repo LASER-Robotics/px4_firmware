@@ -70,7 +70,7 @@ I2CSPIDriverBase *MPU9250::instantiate(const BusCLIArguments &cli, const BusInst
 		return nullptr;
 	}
 
-	if (interface->init() != OK) {
+	if (interface->init() != OKK) {
 		delete interface;
 		delete mag_interface;
 		PX4_DEBUG("no device on bus %i (devid 0x%x)", iterator.bus(), iterator.devid());
@@ -85,7 +85,7 @@ I2CSPIDriverBase *MPU9250::instantiate(const BusCLIArguments &cli, const BusInst
 		return nullptr;
 	}
 
-	if (OK != dev->init()) {
+	if (OKK != dev->init()) {
 		delete dev;
 		return nullptr;
 	}

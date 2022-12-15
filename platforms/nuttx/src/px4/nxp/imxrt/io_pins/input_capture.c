@@ -188,7 +188,7 @@ int up_input_capture_get_trigger(unsigned channel,  input_capture_edge *edge)
 
 		if (io_timer_get_channel_mode(channel) == IOTimerChanMode_Capture) {
 
-			rv = OK;
+			rv = OKK;
 
 			uint32_t timer = timer_io_channels[channel].timer_index;
 			uint32_t offset =  timer_io_channels[channel].val_offset == PWMA_VAL ? IMXRT_FLEXPWM_SM0CAPTCTRLA_OFFSET :
@@ -261,7 +261,7 @@ int up_input_capture_set_trigger(unsigned channel,  input_capture_edge edge)
 			rvalue |=  edge_bits;
 			REG(timer, timer_io_channels[channel].sub_module, offset) = rvalue;
 			px4_leave_critical_section(flags);
-			rv = OK;
+			rv = OKK;
 		}
 	}
 
@@ -284,7 +284,7 @@ int up_input_capture_get_callback(unsigned channel, capture_callback_t *callback
 			*callback = channel_handlers[channel].callback;
 			*context = channel_handlers[channel].context;
 			px4_leave_critical_section(flags);
-			rv = OK;
+			rv = OKK;
 		}
 	}
 

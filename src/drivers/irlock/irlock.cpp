@@ -130,12 +130,12 @@ int IRLOCK::init()
 	/** initialise I2C bus **/
 	int ret = I2C::init();
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		return ret;
 	}
 
 	ScheduleNow();
-	return OK;
+	return OKK;
 }
 
 int IRLOCK::probe()
@@ -147,11 +147,11 @@ int IRLOCK::probe()
 	 **/
 	uint8_t byte;
 
-	if (transfer(nullptr, 0, &byte, 1) != OK) {
+	if (transfer(nullptr, 0, &byte, 1) != OKK) {
 		return -EIO;
 	}
 
-	return OK;
+	return OKK;
 }
 
 void IRLOCK::print_status()
@@ -172,7 +172,7 @@ bool IRLOCK::sync_device()
 	uint8_t sync_byte;
 	uint16_t sync_word;
 
-	if (read_device_word(&sync_word) != OK) {
+	if (read_device_word(&sync_word) != OKK) {
 		return false;
 	}
 
@@ -202,7 +202,7 @@ int IRLOCK::read_device()
 	report.num_targets = 0;
 
 	while (report.num_targets < IRLOCK_OBJECTS_MAX) {
-		if (!sync_device() || read_device_block(&report.targets[report.num_targets]) != OK) {
+		if (!sync_device() || read_device_block(&report.targets[report.num_targets]) != OKK) {
 			break;
 		}
 
@@ -222,7 +222,7 @@ int IRLOCK::read_device()
 		_irlock_report_topic.publish(orb_report);
 	}
 
-	return OK;
+	return OKK;
 }
 
 int IRLOCK::read_device_word(uint16_t *word)

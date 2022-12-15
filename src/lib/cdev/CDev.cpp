@@ -91,7 +91,7 @@ CDev::register_class_devname(const char *class_devname)
 		snprintf(name, sizeof(name), "%s%d", class_devname, class_instance);
 		ret = register_driver(name, &fops, 0666, (void *)this);
 
-		if (ret == OK) {
+		if (ret == OKK) {
 			break;
 		}
 

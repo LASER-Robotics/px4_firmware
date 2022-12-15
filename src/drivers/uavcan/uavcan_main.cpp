@@ -554,7 +554,7 @@ UavcanNode::start(uavcan::NodeID node_id, uint32_t bitrate)
 
 	_instance->ScheduleOnInterval(ScheduleIntervalMs * 1000);
 
-	return OK;
+	return OKK;
 }
 
 void
@@ -596,7 +596,7 @@ UavcanNode::init(uavcan::NodeID node_id, UAVCAN_DRIVER::BusEvent &bus_events)
 	// Do regular cdev init
 	int ret = CDev::init();
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		return ret;
 	}
 
@@ -817,7 +817,7 @@ UavcanNode::teardown()
 int
 UavcanNode::ioctl(file *filp, int cmd, unsigned long arg)
 {
-	int ret = OK;
+	int ret = OKK;
 
 	lock();
 
@@ -862,7 +862,7 @@ UavcanNode::ioctl(file *filp, int cmd, unsigned long arg)
 
 			} else {
 				// node discovery in progress
-				ret = OK;
+				ret = OKK;
 				break;
 			}
 		}

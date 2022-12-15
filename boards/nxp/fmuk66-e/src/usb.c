@@ -92,7 +92,7 @@ int kinetis_usbpullup(FAR struct usbdev_s *dev, bool enable)
 		putreg8(0, KINETIS_USB0_CONTROL);
 	}
 
-	return OK;
+	return OKK;
 }
 
 /************************************************************************************

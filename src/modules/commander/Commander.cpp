@@ -3513,7 +3513,7 @@ void *commander_low_prio_loop(void *arg)
 							answer_command(cmd, vehicle_command_s::VEHICLE_CMD_RESULT_ACCEPTED, command_ack_pub);
 							/* disable RC control input completely */
 							status_flags.rc_input_blocked = true;
-							calib_ret = OK;
+							calib_ret = OKK;
 							mavlink_log_info(&mavlink_log_pub, "Calibration: Disabling RC input");
 
 						} else if ((int)(cmd.param4) == 2) {
@@ -3552,7 +3552,7 @@ void *commander_low_prio_loop(void *arg)
 
 							answer_command(cmd, vehicle_command_s::VEHICLE_CMD_RESULT_ACCEPTED, command_ack_pub);
 							/* this always succeeds */
-							calib_ret = OK;
+							calib_ret = OKK;
 
 						} else {
 							answer_command(cmd, vehicle_command_s::VEHICLE_CMD_RESULT_UNSUPPORTED, command_ack_pub);
@@ -3560,7 +3560,7 @@ void *commander_low_prio_loop(void *arg)
 
 						status_flags.condition_calibration_enabled = false;
 
-						if (calib_ret == OK) {
+						if (calib_ret == OKK) {
 							tune_positive(true);
 
 							// time since boot not relevant here
@@ -3597,7 +3597,7 @@ void *commander_low_prio_loop(void *arg)
 						if (((int)(cmd.param1)) == 0) {
 							int ret = param_load_default();
 
-							if (ret == OK) {
+							if (ret == OKK) {
 								mavlink_log_info(&mavlink_log_pub, "Settings loaded");
 								answer_command(cmd, vehicle_command_s::VEHICLE_CMD_RESULT_ACCEPTED, command_ack_pub);
 
@@ -3620,7 +3620,7 @@ void *commander_low_prio_loop(void *arg)
 
 							int ret = param_save_default();
 
-							if (ret == OK) {
+							if (ret == OKK) {
 								/* do not spam MAVLink, but provide the answer / green led mechanism */
 								answer_command(cmd, vehicle_command_s::VEHICLE_CMD_RESULT_ACCEPTED, command_ack_pub);
 

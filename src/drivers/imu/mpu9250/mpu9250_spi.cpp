@@ -145,7 +145,7 @@ MPU9250_SPI::read(unsigned reg_speed, void *data, unsigned count)
 	/* Transfer the command and get the data */
 	int ret = transfer(pbuff, pbuff, count);
 
-	if (ret == OK && pbuff == &cmd[0]) {
+	if (ret == OKK && pbuff == &cmd[0]) {
 		/* Adjust the count back */
 		count--;
 
@@ -163,7 +163,7 @@ MPU9250_SPI::probe()
 
 	int ret = read(MPUREG_WHOAMI, &whoami, 1);
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		return -EIO;
 	}
 

@@ -82,7 +82,7 @@ LPS33HW::init()
 
 	ret = reset();
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		PX4_DEBUG("reset failed");
 		return ret;
 	}

@@ -285,7 +285,7 @@ MK::init(unsigned motors)
 
 	ret = I2C::init();
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		warnx("I2C init failed");
 		return ret;
 	}
@@ -295,7 +295,7 @@ MK::init(unsigned motors)
 	if (sizeof(_device) > 0) {
 		ret = register_driver(_device, &fops, 0666, (void *)this);
 
-		if (ret == OK) {
+		if (ret == OKK) {
 			DEVICE_LOG("creating alternate output device");
 			_primary_pwm_device = true;
 		}
@@ -316,7 +316,7 @@ MK::init(unsigned motors)
 		return -errno;
 	}
 
-	return OK;
+	return OKK;
 }
 
 int
@@ -406,7 +406,7 @@ MK::set_motor_count(unsigned count)
 			PX4_INFO("8 ESCs = Octocopter");
 		}
 
-		return OK;
+		return OKK;
 
 	} else {
 		return -1;
@@ -418,14 +418,14 @@ int
 MK::set_motor_test(bool motortest)
 {
 	_motortest = motortest;
-	return OK;
+	return OKK;
 }
 
 int
 MK::set_overrideSecurityChecks(bool overrideSecurityChecks)
 {
 	_overrideSecurityChecks = overrideSecurityChecks;
-	return OK;
+	return OKK;
 }
 
 short
@@ -699,7 +699,7 @@ MK::mk_check_for_blctrl(unsigned int count, bool showOutput, bool initI2C)
 
 		set_device_address(BLCTRL_BASE_ADDR + i);
 
-		if (OK == transfer(&msg, 1, &result[0], 3)) {
+		if (OKK == transfer(&msg, 1, &result[0], 3)) {
 			Motor[i].Current = result[0];
 			Motor[i].MaxPWM = result[1];
 			Motor[i].Temperature = result[2];
@@ -771,7 +771,7 @@ MK::mk_servo_set(unsigned int chan, short val)
 
 		if (Motor[chan].RoundCount >= 16) {
 			// on each 16th cyle we read out the status messages from the blctrl
-			if (OK == transfer(&msg[0], 1, &result[0], 2)) {
+			if (OKK == transfer(&msg[0], 1, &result[0], 2)) {
 				Motor[chan].Current = result[0];
 				Motor[chan].MaxPWM = result[1];
 				Motor[chan].Temperature = 255;
@@ -783,7 +783,7 @@ MK::mk_servo_set(unsigned int chan, short val)
 			Motor[chan].RoundCount = 0;
 
 		} else {
-			if (OK != transfer(&msg[0], 1, nullptr, 0)) {
+			if (OKK != transfer(&msg[0], 1, nullptr, 0)) {
 				if ((Motor[chan].State & MOTOR_STATE_ERROR_MASK) < MOTOR_STATE_ERROR_MASK) { Motor[chan].State++; }	// error
 			}
 		}
@@ -801,7 +801,7 @@ MK::mk_servo_set(unsigned int chan, short val)
 
 		if (Motor[chan].RoundCount >= 16) {
 			// on each 16th cyle we read out the status messages from the blctrl
-			if (OK == transfer(&msg[0], bytesToSendBL2, &result[0], 3)) {
+			if (OKK == transfer(&msg[0], bytesToSendBL2, &result[0], 3)) {
 				Motor[chan].Current = result[0];
 				Motor[chan].MaxPWM = result[1];
 				Motor[chan].Temperature = result[2];
@@ -813,7 +813,7 @@ MK::mk_servo_set(unsigned int chan, short val)
 			Motor[chan].RoundCount = 0;
 
 		} else {
-			if (OK != transfer(&msg[0], bytesToSendBL2, nullptr, 0)) {
+			if (OKK != transfer(&msg[0], bytesToSendBL2, nullptr, 0)) {
 				if ((Motor[chan].State & MOTOR_STATE_ERROR_MASK) < MOTOR_STATE_ERROR_MASK) { Motor[chan].State++; }	// error
 			}
 		}
@@ -974,7 +974,7 @@ MK::ioctl(file *filp, int cmd, unsigned long arg)
 int
 MK::pwm_ioctl(file *filp, int cmd, unsigned long arg)
 {
-	int ret = OK;
+	int ret = OKK;
 
 	lock();
 
@@ -993,7 +993,7 @@ MK::pwm_ioctl(file *filp, int cmd, unsigned long arg)
 		break;
 
 	case PWM_SERVO_SET_UPDATE_RATE:
-		ret = OK;
+		ret = OKK;
 		break;
 
 	case PWM_SERVO_GET_UPDATE_RATE:
@@ -1001,7 +1001,7 @@ MK::pwm_ioctl(file *filp, int cmd, unsigned long arg)
 		break;
 
 	case PWM_SERVO_SET_SELECT_UPDATE_RATE:
-		ret = OK;
+		ret = OKK;
 		break;
 
 
@@ -1077,12 +1077,12 @@ MK::pwm_ioctl(file *filp, int cmd, unsigned long arg)
 			}
 
 			set_rc_min_value((unsigned)pwm->values[0]);
-			ret = OK;
+			ret = OKK;
 			break;
 		}
 
 	case PWM_SERVO_GET_MIN_PWM:
-		ret = OK;
+		ret = OKK;
 		break;
 
 	case PWM_SERVO_SET_MAX_PWM: {
@@ -1095,12 +1095,12 @@ MK::pwm_ioctl(file *filp, int cmd, unsigned long arg)
 			}
 
 			set_rc_max_value((unsigned)pwm->values[0]);
-			ret = OK;
+			ret = OKK;
 			break;
 		}
 
 	case PWM_SERVO_GET_MAX_PWM:
-		ret = OK;
+		ret = OKK;
 		break;
 
 
@@ -1193,7 +1193,7 @@ mk_new_mode(int motorcount, bool motortest, int px4mode, int frametype, bool ove
 
 	g_mk->set_motor_count(g_mk->mk_check_for_blctrl(8, true, false));
 
-	return OK;
+	return OKK;
 }
 
 int
@@ -1208,12 +1208,12 @@ mk_start(unsigned motors, const char *device_path)
 		return -ENOMEM;
 	}
 
-	if (OK == g_mk->init(motors)) {
+	if (OKK == g_mk->init(motors)) {
 		warnx("[mkblctrl] scanning i2c3...\n");
 		ret = g_mk->mk_check_for_blctrl(8, false, false);
 
 		if (ret > 0) {
-			return OK;
+			return OKK;
 		}
 	}
 
@@ -1227,12 +1227,12 @@ mk_start(unsigned motors, const char *device_path)
 		return -ENOMEM;
 	}
 
-	if (OK == g_mk->init(motors)) {
+	if (OKK == g_mk->init(motors)) {
 		warnx("[mkblctrl] scanning i2c1...\n");
 		ret = g_mk->mk_check_for_blctrl(8, false, false);
 
 		if (ret > 0) {
-			return OK;
+			return OKK;
 		}
 	}
 
@@ -1374,7 +1374,7 @@ mkblctrl_main(int argc, char *argv[])
 
 	if (!motortest) {
 		if (g_mk == nullptr) {
-			if (mk_start(motorcount, devicepath) != OK) {
+			if (mk_start(motorcount, devicepath) != OKK) {
 				errx(1, "failed to start the MK-BLCtrl driver");
 			}
 

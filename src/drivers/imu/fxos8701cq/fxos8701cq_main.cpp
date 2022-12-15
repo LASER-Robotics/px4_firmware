@@ -81,7 +81,7 @@ I2CSPIDriverBase *FXOS8701CQ::instantiate(const BusCLIArguments &cli, const BusI
 		return nullptr;
 	}
 
-	if (OK != dev->init()) {
+	if (OKK != dev->init()) {
 		delete dev;
 		return nullptr;
 	}

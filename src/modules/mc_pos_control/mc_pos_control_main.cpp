@@ -394,7 +394,7 @@ MulticopterPositionControl::parameters_update(bool force)
 		}
 	}
 
-	return OK;
+	return OKK;
 }
 
 void

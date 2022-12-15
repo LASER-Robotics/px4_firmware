@@ -15,7 +15,7 @@ void BlockLocalPositionEstimator::landInit()
 	// measure
 	Vector<float, n_y_land> y;
 
-	if (landMeasure(y) != OK) {
+	if (landMeasure(y) != OKK) {
 		_landCount = 0;
 	}
 
@@ -32,7 +32,7 @@ int BlockLocalPositionEstimator::landMeasure(Vector<float, n_y_land> &y)
 	_time_last_land = _timeStamp;
 	y.setZero();
 	_landCount += 1;
-	return OK;
+	return OKK;
 }
 
 void BlockLocalPositionEstimator::landCorrect()
@@ -40,7 +40,7 @@ void BlockLocalPositionEstimator::landCorrect()
 	// measure land
 	Vector<float, n_y_land> y;
 
-	if (landMeasure(y) != OK) { return; }
+	if (landMeasure(y) != OKK) { return; }
 
 	// measurement matrix
 	Matrix<float, n_y_land, n_x> C;

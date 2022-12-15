@@ -439,7 +439,7 @@ void RCInput::Run()
 					for (unsigned i = 0; i < (unsigned)newBytes; i++) {
 						/* set updated flag if one complete packet was parsed */
 						st24_rssi = RC_INPUT_RSSI_MAX;
-						rc_updated = (OK == st24_decode(_rcs_buf[i], &st24_rssi, &lost_count,
+						rc_updated = (OKK == st24_decode(_rcs_buf[i], &st24_rssi, &lost_count,
 										&_raw_rc_count, _raw_rc_values, input_rc_s::RC_INPUT_MAX_CHANNELS));
 					}
 
@@ -488,7 +488,7 @@ void RCInput::Run()
 					for (unsigned i = 0; i < (unsigned)newBytes; i++) {
 						/* set updated flag if one complete packet was parsed */
 						sumd_rssi = RC_INPUT_RSSI_MAX;
-						rc_updated = (OK == sumd_decode(_rcs_buf[i], &sumd_rssi, &rx_count,
+						rc_updated = (OKK == sumd_decode(_rcs_buf[i], &sumd_rssi, &rx_count,
 										&_raw_rc_count, _raw_rc_values, input_rc_s::RC_INPUT_MAX_CHANNELS, &sumd_failsafe));
 					}
 
@@ -635,7 +635,7 @@ bool bind_spektrum(int arg)
 
 		dsm_bind(DSM_CMD_BIND_REINIT_UART, 0);
 
-		ret = OK;
+		ret = OKK;
 
 	} else {
 		PX4_ERR("DSM bind failed");

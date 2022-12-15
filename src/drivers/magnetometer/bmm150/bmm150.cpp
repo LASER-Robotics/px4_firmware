@@ -73,7 +73,7 @@ int BMM150::init()
 	int ret = I2C::init();
 
 	/* if probe/setup failed, bail now */
-	if (ret != OK) {
+	if (ret != OKK) {
 		DEVICE_DEBUG("I2C setup failed");
 		return ret;
 	}
@@ -89,7 +89,7 @@ int BMM150::init()
 		return -EIO;
 	}
 
-	if (reset() != OK) {
+	if (reset() != OKK) {
 		goto out;
 	}
 
@@ -121,7 +121,7 @@ int BMM150::probe()
 	 * chip id. */
 
 	/* @Note: Please read BMM150 Datasheet for more details */
-	return OK;
+	return OKK;
 }
 
 void BMM150::start()
@@ -162,7 +162,7 @@ int BMM150::measure()
 	/* start measure */
 	int ret = set_power_mode(BMM150_FORCED_MODE);
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		perf_count(_comms_errors);
 		perf_cancel(_measure_perf);
 		return -EIO;
@@ -170,7 +170,7 @@ int BMM150::measure()
 
 	perf_end(_measure_perf);
 
-	return OK;
+	return OKK;
 }
 
 int BMM150::collect()
@@ -194,7 +194,7 @@ int BMM150::collect()
 	/* Read Magnetometer data*/
 	const hrt_abstime timestamp_sample = hrt_absolute_time();
 
-	if (OK != get_data(BMM150_DATA_X_LSB_REG, mag_data, sizeof(mag_data))) {
+	if (OKK != get_data(BMM150_DATA_X_LSB_REG, mag_data, sizeof(mag_data))) {
 		return -EIO;
 	}
 
@@ -318,12 +318,12 @@ int BMM150::collect()
 	_last_resistance = resistance;
 
 	perf_end(_sample_perf);
-	return OK;
+	return OKK;
 }
 
 int BMM150::reset()
 {
-	int ret = OK;
+	int ret = OKK;
 
 	/* Soft-reset */
 	modify_reg(BMM150_POWER_CTRL_REG, BMM150_SOFT_RESET_MASK, BMM150_SOFT_RESET_VALUE);
@@ -341,7 +341,7 @@ int BMM150::reset()
 	/* set the preset mode as regular*/
 	ret += set_presetmode(BMM150_PRESETMODE_REGULAR);
 
-	return OK;
+	return OKK;
 }
 
 uint8_t BMM150::read_reg(uint8_t reg)
@@ -397,7 +397,7 @@ int BMM150::set_power_mode(uint8_t power_mode)
 	setbits |= power_mode;
 	modify_reg(BMM150_CTRL_REG, clearbits, setbits);
 
-	return OK;
+	return OKK;
 }
 
 int BMM150::set_data_rate(uint8_t data_rate)
@@ -445,12 +445,12 @@ int BMM150::set_data_rate(uint8_t data_rate)
 	setbits |= data_rate;
 	modify_reg(BMM150_CTRL_REG, clearbits, setbits);
 
-	return OK;
+	return OKK;
 }
 
 int BMM150::init_trim_registers()
 {
-	int ret = OK;
+	int ret = OKK;
 	uint8_t data[2] = {0};
 	uint16_t msb, lsb, msblsb;
 
@@ -508,7 +508,7 @@ int BMM150::set_rep_z(uint8_t rep_z)
 
 int BMM150::set_presetmode(uint8_t presetmode)
 {
-	int ret = OK;
+	int ret = OKK;
 	uint8_t data_rate, rep_xy, rep_z;
 
 	if (presetmode == 1) {
@@ -655,7 +655,7 @@ I2CSPIDriverBase *BMM150::instantiate(const BusCLIArguments &cli, const BusInsta
 		return nullptr;
 	}
 
-	if (interface->init() != OK) {
+	if (interface->init() != OKK) {
 		delete interface;
 		PX4_DEBUG("no device on bus %i (devid 0x%x)", iterator.bus(), iterator.devid());
 		return nullptr;

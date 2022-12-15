@@ -47,7 +47,7 @@ AEROFC_ADC::instantiate(const BusCLIArguments &cli, const BusInstanceIterator &i
 		return nullptr;
 	}
 
-	if (interface->init() != OK) {
+	if (interface->init() != OKK) {
 		delete interface;
 		PX4_DEBUG("no device on bus %i (devid 0x%x)", iterator.bus(), iterator.devid());
 		return nullptr;

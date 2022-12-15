@@ -82,7 +82,7 @@ int HMC5883_SPI::init()
 
 	ret = SPI::init();
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		DEVICE_DEBUG("SPI init failed");
 		return -EIO;
 	}
@@ -103,7 +103,7 @@ int HMC5883_SPI::init()
 		return -EIO;
 	}
 
-	return OK;
+	return OKK;
 }
 
 int HMC5883_SPI::write(unsigned address, void *data, unsigned count)

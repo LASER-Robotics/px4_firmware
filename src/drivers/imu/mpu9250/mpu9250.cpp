@@ -108,14 +108,14 @@ MPU9250::init()
 
 	int ret = probe();
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		PX4_DEBUG("probe failed");
 		return ret;
 	}
 
 	_reset_wait = hrt_absolute_time() + 100000;
 
-	if (reset_mpu() != OK) {
+	if (reset_mpu() != OKK) {
 		PX4_ERR("Exiting! Device failed to take initialization");
 		return PX4_ERROR;
 	}
@@ -134,7 +134,7 @@ MPU9250::init()
 
 		ret = _mag.ak8963_reset();
 
-		if (ret != OK) {
+		if (ret != OKK) {
 			PX4_DEBUG("mag reset failed");
 			return ret;
 		}
@@ -161,7 +161,7 @@ MPU9250::reset()
 
 	int ret = reset_mpu();
 
-	if (ret == OK && (_whoami == MPU_WHOAMI_9250)) {
+	if (ret == OKK && (_whoami == MPU_WHOAMI_9250)) {
 		ret = _mag.ak8963_reset();
 	}
 
@@ -463,7 +463,7 @@ MPU9250::set_accel_range(unsigned max_g_in)
 
 	_px4_accel.set_scale(CONSTANTS_ONE_G / lsb_per_g);
 
-	return OK;
+	return OKK;
 }
 
 void
@@ -580,7 +580,7 @@ MPU9250::measure()
 
 	// Fetch the full set of measurements from the ICM20948 in one pass
 	if (_mag.is_passthrough() && _register_wait == 0) {
-		if (OK != read_reg_range(MPUREG_ACCEL_XOUT_H, MPU9250_HIGH_BUS_SPEED, (uint8_t *)&mpu_report, sizeof(mpu_report))) {
+		if (OKK != read_reg_range(MPUREG_ACCEL_XOUT_H, MPU9250_HIGH_BUS_SPEED, (uint8_t *)&mpu_report, sizeof(mpu_report))) {
 			perf_end(_sample_perf);
 			return;
 		}

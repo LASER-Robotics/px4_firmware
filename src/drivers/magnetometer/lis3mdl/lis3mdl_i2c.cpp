@@ -103,7 +103,7 @@ int LIS3MDL_I2C::probe()
 		return -EIO;
 	}
 
-	return OK;
+	return OKK;
 }
 
 int LIS3MDL_I2C::read(unsigned address, void *data, unsigned count)

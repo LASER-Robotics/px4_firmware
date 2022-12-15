@@ -92,5 +92,5 @@ int get_data_for_nn_tmp_main(int argc, char *argv[])
             }    
         }
     }
-	return OK;
+	return OKK;
 }

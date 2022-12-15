@@ -203,7 +203,7 @@ int up_input_capture_get_filter(unsigned channel, capture_filter_t *filter)
 
 			uint32_t timer = timer_io_channels[channel].timer_index;
 			uint16_t rvalue;
-			rv = OK;
+			rv = OKK;
 
 			switch (timer_io_channels[channel].timer_channel) {
 
@@ -251,7 +251,7 @@ int up_input_capture_set_filter(unsigned channel,  capture_filter_t filter)
 
 		if (io_timer_get_channel_mode(channel) == IOTimerChanMode_Capture) {
 
-			rv = OK;
+			rv = OKK;
 			uint32_t timer = timer_io_channels[channel].timer_index;
 			uint16_t rvalue;
 
@@ -306,7 +306,7 @@ int up_input_capture_get_trigger(unsigned channel,  input_capture_edge *edge)
 
 		if (io_timer_get_channel_mode(channel) == IOTimerChanMode_Capture) {
 
-			rv = OK;
+			rv = OKK;
 
 			uint32_t timer = timer_io_channels[channel].timer_index;
 			uint16_t rvalue;
@@ -396,7 +396,7 @@ int up_input_capture_set_trigger(unsigned channel,  input_capture_edge edge)
 
 			uint32_t timer = timer_io_channels[channel].timer_index;
 			uint16_t rvalue;
-			rv = OK;
+			rv = OKK;
 
 			irqstate_t flags = px4_enter_critical_section();
 
@@ -457,7 +457,7 @@ int up_input_capture_get_callback(unsigned channel, capture_callback_t *callback
 			*callback = channel_handlers[channel].callback;
 			*context = channel_handlers[channel].context;
 			px4_leave_critical_section(flags);
-			rv = OK;
+			rv = OKK;
 		}
 	}
 

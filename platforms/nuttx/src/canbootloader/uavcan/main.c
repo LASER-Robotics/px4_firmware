@@ -1071,7 +1071,7 @@ __EXPORT int main(int argc, char *argv[])
 	board_indicate(reset);
 
 	/* Was this boot a result of the Application being told it has a FW update ? */
-	bootloader.app_bl_request = (OK == bootloader_app_shared_read(&common, App)) &&
+	bootloader.app_bl_request = (OKK == bootloader_app_shared_read(&common, App)) &&
 				    common.bus_speed && common.node_id;
 
 	/*

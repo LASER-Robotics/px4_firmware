@@ -323,7 +323,7 @@ ArchPX4IOSerial::_bus_exchange(IOPacket *_packet)
 	for (;;) {
 		ret = sem_timedwait(&_completion_semaphore, &abstime);
 
-		if (ret == OK) {
+		if (ret == OKK) {
 			/* check for DMA errors */
 			if (_rx_dma_status & DMA_STATUS_TEIF) {
 				perf_count(_pc_dmaerrs);

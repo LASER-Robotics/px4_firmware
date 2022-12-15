@@ -124,7 +124,7 @@ PX4IO_Uploader::upload(const char *filenames[])
 	for (int i = 0; i < 15; i++) {
 		ret = sync();
 
-		if (ret == OK) {
+		if (ret == OKK) {
 			break;
 
 		} else {
@@ -132,7 +132,7 @@ PX4IO_Uploader::upload(const char *filenames[])
 		}
 	}
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		/* this is immediately fatal */
 		log("bootloader not responding");
 		tcsetattr(_io_fd, TCSANOW, &t_original);
@@ -166,7 +166,7 @@ PX4IO_Uploader::upload(const char *filenames[])
 			log("retrying update...");
 			ret = sync();
 
-			if (ret != OK) {
+			if (ret != OKK) {
 				/* this is immediately fatal */
 				log("bootloader not responding");
 				tcsetattr(_io_fd, TCSANOW, &t_original);
@@ -178,7 +178,7 @@ PX4IO_Uploader::upload(const char *filenames[])
 
 		ret = get_info(INFO_BL_REV, bl_rev);
 
-		if (ret == OK) {
+		if (ret == OKK) {
 			if (bl_rev <= BL_REV) {
 				log("found bootloader revision: %d", bl_rev);
 
@@ -187,20 +187,20 @@ PX4IO_Uploader::upload(const char *filenames[])
 				tcsetattr(_io_fd, TCSANOW, &t_original);
 				close(_io_fd);
 				_io_fd = -1;
-				return OK;
+				return OKK;
 			}
 		}
 
 		ret = erase();
 
-		if (ret != OK) {
+		if (ret != OKK) {
 			log("erase failed");
 			continue;
 		}
 
 		ret = program(fw_size);
 
-		if (ret != OK) {
+		if (ret != OKK) {
 			log("program failed");
 			continue;
 		}
@@ -213,14 +213,14 @@ PX4IO_Uploader::upload(const char *filenames[])
 			ret = verify_rev3(fw_size);
 		}
 
-		if (ret != OK) {
+		if (ret != OKK) {
 			log("verify failed");
 			continue;
 		}
 
 		ret = reboot();
 
-		if (ret != OK) {
+		if (ret != OKK) {
 			log("reboot failed");
 			tcsetattr(_io_fd, TCSANOW, &t_original);
 			close(_io_fd);
@@ -230,7 +230,7 @@ PX4IO_Uploader::upload(const char *filenames[])
 
 		log("update complete");
 
-		ret = OK;
+		ret = OKK;
 		break;
 	}
 
@@ -270,18 +270,18 @@ PX4IO_Uploader::recv_byte_with_timeout(uint8_t *c, unsigned timeout)
 #ifdef UDEBUG
 	log("recv_bytes 0x%02x", c);
 #endif
-	return OK;
+	return OKK;
 }
 
 int
 PX4IO_Uploader::recv_bytes(uint8_t *p, unsigned count)
 {
-	int ret = OK;
+	int ret = OKK;
 
 	while (count--) {
 		ret = recv_byte_with_timeout(p++, 5000);
 
-		if (ret != OK) {
+		if (ret != OKK) {
 			break;
 		}
 	}
@@ -303,12 +303,12 @@ PX4IO_Uploader::drain()
 
 #ifdef UDEBUG
 
-		if (ret == OK) {
+		if (ret == OKK) {
 			log("discard 0x%02x", c);
 		}
 
 #endif
-	} while (ret == OK);
+	} while (ret == OKK);
 }
 
 int
@@ -322,7 +322,7 @@ PX4IO_Uploader::send(uint8_t c)
 		return -errno;
 	}
 
-	return OK;
+	return OKK;
 }
 
 int
@@ -333,7 +333,7 @@ PX4IO_Uploader::send(uint8_t *p, unsigned count)
 	while (count--) {
 		ret = send(*p++);
 
-		if (ret != OK) {
+		if (ret != OKK) {
 			break;
 		}
 	}
@@ -349,13 +349,13 @@ PX4IO_Uploader::get_sync(unsigned timeout)
 
 	ret = recv_byte_with_timeout(c, timeout);
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		return ret;
 	}
 
 	ret = recv_byte_with_timeout(c + 1, timeout);
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		return ret;
 	}
 
@@ -364,7 +364,7 @@ PX4IO_Uploader::get_sync(unsigned timeout)
 		return -EIO;
 	}
 
-	return OK;
+	return OKK;
 }
 
 int
@@ -393,7 +393,7 @@ PX4IO_Uploader::get_info(int param, uint32_t &val)
 
 	ret = recv_bytes((uint8_t *)&val, sizeof(val));
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		return ret;
 	}
 
@@ -479,7 +479,7 @@ PX4IO_Uploader::program(size_t fw_size)
 
 		ret = get_sync(1000);
 
-		if (ret != OK) {
+		if (ret != OKK) {
 			break;
 		}
 	}
@@ -503,7 +503,7 @@ PX4IO_Uploader::verify_rev2(size_t fw_size)
 	send(PROTO_EOC);
 	ret = get_sync();
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		return ret;
 	}
 
@@ -546,7 +546,7 @@ PX4IO_Uploader::verify_rev2(size_t fw_size)
 
 			ret = recv_byte_with_timeout(&c, 5000);
 
-			if (ret != OK) {
+			if (ret != OKK) {
 				log("%d: got %d waiting for bytes", sent + i, ret);
 				return ret;
 			}
@@ -559,13 +559,13 @@ PX4IO_Uploader::verify_rev2(size_t fw_size)
 
 		ret = get_sync();
 
-		if (ret != OK) {
+		if (ret != OKK) {
 			log("timeout waiting for post-verify sync");
 			return ret;
 		}
 	}
 
-	return OK;
+	return OKK;
 }
 
 int
@@ -586,7 +586,7 @@ PX4IO_Uploader::verify_rev3(size_t fw_size_local)
 	ret = get_info(INFO_FLASH_SIZE, fw_size_remote);
 	send(PROTO_EOC);
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		log("could not read firmware size");
 		return ret;
 	}
@@ -637,14 +637,14 @@ PX4IO_Uploader::verify_rev3(size_t fw_size_local)
 
 	ret = recv_bytes((uint8_t *)(&crc), sizeof(crc));
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		log("did not receive CRC checksum");
 		return ret;
 	}
 
 	ret = get_sync();
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		log("did not receive CRC checksum");
 		return ret;
 	}
@@ -655,7 +655,7 @@ PX4IO_Uploader::verify_rev3(size_t fw_size_local)
 		return -EINVAL;
 	}
 
-	return OK;
+	return OKK;
 }
 
 int
@@ -669,7 +669,7 @@ PX4IO_Uploader::reboot()
 
 	ret = get_sync();
 
-	if (ret == OK) {
+	if (ret == OKK) {
 		up_udelay(10 * 1000);	// Ensure that we do not close UART too soon
 	}
 

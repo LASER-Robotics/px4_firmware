@@ -321,7 +321,7 @@ led_pwm_servo_init(void)
 	}
 
 	led_pwm_servo_arm(true);
-	return OK;
+	return OKK;
 }
 
 void

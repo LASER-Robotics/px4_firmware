@@ -656,7 +656,7 @@ int TAP_ESC::control_callback(uint8_t control_group, uint8_t control_index, floa
 
 int TAP_ESC::ioctl(cdev::file_t *filp, int cmd, unsigned long arg)
 {
-	int ret = OK;
+	int ret = OKK;
 
 	switch (cmd) {
 

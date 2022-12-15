@@ -84,7 +84,7 @@ ADIS16448::init()
 
 	start();
 
-	return OK;
+	return OKK;
 }
 
 bool ADIS16448::reset()
@@ -214,7 +214,7 @@ ADIS16448::probe()
 	case ADIS16448_Product:
 		DEVICE_DEBUG("ADIS16448 is detected ID: 0x%02x, Serial: 0x%02x", _product_ID, serial_number);
 		modify_reg16(ADIS16448_GPIO_CTRL, 0x0200, 0x0002);  // Turn on ADIS16448 adaptor board led.
-		return OK;
+		return OKK;
 	}
 
 	DEVICE_DEBUG("unexpected ID 0x%02x", _product_ID);
@@ -457,7 +457,7 @@ ADIS16448::measure()
 
 	perf_begin(_perf_transfer);
 
-	if (OK != transferhword((uint16_t *)&report, ((uint16_t *)&report), sizeof(report) / sizeof(int16_t))) {
+	if (OKK != transferhword((uint16_t *)&report, ((uint16_t *)&report), sizeof(report) / sizeof(int16_t))) {
 		perf_end(_perf_transfer);
 		perf_end(_perf_read);
 
@@ -505,7 +505,7 @@ ADIS16448::measure()
 	// Stop measuring.
 	perf_end(_perf_read);
 
-	return OK;
+	return OKK;
 }
 
 void

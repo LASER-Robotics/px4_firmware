@@ -80,7 +80,7 @@ int test_jig_voltages(int argc, char *argv[])
 			return 1;
 
 		} else {
-			int ret = OK;
+			int ret = OKK;
 
 			/* Check values */
 			check_res[0] = (expected_min[0] < adc.raw_data[0] && expected_max[0] > adc.raw_data[0]) ? "OK" : "FAIL";
@@ -104,7 +104,7 @@ int test_jig_voltages(int argc, char *argv[])
 			PX4_INFO("channel: %d value: %d (allowed min: %d, allowed max: %d), result: %s",
 				 adc.channel_id[3], (int)(adc.raw_data[3]), expected_min[3], expected_max[3], check_res[3]);
 
-			if (ret != OK) {
+			if (ret != OKK) {
 				PX4_ERR("\t JIG voltages test FAILED. Some channels where out of allowed range. Check supply voltages.");
 				return ret;
 			}
@@ -112,7 +112,7 @@ int test_jig_voltages(int argc, char *argv[])
 
 		PX4_INFO("JIG voltages test successful.");
 
-		return OK;
+		return OKK;
 
 	} else {
 		return 1;

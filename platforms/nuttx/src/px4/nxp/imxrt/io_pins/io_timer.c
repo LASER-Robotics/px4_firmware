@@ -592,7 +592,7 @@ int io_timer_set_rate(unsigned channel, unsigned rate)
 			timer_set_rate(channel, rate);
 		}
 
-		rv = OK;
+		rv = OKK;
 	}
 
 	return rv;

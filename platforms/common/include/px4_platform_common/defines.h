@@ -120,7 +120,7 @@ __END_DECLS
  * Defines for POSIX and ROS
  ****************************************************************************/
 
-#define OK 0
+#define OKK 0
 #define ERROR -1
 #define MAX_RAND 32767
 

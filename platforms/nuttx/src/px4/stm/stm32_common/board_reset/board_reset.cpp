@@ -58,7 +58,7 @@ static int board_reset_enter_bootloader()
 	*(uint32_t *)STM32_RTC_BK0R = regvalue;
 #endif
 	stm32_pwr_enablebkp(false);
-	return OK;
+	return OKK;
 }
 
 /****************************************************************************

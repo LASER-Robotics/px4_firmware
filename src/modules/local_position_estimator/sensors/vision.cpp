@@ -23,7 +23,7 @@ void BlockLocalPositionEstimator::visionInit()
 	// measure
 	Vector<float, n_y_vision> y;
 
-	if (visionMeasure(y) != OK) {
+	if (visionMeasure(y) != OKK) {
 		_visionStats.reset();
 		return;
 	}
@@ -97,7 +97,7 @@ int BlockLocalPositionEstimator::visionMeasure(Vector<float, n_y_vision> &y)
 			y(Y_vision_z) = _sub_visual_odom.get().z;
 			_visionStats.update(y);
 
-			return OK;
+			return OKK;
 
 		} else {
 			return -1;
@@ -110,7 +110,7 @@ void BlockLocalPositionEstimator::visionCorrect()
 	// measure
 	Vector<float, n_y_vision> y;
 
-	if (visionMeasure(y) != OK) {
+	if (visionMeasure(y) != OKK) {
 		mavlink_log_info(&mavlink_log_pub, "[lpe] vision data invalid. eph: %f epv: %f", (double)_vision_eph,
 				 (double)_vision_epv);
 		return;

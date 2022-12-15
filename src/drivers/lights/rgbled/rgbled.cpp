@@ -110,7 +110,7 @@ RGBLED::init()
 {
 	int ret = I2C::init();
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		return ret;
 	}
 
@@ -123,7 +123,7 @@ RGBLED::init()
 	// kick off work queue
 	ScheduleNow();
 
-	return OK;
+	return OKK;
 }
 
 int
@@ -145,9 +145,9 @@ RGBLED::probe()
 	unsigned prevretries = _retries;
 	_retries = 4;
 
-	if ((ret = get(on, powersave, r, g, b)) != OK ||
-	    (ret = send_led_enable(false) != OK) ||
-	    (ret = send_led_enable(false) != OK)) {
+	if ((ret = get(on, powersave, r, g, b)) != OKK ||
+	    (ret = send_led_enable(false) != OKK) ||
+	    (ret = send_led_enable(false) != OKK)) {
 		return ret;
 	}
 
@@ -164,7 +164,7 @@ RGBLED::print_status()
 
 	int ret = get(on, powersave, r, g, b);
 
-	if (ret == OK) {
+	if (ret == OKK) {
 		/* we don't care about power-save mode */
 		PX4_INFO("state: %s", on ? "ON" : "OFF");
 		PX4_INFO("red: %u, green: %u, blue: %u", (unsigned)r, (unsigned)g, (unsigned)b);
@@ -293,7 +293,7 @@ RGBLED::get(bool &on, bool &powersave, uint8_t &r, uint8_t &g, uint8_t &b)
 
 	ret = transfer(nullptr, 0, &result[0], 2);
 
-	if (ret == OK) {
+	if (ret == OKK) {
 		on = ((result[0] >> 4) & SETTING_ENABLE);
 		powersave = !((result[0] >> 4) & SETTING_NOT_POWERSAVE);
 		/* XXX check, looks wrong */

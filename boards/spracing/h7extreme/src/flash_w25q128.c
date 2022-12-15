@@ -300,7 +300,7 @@ __ramfunc__ int n25qxxx_write_page(struct n25qxxx_dev_s *priv, FAR const uint8_t
 	unsigned int pagesize;
 	unsigned int npages;
 	unsigned int firstpagesize = 0;
-	int ret = OK;
+	int ret = OKK;
 	unsigned int i;
 
 	finfo("address: %08lx buflen: %u\n", (unsigned long)address, (unsigned)buflen);
@@ -342,7 +342,7 @@ __ramfunc__ int n25qxxx_write_page(struct n25qxxx_dev_s *priv, FAR const uint8_t
 
 		/* Then write each page */
 
-		for (i = 0; (i < npages) && (ret == OK); i++) {
+		for (i = 0; (i < npages) && (ret == OKK); i++) {
 			/* Set up varying parts of the transfer description */
 
 			meminfo.addr   = address;
@@ -357,7 +357,7 @@ __ramfunc__ int n25qxxx_write_page(struct n25qxxx_dev_s *priv, FAR const uint8_t
 			buflen  -= pagesize;
 		}
 
-		if ((ret == OK) && (buflen > 0)) {
+		if ((ret == OKK) && (buflen > 0)) {
 			meminfo.addr   = address;
 			meminfo.buffer = (void *)buffer;
 			meminfo.buflen = buflen;
@@ -424,7 +424,7 @@ __ramfunc__ int n25qxxx_erase_sector(struct n25qxxx_dev_s *priv, off_t sector)
 
 	while ((n25qxxx_read_status(priv) & STATUS_BUSY_MASK) != 0);
 
-	return OK;
+	return OKK;
 }
 
 /************************************************************************************

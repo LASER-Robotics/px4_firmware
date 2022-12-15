@@ -76,7 +76,7 @@ int test_ppm_loopback(int argc, char *argv[])
 	unsigned servo_count;
 	result = ioctl(servo_fd, PWM_SERVO_GET_COUNT, (unsigned long)&servo_count);
 
-	if (result != OK) {
+	if (result != OKK) {
 		warnx("PWM_SERVO_GET_COUNT");
 
 		(void)close(servo_fd);
@@ -96,11 +96,11 @@ int test_ppm_loopback(int argc, char *argv[])
 
 	// /* tell safety that its ok to disable it with the switch */
 	// result = ioctl(servo_fd, PWM_SERVO_SET_ARM_OK, 0);
-	// if (result != OK)
+	// if (result != OKK)
 	// 	warnx("FAIL: PWM_SERVO_SET_ARM_OK");
 	//  tell output device that the system is armed (it will output values if safety is off)
 	// result = ioctl(servo_fd, PWM_SERVO_ARM, 0);
-	// if (result != OK)
+	// if (result != OKK)
 	// 	warnx("FAIL: PWM_SERVO_ARM");
 
 	int pwm_values[] = {1200, 1300, 1900, 1700, 1500, 1250, 1800, 1400};

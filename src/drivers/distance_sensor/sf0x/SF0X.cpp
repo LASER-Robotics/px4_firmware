@@ -161,7 +161,7 @@ int SF0X::collect()
 	bool valid = false;
 
 	for (int i = 0; i < ret; i++) {
-		if (OK == sf0x_parser(readbuf[i], _linebuf, &_linebuf_index, &_parse_state, &distance_m)) {
+		if (OKK == sf0x_parser(readbuf[i], _linebuf, &_linebuf_index, &_parse_state, &distance_m)) {
 			valid = true;
 		}
 	}
@@ -259,7 +259,7 @@ void SF0X::Run()
 			return;
 		}
 
-		if (OK != collect_ret) {
+		if (OKK != collect_ret) {
 
 			/* we know the sensor needs about four seconds to initialize */
 			if (hrt_absolute_time() > 5 * 1000 * 1000LL && _consecutive_fail_count < 5) {
@@ -282,7 +282,7 @@ void SF0X::Run()
 	}
 
 	/* measurement phase */
-	if (OK != measure()) {
+	if (OKK != measure()) {
 		PX4_DEBUG("measure error");
 	}
 

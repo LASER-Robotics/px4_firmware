@@ -181,7 +181,7 @@ CM8JL65::collect()
 		return -EAGAIN;
 	}
 
-	bytes_read = OK;
+	bytes_read = OKK;
 
 	const float current_distance = static_cast<float>(distance_mm) / 1000.0f;
 

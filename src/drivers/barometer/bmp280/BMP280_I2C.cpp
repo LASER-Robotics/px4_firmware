@@ -96,7 +96,7 @@ BMP280_I2C::get_data(uint8_t addr)
 {
 	const uint8_t cmd = addr;
 
-	if (transfer(&cmd, sizeof(cmd), (uint8_t *)&_data, sizeof(bmp280::data_s)) == OK) {
+	if (transfer(&cmd, sizeof(cmd), (uint8_t *)&_data, sizeof(bmp280::data_s)) == OKK) {
 		return (&_data);
 
 	} else {
@@ -109,7 +109,7 @@ BMP280_I2C::get_calibration(uint8_t addr)
 {
 	const uint8_t cmd = addr;
 
-	if (transfer(&cmd, sizeof(cmd), (uint8_t *)&_cal, sizeof(bmp280::calibration_s)) == OK) {
+	if (transfer(&cmd, sizeof(cmd), (uint8_t *)&_cal, sizeof(bmp280::calibration_s)) == OKK) {
 		return &(_cal);
 
 	} else {

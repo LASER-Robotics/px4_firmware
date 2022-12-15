@@ -290,7 +290,7 @@ BlinkM::init()
 {
 	int ret = I2C::init();
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		warnx("I2C init failed");
 		return ret;
 	}
@@ -298,7 +298,7 @@ BlinkM::init()
 	stop_script();
 	set_rgb(0, 0, 0);
 
-	return OK;
+	return OKK;
 }
 
 int
@@ -316,7 +316,7 @@ BlinkM::setMode(int mode)
 		systemstate_run = false;
 	}
 
-	return OK;
+	return OKK;
 }
 
 int
@@ -327,7 +327,7 @@ BlinkM::probe()
 
 	ret = get_firmware_version(version);
 
-	if (ret == OK) {
+	if (ret == OKK) {
 		DEVICE_DEBUG("found BlinkM firmware version %c%c", version[1], version[0]);
 	}
 
@@ -365,14 +365,14 @@ BlinkM::ioctl(device::file_t *filp, int cmd, unsigned long arg)
 			while ((lines < 50) && (script[1] != 0)) {
 				ret = write_script_line(lines, script[0], script[1], script[2], script[3], script[4]);
 
-				if (ret != OK) {
+				if (ret != OKK) {
 					break;
 				}
 
 				script += 5;
 			}
 
-			if (ret == OK) {
+			if (ret == OKK) {
 				ret = set_script(lines, 0);
 			}
 
@@ -886,7 +886,7 @@ BlinkM::read_script_line(uint8_t line, uint8_t &ticks, uint8_t cmd[4])
 
 	int ret = transfer(msg, sizeof(msg), result, sizeof(result));
 
-	if (ret == OK) {
+	if (ret == OKK) {
 		ticks = result[0];
 		cmd[0] = result[1];
 		cmd[1] = result[2];
@@ -913,7 +913,7 @@ BlinkM::get_rgb(uint8_t &r, uint8_t &g, uint8_t &b)
 
 	int ret = transfer(&msg, sizeof(msg), result, sizeof(result));
 
-	if (ret == OK) {
+	if (ret == OKK) {
 		r = result[0];
 		g = result[1];
 		b = result[2];

@@ -166,13 +166,13 @@ PX4FLOW::init()
 	int ret = PX4_ERROR;
 
 	/* do I2C init (and probe) first */
-	if (I2C::init() != OK) {
+	if (I2C::init() != OKK) {
 		return ret;
 	}
 
 	_class_instance = register_class_devname(RANGE_FINDER_BASE_DEVICE_PATH);
 
-	ret = OK;
+	ret = OKK;
 	/* sensor is ok, but we don't really know if it is within range */
 	_sensor_ok = true;
 
@@ -228,7 +228,7 @@ PX4FLOW::probe()
 	// 0x42) we check if a I2C_FRAME_SIZE byte transfer works from address
 	// 0. The ll40ls gives an error for that, whereas the flow
 	// happily returns some data
-	if (transfer(nullptr, 0, &val[0], 22) != OK) {
+	if (transfer(nullptr, 0, &val[0], 22) != OKK) {
 		return -EIO;
 	}
 
@@ -245,7 +245,7 @@ PX4FLOW::measure()
 	uint8_t cmd = PX4FLOW_REG;
 	int ret = transfer(&cmd, 1, nullptr, 0);
 
-	if (OK != ret) {
+	if (OKK != ret) {
 		perf_count(_comms_errors);
 		DEVICE_DEBUG("i2c::transfer returned %d", ret);
 		return ret;
@@ -351,12 +351,12 @@ PX4FLOW::start()
 void
 PX4FLOW::RunImpl()
 {
-	if (OK != measure()) {
+	if (OKK != measure()) {
 		DEVICE_DEBUG("measure error");
 	}
 
 	/* perform collection */
-	if (OK != collect()) {
+	if (OKK != collect()) {
 		DEVICE_DEBUG("collection error");
 		/* restart the measurement state machine */
 		start();
@@ -396,7 +396,7 @@ I2CSPIDriverBase *PX4FLOW::instantiate(const BusCLIArguments &cli, const BusInst
 		return nullptr;
 	}
 
-	if (OK != instance->init()) {
+	if (OKK != instance->init()) {
 		delete instance;
 		return nullptr;
 	}

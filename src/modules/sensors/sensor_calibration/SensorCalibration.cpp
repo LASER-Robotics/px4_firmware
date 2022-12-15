@@ -82,7 +82,7 @@ int SensorCalibration::FindCalibrationIndex(uint32_t device_id) const
 
 		int32_t device_id_val = 0;
 
-		if (param_get(param_find(str), &device_id_val) != OK) {
+		if (param_get(param_find(str), &device_id_val) != OKK) {
 			PX4_ERR("Could not access param %s", str);
 			continue;
 		}

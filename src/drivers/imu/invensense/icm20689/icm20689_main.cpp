@@ -57,7 +57,7 @@ I2CSPIDriverBase *ICM20689::instantiate(const BusCLIArguments &cli, const BusIns
 		return nullptr;
 	}
 
-	if (OK != instance->init()) {
+	if (OKK != instance->init()) {
 		delete instance;
 		return nullptr;
 	}

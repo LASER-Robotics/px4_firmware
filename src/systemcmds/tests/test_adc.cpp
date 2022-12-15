@@ -64,7 +64,7 @@ int test_adc(int argc, char *argv[])
 
 		PX4_INFO_RAW("\t ADC test successful.\n");
 
-		return OK;
+		return OKK;
 
 	} else {
 		return 1;

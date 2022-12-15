@@ -75,7 +75,7 @@ I2CSPIDriverBase *FXAS21002C::instantiate(const BusCLIArguments &cli, const BusI
 		return nullptr;
 	}
 
-	if (OK != dev->init()) {
+	if (OKK != dev->init()) {
 		delete dev;
 		return nullptr;
 	}

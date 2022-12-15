@@ -163,7 +163,7 @@ MPU6000_SPI::read(unsigned reg_speed, void *data, unsigned count)
 	/* Transfer the command and get the data */
 	int ret = transfer(pbuff, pbuff, count);
 
-	if (ret == OK && pbuff == &cmd[0]) {
+	if (ret == OKK && pbuff == &cmd[0]) {
 
 		/* Adjust the count back */
 		count--;
@@ -173,7 +173,7 @@ MPU6000_SPI::read(unsigned reg_speed, void *data, unsigned count)
 
 	}
 
-	return ret == OK ? count : ret;
+	return ret == OKK ? count : ret;
 }
 
 int

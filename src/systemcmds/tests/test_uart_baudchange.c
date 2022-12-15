@@ -123,7 +123,7 @@ int test_uart_baudchange(int argc, char *argv[])
 
 	printf("uart2_nwrite %d\n", uart2_nwrite);
 
-	return OK;
+	return OKK;
 cleanup:
 	close(uart2);
 	return ret;

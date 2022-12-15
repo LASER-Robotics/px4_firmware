@@ -62,7 +62,7 @@ LPS22HB::~LPS22HB()
 
 int LPS22HB::init()
 {
-	if (reset() != OK) {
+	if (reset() != OKK) {
 		return PX4_ERROR;
 	}
 
@@ -91,7 +91,7 @@ void LPS22HB::RunImpl()
 	if (_collect_phase) {
 
 		/* perform collection */
-		if (OK != collect()) {
+		if (OKK != collect()) {
 			PX4_DEBUG("collection error");
 			/* restart the measurement state machine */
 			start();
@@ -103,7 +103,7 @@ void LPS22HB::RunImpl()
 	}
 
 	/* measurement phase */
-	if (OK != measure()) {
+	if (OKK != measure()) {
 		PX4_DEBUG("measure error");
 	}
 
@@ -119,7 +119,7 @@ int LPS22HB::measure()
 	// Send the command to begin a 16-bit measurement.
 	int ret = write_reg(CTRL_REG2, IF_ADD_INC | ONE_SHOT);
 
-	if (OK != ret) {
+	if (OKK != ret) {
 		perf_count(_comms_errors);
 	}
 
@@ -144,7 +144,7 @@ int LPS22HB::collect()
 	const hrt_abstime timestamp_sample = hrt_absolute_time();
 	int ret = _interface->read(STATUS, (uint8_t *)&report, sizeof(report));
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		perf_count(_comms_errors);
 		perf_end(_sample_perf);
 		return ret;

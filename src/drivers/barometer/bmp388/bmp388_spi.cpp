@@ -117,7 +117,7 @@ calibration_s *BMP388_SPI::get_calibration(uint8_t addr)
 {
 	_cal.addr = addr | DIR_READ;
 
-	if (transfer((uint8_t *)&_cal, (uint8_t *)&_cal, sizeof(struct spi_calibration_s)) == OK) {
+	if (transfer((uint8_t *)&_cal, (uint8_t *)&_cal, sizeof(struct spi_calibration_s)) == OKK) {
 		return &(_cal.cal);
 
 	} else {

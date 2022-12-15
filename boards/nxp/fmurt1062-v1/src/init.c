@@ -258,7 +258,7 @@ __EXPORT int board_app_initialize(uintptr_t arg)
 
 	board_spi_reset(10, 0xffff);
 
-	if (OK == board_determine_hw_info()) {
+	if (OKK == board_determine_hw_info()) {
 		syslog(LOG_INFO, "[boot] Rev 0x%1x : Ver 0x%1x %s\n", board_get_hw_revision(), board_get_hw_version(),
 		       board_get_hw_type_name());
 
@@ -304,7 +304,7 @@ __EXPORT int board_app_initialize(uintptr_t arg)
 #if defined(CONFIG_IMXRT_USDHC)
 	int ret = fmurt1062_usdhc_initialize();
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		led_on(LED_RED);
 		return ret;
 	}
@@ -315,13 +315,13 @@ __EXPORT int board_app_initialize(uintptr_t arg)
 
 	ret = imxrt1062_spi_bus_initialize();
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		led_on(LED_RED);
 		return ret;
 	}
 
 
-	return OK;
+	return OKK;
 }
 
 // USB Stubs

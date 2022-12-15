@@ -80,7 +80,7 @@ int up_pwm_trigger_init(uint32_t channel_mask)
 	/* Enable the timers */
 	up_pwm_trigger_arm(true);
 
-	return OK;
+	return OKK;
 }
 
 void up_pwm_trigger_deinit()

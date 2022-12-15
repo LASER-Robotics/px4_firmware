@@ -120,7 +120,7 @@ int can_devinit(void)
 		initialized = true;
 	}
 
-	return OK;
+	return OKK;
 }
 
 #endif

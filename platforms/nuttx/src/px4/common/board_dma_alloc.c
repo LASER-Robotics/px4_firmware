@@ -95,7 +95,7 @@ board_dma_alloc_init(void)
 		g_dma_perf = perf_alloc(PC_COUNT, "dma_alloc");
 	}
 
-	return OK;
+	return OKK;
 }
 
 __EXPORT int
@@ -105,7 +105,7 @@ board_get_dma_usage(uint16_t *dma_total, uint16_t *dma_used, uint16_t *dma_peak_
 	*dma_used = dma_heap_inuse;
 	*dma_peak_used = dma_heap_peak_use;
 
-	return OK;
+	return OKK;
 }
 
 __EXPORT void *

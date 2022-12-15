@@ -97,7 +97,7 @@ int QMC5883_I2C::probe()
 		}
 
 		if (read_valid && id_valid) {
-			return OK;
+			return OKK;
 		}
 
 		// wait 100 usec

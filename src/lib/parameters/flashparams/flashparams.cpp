@@ -174,7 +174,7 @@ out:
 		uint8_t *buffer;
 		result = parameter_flashfs_alloc(parameters_token, &buffer, &buf_size);
 
-		if (result == OK) {
+		if (result == OKK) {
 
 			/* Check for a write that has no changes */
 

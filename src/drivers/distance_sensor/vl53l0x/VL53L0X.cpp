@@ -331,7 +331,7 @@ int VL53L0X::spadCalculations()
 
 	writeRegister(SYSTEM_SEQUENCE_CONFIG_REG, 0xE8);		// Restore config.
 
-	return OK;
+	return OKK;
 }
 
 int VL53L0X::sensorInit()

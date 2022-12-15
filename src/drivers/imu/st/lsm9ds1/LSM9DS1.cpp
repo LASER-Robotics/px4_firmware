@@ -71,7 +71,7 @@ int LSM9DS1::init()
 {
 	int ret = SPI::init();
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		DEVICE_DEBUG("SPI init failed (%i)", ret);
 		return ret;
 	}

@@ -120,7 +120,7 @@ Airspeed::ioctl(device::file_t *filp, int cmd, unsigned long arg)
 	case AIRSPEEDIOCSSCALE: {
 			struct airspeed_scale *s = (struct airspeed_scale *)arg;
 			_diff_pres_offset = s->offset_pa;
-			return OK;
+			return OKK;
 		}
 
 	default:

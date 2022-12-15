@@ -92,7 +92,7 @@ BMP280::init()
 
 	Start();
 
-	return OK;
+	return OKK;
 }
 
 void
@@ -128,7 +128,7 @@ BMP280::measure()
 	// start measure
 	int ret = _interface->set_reg(_curr_ctrl | BMP280_CTRL_MODE_FORCE, BMP280_ADDR_CTRL);
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		perf_count(_comms_errors);
 		perf_cancel(_measure_perf);
 		return -EIO;
@@ -136,7 +136,7 @@ BMP280::measure()
 
 	perf_end(_measure_perf);
 
-	return OK;
+	return OKK;
 }
 
 int
@@ -181,7 +181,7 @@ BMP280::collect()
 
 	perf_end(_sample_perf);
 
-	return OK;
+	return OKK;
 }
 
 void

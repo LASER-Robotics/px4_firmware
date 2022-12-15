@@ -64,7 +64,7 @@ start(const char *port, uint8_t rotation)
 		return PX4_ERROR;
 	}
 
-	if (OK != g_dev->init()) {
+	if (OKK != g_dev->init()) {
 		PX4_ERR("driver start failed");
 		delete g_dev;
 		g_dev = nullptr;

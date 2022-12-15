@@ -53,7 +53,7 @@ static int board_reset_enter_bootloader()
 {
 	uint32_t regvalue = 0xb007b007;
 	putreg32(regvalue, IMXRT_SNVS_LPGPR(PX4_IMXRT_RTC_REBOOT_REG));
-	return OK;
+	return OKK;
 }
 
 int board_reset(int status)

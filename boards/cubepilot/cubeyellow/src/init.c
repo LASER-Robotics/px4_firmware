@@ -199,7 +199,7 @@ __EXPORT int board_app_initialize(uintptr_t arg)
 		return ERROR;
 	}
 
-	if (mmcsd_slotinitialize(0, sdio_dev) != OK) {
+	if (mmcsd_slotinitialize(0, sdio_dev) != OKK) {
 		syslog(LOG_ERR, "[boot] Failed to bind SDIO to the MMC/SD driver\n");
 		return ERROR;
 	}
@@ -208,5 +208,5 @@ __EXPORT int board_app_initialize(uintptr_t arg)
 	sdio_mediachange(sdio_dev, true);
 #endif /* CONFIG_MMCSD */
 
-	return OK;
+	return OKK;
 }

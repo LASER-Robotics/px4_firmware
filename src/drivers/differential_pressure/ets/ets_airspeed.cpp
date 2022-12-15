@@ -100,7 +100,7 @@ ETSAirspeed::measure()
 	uint8_t cmd = READ_CMD;
 	ret = transfer(&cmd, 1, nullptr, 0);
 
-	if (OK != ret) {
+	if (OKK != ret) {
 		perf_count(_comms_errors);
 	}
 
@@ -151,7 +151,7 @@ ETSAirspeed::collect()
 
 	_airspeed_pub.publish(report);
 
-	ret = OK;
+	ret = OKK;
 
 	perf_end(_sample_perf);
 
@@ -169,7 +169,7 @@ ETSAirspeed::RunImpl()
 		/* perform collection */
 		ret = collect();
 
-		if (OK != ret) {
+		if (OKK != ret) {
 			perf_count(_comms_errors);
 			/* restart the measurement state machine */
 			_collect_phase = false;
@@ -196,11 +196,11 @@ ETSAirspeed::RunImpl()
 	/* measurement phase */
 	ret = measure();
 
-	if (OK != ret) {
+	if (OKK != ret) {
 		DEVICE_DEBUG("measure error");
 	}
 
-	_sensor_ok = (ret == OK);
+	_sensor_ok = (ret == OKK);
 
 	/* next phase is collection */
 	_collect_phase = true;

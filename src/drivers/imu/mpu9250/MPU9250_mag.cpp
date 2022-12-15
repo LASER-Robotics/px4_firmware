@@ -80,7 +80,7 @@ MPU9250_mag::measure()
 	uint8_t st1 = 0;
 	int ret = _interface->read(AK8963REG_ST1, &st1, sizeof(st1));
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		perf_count(_mag_errors);
 		_px4_mag.set_error_count(perf_event_count(_mag_errors));
 		return;
@@ -103,7 +103,7 @@ MPU9250_mag::measure()
 	ak8963_regs data{};
 	ret = _interface->read(AK8963REG_ST1, &data, sizeof(data));
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		_px4_mag.set_error_count(perf_event_count(_mag_errors));
 		return;
 	}
@@ -214,7 +214,7 @@ MPU9250_mag::ak8963_reset()
 	// First initialize it to use the bus
 	int rv = ak8963_setup();
 
-	if (rv == OK) {
+	if (rv == OKK) {
 		// Now reset the mag
 		write_reg(AK8963REG_CNTL2, AK8963_RESET);
 
@@ -273,7 +273,7 @@ MPU9250_mag::ak8963_setup_master_i2c()
 		_parent->modify_checked_reg(MPUREG_USER_CTRL, BIT_I2C_MST_EN, 0);
 	}
 
-	return OK;
+	return OKK;
 }
 
 int
@@ -327,7 +327,7 @@ MPU9250_mag::ak8963_setup()
 		set_passthrough(AK8963REG_ST1, sizeof(ak8963_regs));
 	}
 
-	return OK;
+	return OKK;
 }
 
 void MPU9250_mag::write_imu_reg_verified(int reg, uint8_t val, uint8_t mask)

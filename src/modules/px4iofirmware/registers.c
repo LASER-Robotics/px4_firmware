@@ -1077,12 +1077,12 @@ pwm_configure_rates(uint16_t map, uint16_t defaultrate, uint16_t altrate)
 			} else {
 				/* set it - errors here are unexpected */
 				if (alt != 0) {
-					if (up_pwm_servo_set_rate_group_update(group, r_setup_pwm_altrate) != OK) {
+					if (up_pwm_servo_set_rate_group_update(group, r_setup_pwm_altrate) != OKK) {
 						r_status_alarms |= PX4IO_P_STATUS_ALARMS_PWM_ERROR;
 					}
 
 				} else {
-					if (up_pwm_servo_set_rate_group_update(group, r_setup_pwm_defaultrate) != OK) {
+					if (up_pwm_servo_set_rate_group_update(group, r_setup_pwm_defaultrate) != OKK) {
 						r_status_alarms |= PX4IO_P_STATUS_ALARMS_PWM_ERROR;
 					}
 				}

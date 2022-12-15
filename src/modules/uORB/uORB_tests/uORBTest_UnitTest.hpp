@@ -81,7 +81,7 @@ private:
 
 	bool pubsubtest_passed;
 	bool pubsubtest_print;
-	int pubsubtest_res = OK;
+	int pubsubtest_res = OKK;
 
 	orb_advert_t _pfd[4]; ///< used for test_multi and test_multi_reversed
 

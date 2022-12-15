@@ -84,7 +84,7 @@ LSM303D::init()
 	/* do SPI init (and probe) first */
 	int ret = SPI::init();
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		DEVICE_DEBUG("SPI init failed (%i)", ret);
 		return ret;
 	}
@@ -147,7 +147,7 @@ LSM303D::probe()
 	// verify that the device is attached and functioning
 	if (read_reg(ADDR_WHO_AM_I) == WHO_I_AM) {
 		_checked_values[0] = WHO_I_AM;
-		return OK;
+		return OKK;
 	}
 
 	return -EIO;
@@ -242,7 +242,7 @@ LSM303D::accel_set_range(unsigned max_g)
 
 	modify_reg(ADDR_CTRL_REG2, clearbits, setbits);
 
-	return OK;
+	return OKK;
 }
 
 int
@@ -284,7 +284,7 @@ LSM303D::mag_set_range(unsigned max_ga)
 
 	modify_reg(ADDR_CTRL_REG6, clearbits, setbits);
 
-	return OK;
+	return OKK;
 }
 
 int
@@ -319,7 +319,7 @@ LSM303D::accel_set_onchip_lowpass_filter_bandwidth(unsigned bandwidth)
 
 	modify_reg(ADDR_CTRL_REG2, clearbits, setbits);
 
-	return OK;
+	return OKK;
 }
 
 int
@@ -362,7 +362,7 @@ LSM303D::accel_set_samplerate(unsigned frequency)
 
 	modify_reg(ADDR_CTRL_REG1, clearbits, setbits);
 
-	return OK;
+	return OKK;
 }
 
 int
@@ -397,7 +397,7 @@ LSM303D::mag_set_samplerate(unsigned frequency)
 
 	modify_reg(ADDR_CTRL_REG5, clearbits, setbits);
 
-	return OK;
+	return OKK;
 }
 
 void

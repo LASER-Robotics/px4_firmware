@@ -48,12 +48,12 @@ I2CSPIDriverBase *VOXLPM::instantiate(const BusCLIArguments &cli, const BusInsta
 	}
 
 	if (cli.custom1 == 1) {
-		if (OK != instance->force_init()) {
+		if (OKK != instance->force_init()) {
 			PX4_INFO("Failed to init voxlpm type: %d on bus: %d, but will try again periodically.", (VOXLPM_CH_TYPE)cli.type,
 				 iterator.bus());
 		}
 
-	} else if (OK != instance->init()) {
+	} else if (OKK != instance->init()) {
 		delete instance;
 		return nullptr;
 	}

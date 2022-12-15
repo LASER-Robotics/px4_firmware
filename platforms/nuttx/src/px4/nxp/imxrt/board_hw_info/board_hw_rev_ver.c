@@ -198,7 +198,7 @@ static int read_id_dn(int *id, uint32_t gpio_drive, uint32_t gpio_sense, int adc
 	if ((high ^ low) && low == 0) {
 		/* Yes - Fire up the ADC (it has once control) */
 
-		if (px4_arch_adc_init(HW_REV_VER_ADC_BASE) == OK) {
+		if (px4_arch_adc_init(HW_REV_VER_ADC_BASE) == OKK) {
 
 			/* Read the value */
 			for (unsigned av = 0; av < samples; av++) {
@@ -213,14 +213,14 @@ static int read_id_dn(int *id, uint32_t gpio_drive, uint32_t gpio_sense, int adc
 
 			if (dn != 0xffff) {
 				*id = dn_sum / samples;
-				rv = OK;
+				rv = OKK;
 			}
 		}
 
 	} else {
 		/* No - No Resistors is ID 0 */
 		*id = 0;
-		rv = OK;
+		rv = OKK;
 	}
 
 	/*  Turn the drive lines to digital outputs High */
@@ -235,11 +235,11 @@ static int determine_hw_info(int *revision, int *version)
 	int dn;
 	int rv = read_id_dn(&dn, GPIO_HW_REV_DRIVE, GPIO_HW_REV_SENSE, ADC_HW_REV_SENSE_CHANNEL);
 
-	if (rv == OK) {
+	if (rv == OKK) {
 		*revision =  dn_to_ordinal(dn);
 		rv = read_id_dn(&dn, GPIO_HW_VER_DRIVE, GPIO_HW_VER_SENSE, ADC_HW_VER_SENSE_CHANNEL);
 
-		if (rv == OK) {
+		if (rv == OKK) {
 			*version =  dn_to_ordinal(dn);
 		}
 	}
@@ -337,7 +337,7 @@ int board_determine_hw_info()
 {
 	int rv = determine_hw_info(&hw_revision, &hw_version);
 
-	if (rv == OK) {
+	if (rv == OKK) {
 		hw_info[HW_INFO_INIT_REV] = board_get_hw_revision() + '0';
 		hw_info[HW_INFO_INIT_VER] = board_get_hw_version() + '0';
 	}

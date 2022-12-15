@@ -60,7 +60,7 @@ I2CSPIDriverBase *L3GD20::instantiate(const BusCLIArguments &cli, const BusInsta
 		return nullptr;
 	}
 
-	if (OK != instance->init()) {
+	if (OKK != instance->init()) {
 		delete instance;
 		return nullptr;
 	}

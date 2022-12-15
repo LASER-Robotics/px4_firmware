@@ -235,7 +235,7 @@ static int determin_hw_version(int *version, int *revision)
 	stm32_configgpio(HW_VER_PB4_INIT);
 	stm32_configgpio(HW_VER_PB12_INIT);
 	*version = rv;
-	return OK;
+	return OKK;
 }
 
 /************************************************************************************
@@ -365,7 +365,7 @@ __EXPORT int board_app_initialize(uintptr_t arg)
 	/* Ensure the power is on 1 ms before we drive the GPIO pins */
 	usleep(1000);
 
-	if (OK == determin_hw_version(&hw_version, & hw_revision)) {
+	if (OKK == determin_hw_version(&hw_version, & hw_revision)) {
 		switch (hw_version) {
 		case HW_VER_FMUV2_STATE:
 			break;
@@ -517,7 +517,7 @@ __EXPORT int board_app_initialize(uintptr_t arg)
 	/* Now bind the SDIO interface to the MMC/SD driver */
 	int ret = mmcsd_slotinitialize(CONFIG_NSH_MMCSDMINOR, sdio);
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		led_on(LED_AMBER);
 		syslog(LOG_ERR, "[boot] Failed to bind SDIO to the MMC/SD driver: %d\n", ret);
 		return ret;
@@ -528,5 +528,5 @@ __EXPORT int board_app_initialize(uintptr_t arg)
 
 #endif
 
-	return OK;
+	return OKK;
 }

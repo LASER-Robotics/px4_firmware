@@ -121,14 +121,14 @@ int HMC5883::set_range(unsigned range)
 	 */
 	int ret = write_reg(ADDR_CONF_B, (_range_bits << 5));
 
-	if (OK != ret) {
+	if (OKK != ret) {
 		perf_count(_comms_errors);
 	}
 
 	uint8_t range_bits_in = 0;
 	ret = read_reg(ADDR_CONF_B, range_bits_in);
 
-	if (OK != ret) {
+	if (OKK != ret) {
 		perf_count(_comms_errors);
 	}
 
@@ -147,7 +147,7 @@ void HMC5883::check_range()
 	uint8_t range_bits_in = 0;
 	ret = read_reg(ADDR_CONF_B, range_bits_in);
 
-	if (OK != ret) {
+	if (OKK != ret) {
 		perf_count(_comms_errors);
 		return;
 	}
@@ -156,7 +156,7 @@ void HMC5883::check_range()
 		perf_count(_range_errors);
 		ret = write_reg(ADDR_CONF_B, (_range_bits << 5));
 
-		if (OK != ret) {
+		if (OKK != ret) {
 			perf_count(_comms_errors);
 		}
 	}
@@ -174,7 +174,7 @@ void HMC5883::check_conf()
 	uint8_t conf_reg_in = 0;
 	ret = read_reg(ADDR_CONF_A, conf_reg_in);
 
-	if (OK != ret) {
+	if (OKK != ret) {
 		perf_count(_comms_errors);
 		return;
 	}
@@ -183,7 +183,7 @@ void HMC5883::check_conf()
 		perf_count(_conf_errors);
 		ret = write_reg(ADDR_CONF_A, _conf_reg);
 
-		if (OK != ret) {
+		if (OKK != ret) {
 			perf_count(_comms_errors);
 		}
 	}
@@ -217,7 +217,7 @@ HMC5883::RunImpl()
 	if (_collect_phase) {
 
 		/* perform collection */
-		if (OK != collect()) {
+		if (OKK != collect()) {
 			PX4_DEBUG("collection error");
 			/* restart the measurement state machine */
 			start();
@@ -240,7 +240,7 @@ HMC5883::RunImpl()
 	}
 
 	/* measurement phase */
-	if (OK != measure()) {
+	if (OKK != measure()) {
 		PX4_DEBUG("measure error");
 	}
 
@@ -260,7 +260,7 @@ int HMC5883::measure()
 	 */
 	int ret = write_reg(ADDR_MODE, MODE_REG_SINGLE_MODE);
 
-	if (OK != ret) {
+	if (OKK != ret) {
 		perf_count(_comms_errors);
 	}
 
@@ -300,7 +300,7 @@ int HMC5883::collect()
 	const hrt_abstime timestamp_sample = hrt_absolute_time();
 	int ret = _interface->read(ADDR_DATA_OUT_X_MSB, (uint8_t *)&hmc_report, sizeof(hmc_report));
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		perf_count(_comms_errors);
 		PX4_DEBUG("data/status read error");
 		goto out;
@@ -338,7 +338,7 @@ int HMC5883::collect()
 			ret = _interface->read(ADDR_TEMP_OUT_MSB,
 					       raw_temperature, sizeof(raw_temperature));
 
-			if (ret == OK) {
+			if (ret == OKK) {
 				int16_t temp16 = (((int16_t)raw_temperature[0]) << 8) +
 						 raw_temperature[1];
 				float temperature = 25 + (temp16 / (16 * 8.0f));
@@ -400,7 +400,7 @@ int HMC5883::collect()
 		check_conf();
 	}
 
-	ret = OK;
+	ret = OKK;
 
 out:
 	perf_end(_sample_perf);
@@ -433,7 +433,7 @@ int HMC5883::set_temperature_compensation(unsigned enable)
 	/* get current config */
 	ret = read_reg(ADDR_CONF_A, _conf_reg);
 
-	if (OK != ret) {
+	if (OKK != ret) {
 		perf_count(_comms_errors);
 		return -EIO;
 	}
@@ -447,14 +447,14 @@ int HMC5883::set_temperature_compensation(unsigned enable)
 
 	ret = write_reg(ADDR_CONF_A, _conf_reg);
 
-	if (OK != ret) {
+	if (OKK != ret) {
 		perf_count(_comms_errors);
 		return -EIO;
 	}
 
 	uint8_t conf_reg_ret = 0;
 
-	if (read_reg(ADDR_CONF_A, conf_reg_ret) != OK) {
+	if (read_reg(ADDR_CONF_A, conf_reg_ret) != OKK) {
 		perf_count(_comms_errors);
 		return -EIO;
 	}

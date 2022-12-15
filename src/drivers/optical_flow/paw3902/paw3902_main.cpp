@@ -57,7 +57,7 @@ I2CSPIDriverBase *PAW3902::instantiate(const BusCLIArguments &cli, const BusInst
 		return nullptr;
 	}
 
-	if (OK != instance->init()) {
+	if (OKK != instance->init()) {
 		delete instance;
 		return nullptr;
 	}

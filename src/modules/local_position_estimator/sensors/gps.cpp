@@ -30,7 +30,7 @@ void BlockLocalPositionEstimator::gpsInit()
 	// measure
 	Vector<double, n_y_gps> y;
 
-	if (gpsMeasure(y) != OK) {
+	if (gpsMeasure(y) != OKK) {
 		_gpsStats.reset();
 		return;
 	}
@@ -102,7 +102,7 @@ int BlockLocalPositionEstimator::gpsMeasure(Vector<double, n_y_gps> &y)
 	// increament sums for mean
 	_gpsStats.update(y);
 	_time_last_gps = _timeStamp;
-	return OK;
+	return OKK;
 }
 
 void BlockLocalPositionEstimator::gpsCorrect()
@@ -110,7 +110,7 @@ void BlockLocalPositionEstimator::gpsCorrect()
 	// measure
 	Vector<double, n_y_gps> y_global;
 
-	if (gpsMeasure(y_global) != OK) { return; }
+	if (gpsMeasure(y_global) != OKK) { return; }
 
 	// gps measurement in local frame
 	double lat = y_global(Y_gps_x);

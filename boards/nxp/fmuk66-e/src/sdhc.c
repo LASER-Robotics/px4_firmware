@@ -142,7 +142,7 @@ static int fmuk66_cdinterrupt(int irq, FAR void *context, FAR void *args)
 	/* All of the work is done by fmuk66_mediachange() */
 
 	fmuk66_mediachange((struct fmuk66_sdhc_state_s *) args);
-	return OK;
+	return OKK;
 }
 #endif
 
@@ -206,7 +206,7 @@ int fmuk66_sdhc_initialize(void)
 
 	ret = mmcsd_slotinitialize(CONFIG_NSH_MMCSDMINOR, sdhc->sdhc);
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		syslog(LOG_ERR, "ERROR: Failed to bind SDHC to the MMC/SD driver: %d\n", ret);
 		return ret;
 	}
@@ -224,7 +224,7 @@ int fmuk66_sdhc_initialize(void)
 #else
 	sdhc_mediachange(sdhc->sdhc, true);
 #endif
-	return OK;
+	return OKK;
 }
 
 /****************************************************************************

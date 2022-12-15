@@ -139,7 +139,7 @@ int IridiumSBD::stop()
 		IridiumSBD::instance = nullptr;
 	}
 
-	return OK;
+	return OKK;
 }
 
 void IridiumSBD::status()
@@ -191,14 +191,14 @@ int IridiumSBD::ioctl(struct file *filp, int cmd, unsigned long arg)
 			int count = _rx_msg_end_idx - _rx_msg_read_idx;
 			*(int *)arg = count;
 
-			return OK;
+			return OKK;
 		}
 
 	case FIONSPACE: {
 			int count = SATCOM_TX_BUF_LEN - _tx_buf_write_idx + SATCOM_MAX_MESSAGE_LENGTH;
 			*(int *)arg = count;
 
-			return OK;
+			return OKK;
 		}
 
 	default: {
@@ -1122,12 +1122,12 @@ void IridiumSBD::publish_subsystem_status()
 	const bool enabled = true;
 	const bool ok = _status.last_heartbeat > 0; // maybe at some point here an additional check should be made
 
-	if ((_info.present != present) || (_info.enabled != enabled) || (_info.ok != ok)) {
+	if ((_info.present != present) || (_info.enabled != enabled) || (_info.ok != OKK)) {
 		_info.timestamp = hrt_absolute_time();
 		_info.subsystem_type = subsystem_info_s::SUBSYSTEM_TYPE_SATCOM;
 		_info.present = present;
 		_info.enabled = enabled;
-		_info.ok = ok;
+		_info.ok = OKK;
 
 		_subsystem_pub.publish(_info);
 	}
@@ -1160,11 +1160,11 @@ int iridiumsbd_main(int argc, char *argv[])
 
 	} else if (!strcmp(argv[1], "status")) {
 		IridiumSBD::status();
-		return OK;
+		return OKK;
 
 	} else if (!strcmp(argv[1], "test")) {
 		IridiumSBD::test(argc, argv);
-		return OK;
+		return OKK;
 	}
 
 out_error:

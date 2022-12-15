@@ -72,7 +72,7 @@ DPS310::init()
 		return PX4_ERROR;
 	}
 
-	if (reset() != OK) {
+	if (reset() != OKK) {
 		PX4_DEBUG("reset failed");
 		return PX4_ERROR;
 	}

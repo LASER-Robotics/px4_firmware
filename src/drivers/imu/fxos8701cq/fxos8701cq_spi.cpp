@@ -175,7 +175,7 @@ int FXOS8701CQ_SPI::read(unsigned reg, void *data, unsigned count)
 	/* Transfer the command and get the data */
 	int ret = transfer(pBuf, pBuf, count);
 
-	if (ret == OK && pBuf == &cmd[0]) {
+	if (ret == OKK && pBuf == &cmd[0]) {
 		/* Adjust the count back */
 		count -= 2;
 

@@ -158,7 +158,7 @@ OSDatxxxx::writeRegister(unsigned reg, uint8_t data)
 
 	int ret = transfer(&cmd[0], nullptr, 2);
 
-	if (OK != ret) {
+	if (OKK != ret) {
 		DEVICE_LOG("spi::transfer returned %d", ret);
 		return ret;
 	}
@@ -518,7 +518,7 @@ I2CSPIDriverBase *OSDatxxxx::instantiate(const BusCLIArguments &cli, const BusIn
 		return nullptr;
 	}
 
-	if (OK != instance->init()) {
+	if (OKK != instance->init()) {
 		delete instance;
 		return nullptr;
 	}

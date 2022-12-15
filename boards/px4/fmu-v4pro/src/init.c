@@ -393,7 +393,7 @@ __EXPORT int board_app_initialize(uintptr_t arg)
 	/* Now bind the SDIO interface to the MMC/SD driver */
 	int ret = mmcsd_slotinitialize(CONFIG_NSH_MMCSDMINOR, sdio);
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		led_on(LED_RED);
 		syslog(LOG_ERR, "[boot] Failed to bind SDIO to the MMC/SD driver: %d\n", ret);
 		return ret;
@@ -404,5 +404,5 @@ __EXPORT int board_app_initialize(uintptr_t arg)
 
 #endif
 
-	return OK;
+	return OKK;
 }

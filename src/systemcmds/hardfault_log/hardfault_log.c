@@ -127,7 +127,7 @@ static int genfault(int fault)
 	}
 
 	UNUSED(k);
-	return OK;
+	return OKK;
 }
 
 
@@ -149,7 +149,7 @@ static int format_fault_time(char *format, struct timespec *ts, char *buffer, un
 			gmtime_r(&time_sec, &tt);
 
 			if (TIME_FMT_LEN == strftime(buffer, maxsz, format, &tt)) {
-				ret = OK;
+				ret = OKK;
 			}
 		}
 	}
@@ -176,11 +176,11 @@ static int format_fault_file_name(struct timespec *ts, char *buffer, unsigned in
 			maxsz -= plen;
 			int rv = format_fault_time(TIME_FMT, ts, fmtbuff, arraySize(fmtbuff));
 
-			if (rv == OK) {
+			if (rv == OKK) {
 				int n = snprintf(&buffer[plen], maxsz, LOG_NAME_FMT, fmtbuff);
 
 				if (n == (int) LOG_NAME_LEN + TIME_FMT_LEN) {
-					ret = OK;
+					ret = OKK;
 				}
 			}
 		}
@@ -266,7 +266,7 @@ static int write_stack_detail(bool inValid, _stack_s *si, char *sp_name,
 	}
 
 #endif
-	return OK;
+	return OKK;
 }
 
 /****************************************************************************
@@ -288,7 +288,7 @@ static int  write_stack(bool inValid, int winsize, uint32_t wtopaddr,
 {
 	char marker[30];
 	stack_word_t stack[32];
-	int ret = OK;
+	int ret = OKK;
 
 	int n = snprintf(buffer, max, "%s memory region, stack pointer lies %s stack\n",
 			 sp_name, (inValid ? "outside of" : "within"));
@@ -299,7 +299,7 @@ static int  write_stack(bool inValid, int winsize, uint32_t wtopaddr,
 
 	} else {
 
-		while (winsize > 0 && ret == OK) {
+		while (winsize > 0 && ret == OKK) {
 			int chunk = read_stack(infd, stack, arraySize(stack));
 
 			if (chunk <= 0) {
@@ -389,7 +389,7 @@ static int write_registers(uint32_t regs[], char *buffer, int max, int fd)
 	}
 
 #endif
-	return OK;
+	return OKK;
 }
 
 /****************************************************************************
@@ -502,7 +502,7 @@ static int write_dump_info(int fdout, info_s *info, struct bbsramd_s *desc,
 		return -EIO;
 	}
 
-	return OK;
+	return OKK;
 }
 
 /****************************************************************************
@@ -511,7 +511,7 @@ static int write_dump_info(int fdout, info_s *info, struct bbsramd_s *desc,
 static int write_dump_time(char *caller, char *tag, int fdout,
 			   struct timespec *ts, char *buffer, unsigned int sz)
 {
-	int ret = OK;
+	int ret = OKK;
 	char fmtbuff[ TIME_FMT_LEN + 1];
 	format_fault_time(HEADER_TIME_FMT, ts, fmtbuff, sizeof(fmtbuff));
 	int n = snprintf(buffer, sz, "[%s] -- %s %s Fault Log --\n", caller, fmtbuff, tag);
@@ -804,7 +804,7 @@ static int hardfault_commit(char *caller)
 
 		} else {
 
-			if (state != OK) {
+			if (state != OKK) {
 				identify(caller);
 				syslog(LOG_INFO, "Nothing to save\n", path);
 				ret = -ENOENT;
@@ -812,7 +812,7 @@ static int hardfault_commit(char *caller)
 			} else {
 				ret = format_fault_file_name(&desc.lastwrite, path, arraySize(path));
 
-				if (ret == OK) {
+				if (ret == OKK) {
 					int fdout = open(path, O_RDWR | O_CREAT);
 
 					if (fdout >= 0) {
@@ -825,7 +825,7 @@ static int hardfault_commit(char *caller)
 						// now save the same data to the last ulog file by copying from the txt file
 						// (not the fastest, but a simple way to do it). We also want to keep a separate
 						// .txt file around, since that is a bit less prone to FS errors than the ULog
-						if (ret == OK) {
+						if (ret == OKK) {
 							ret = hardfault_append_to_ulog(caller, fdout);
 							identify(caller);
 
@@ -836,7 +836,7 @@ static int hardfault_commit(char *caller)
 
 							case -ENOENT:
 								syslog(LOG_INFO, "No ULog to append to\n");
-								ret = OK;
+								ret = OKK;
 								break;
 
 							default:
@@ -881,7 +881,7 @@ static int hardfault_dowrite(char *caller, int infd, int outfd,
 				info_s *pinfo = (info_s *) info;
 				ret = write_dump_header(caller, outfd, &desc->lastwrite, line, OUT_BUFFER_LEN);
 
-				if (ret == OK) {
+				if (ret == OKK) {
 
 					switch (format) {
 					case HARDFAULT_DISPLAY_FORMAT:
@@ -912,7 +912,7 @@ static int hardfault_dowrite(char *caller, int infd, int outfd,
 					case HARDFAULT_FILE_FORMAT:
 						ret = write_dump_info(outfd, pinfo, desc, line, OUT_BUFFER_LEN);
 
-						if (ret == OK) {
+						if (ret == OKK) {
 							ret = write_registers_info(outfd, pinfo, line, OUT_BUFFER_LEN);
 
 							if (ret >= OK) {
@@ -963,7 +963,7 @@ static int hardfault_dowrite(char *caller, int infd, int outfd,
  ****************************************************************************/
 __EXPORT int hardfault_rearm(char *caller)
 {
-	int ret = OK;
+	int ret = OKK;
 	int rv = unlink(HARDFAULT_PATH);
 
 	if (rv < 0) {
@@ -1013,7 +1013,7 @@ __EXPORT int hardfault_check_status(char *caller)
 			syslog(LOG_INFO, "Fault Log info File No %d Length %d flags:0x%02x state:%d\n",
 			       (unsigned int)desc.fileno, (unsigned int) desc.len, (unsigned int)desc.flags, state);
 
-			if (state == OK) {
+			if (state == OKK) {
 				char buf[TIME_FMT_LEN + 1];
 				format_fault_time(HEADER_TIME_FMT, &desc.lastwrite, buf, arraySize(buf));
 				identify(caller);
@@ -1047,7 +1047,7 @@ __EXPORT int hardfault_increment_reboot(char *caller, bool reset)
 
 	} else {
 
-		ret = OK;
+		ret = OKK;
 
 		if (!reset) {
 			if (read(fd, &count, sizeof(count)) !=  sizeof(count)) {
@@ -1060,7 +1060,7 @@ __EXPORT int hardfault_increment_reboot(char *caller, bool reset)
 			}
 		}
 
-		if (ret == OK) {
+		if (ret == OKK) {
 			ret = write(fd, &count, sizeof(count));
 
 			if (ret != sizeof(count)) {
@@ -1069,7 +1069,7 @@ __EXPORT int hardfault_increment_reboot(char *caller, bool reset)
 			} else {
 				ret = close(fd);
 
-				if (ret == OK) {
+				if (ret == OKK) {
 					ret = count;
 				}
 			}
@@ -1112,7 +1112,7 @@ __EXPORT int hardfault_write(char *caller, int fd, int format, bool rearm)
 
 		}
 
-		if (rv == OK && rearm) {
+		if (rv == OKK && rearm) {
 			ret = hardfault_rearm(caller);
 
 			if (ret < 0) {
@@ -1121,11 +1121,11 @@ __EXPORT int hardfault_write(char *caller, int fd, int format, bool rearm)
 			}
 		}
 
-		if (ret == OK) {
+		if (ret == OKK) {
 			ret = rv;
 		}
 
-		if (ret != OK) {
+		if (ret != OKK) {
 			identify(caller);
 			syslog(LOG_INFO, "Failed to Write Fault Log (%d)\n", ret);
 		}

@@ -195,7 +195,7 @@ int bootloader_app_shared_read(bootloader_app_shared_t *shared,
 	     : working.signature == BOOTLOADER_COMMON_BOOTLOADER_SIGNATURE)
 	    && (working.crc.ull == calulate_signature(&working))) {
 		*shared = working;
-		rv = OK;
+		rv = OKK;
 	}
 
 	return rv;

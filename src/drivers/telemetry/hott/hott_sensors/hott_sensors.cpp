@@ -92,7 +92,7 @@ send_poll(int uart, uint8_t *buffer, size_t size)
 	uint8_t dummy[size];
 	read(uart, &dummy, size);
 
-	return OK;
+	return OKK;
 }
 
 int
@@ -115,7 +115,7 @@ recv_data(int uart, uint8_t *buffer, size_t *size, uint8_t *id)
 			if (stop_byte_read) {
 				// XXX process checksum
 				*size = ++i;
-				return OK;
+				return OKK;
 			}
 
 			// XXX can some other field not have the STOP BYTE value?

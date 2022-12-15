@@ -123,7 +123,7 @@ MEASAirspeed::measure()
 	uint8_t cmd = 0;
 	int ret = transfer(&cmd, 1, nullptr, 0);
 
-	if (OK != ret) {
+	if (OKK != ret) {
 		perf_count(_comms_errors);
 	}
 
@@ -219,7 +219,7 @@ MEASAirspeed::collect()
 
 	_airspeed_pub.publish(report);
 
-	ret = OK;
+	ret = OKK;
 
 	perf_end(_sample_perf);
 
@@ -237,7 +237,7 @@ MEASAirspeed::RunImpl()
 		/* perform collection */
 		ret = collect();
 
-		if (OK != ret) {
+		if (OKK != ret) {
 			/* restart the measurement state machine */
 			_collect_phase = false;
 			_sensor_ok = false;
@@ -263,11 +263,11 @@ MEASAirspeed::RunImpl()
 	/* measurement phase */
 	ret = measure();
 
-	if (OK != ret) {
+	if (OKK != ret) {
 		DEVICE_DEBUG("measure error");
 	}
 
-	_sensor_ok = (ret == OK);
+	_sensor_ok = (ret == OKK);
 
 	/* next phase is collection */
 	_collect_phase = true;

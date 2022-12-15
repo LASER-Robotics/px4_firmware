@@ -261,7 +261,7 @@ MS5525::collect()
 
 	_airspeed_pub.publish(diff_pressure);
 
-	ret = OK;
+	ret = OKK;
 
 	perf_end(_sample_perf);
 
@@ -278,7 +278,7 @@ MS5525::RunImpl()
 		// perform collection
 		ret = collect();
 
-		if (OK != ret) {
+		if (OKK != ret) {
 			/* restart the measurement state machine */
 			_collect_phase = false;
 			_sensor_ok = false;
@@ -302,11 +302,11 @@ MS5525::RunImpl()
 	/* measurement phase */
 	ret = measure();
 
-	if (OK != ret) {
+	if (OKK != ret) {
 		DEVICE_DEBUG("measure error");
 	}
 
-	_sensor_ok = (ret == OK);
+	_sensor_ok = (ret == OKK);
 
 	// next phase is collection
 	_collect_phase = true;

@@ -108,7 +108,7 @@ AK8963_I2C::probe()
 		return -EIO;
 	}
 
-	return OK;
+	return OKK;
 }
 
 #endif

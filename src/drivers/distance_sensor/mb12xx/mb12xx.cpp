@@ -288,7 +288,7 @@ MB12XX::init()
 	}
 
 	// Initialize the I2C device
-	if (I2C::init() != OK) {
+	if (I2C::init() != OKK) {
 		return PX4_ERROR;
 	}
 

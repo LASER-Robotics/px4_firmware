@@ -59,7 +59,7 @@ I2CSPIDriverBase *ISM330DLC::instantiate(const BusCLIArguments &cli, const BusIn
 		return nullptr;
 	}
 
-	if (OK != instance->init()) {
+	if (OKK != instance->init()) {
 		delete instance;
 		return nullptr;
 	}

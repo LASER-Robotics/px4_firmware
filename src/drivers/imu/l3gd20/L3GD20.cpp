@@ -59,7 +59,7 @@ int
 L3GD20::init()
 {
 	/* do SPI init (and probe) first */
-	if (SPI::init() != OK) {
+	if (SPI::init() != OKK) {
 		return PX4_ERROR;
 	}
 
@@ -98,7 +98,7 @@ L3GD20::probe()
 
 	if (success) {
 		_checked_values[0] = v;
-		return OK;
+		return OKK;
 	}
 
 	return -EIO;
@@ -182,7 +182,7 @@ L3GD20::set_range(unsigned max_dps)
 
 	write_checked_reg(ADDR_CTRL_REG4, bits);
 
-	return OK;
+	return OKK;
 }
 
 int
@@ -216,7 +216,7 @@ L3GD20::set_samplerate(unsigned frequency)
 
 	write_checked_reg(ADDR_CTRL_REG1, bits);
 
-	return OK;
+	return OKK;
 }
 
 void

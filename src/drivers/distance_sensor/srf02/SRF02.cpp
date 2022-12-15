@@ -60,7 +60,7 @@ void SRF02::start()
 int SRF02::init()
 {
 	// I2C init (and probe) first.
-	if (I2C::init() != OK) {
+	if (I2C::init() != OKK) {
 		return PX4_ERROR;
 	}
 
@@ -119,7 +119,7 @@ void SRF02::RunImpl()
 {
 	if (_collect_phase) {
 		// Perform collection.
-		if (OK != collect()) {
+		if (OKK != collect()) {
 			PX4_DEBUG("collection error");
 			// If error restart the measurement state machine.
 			start();
@@ -131,7 +131,7 @@ void SRF02::RunImpl()
 	}
 
 	// Perform measurement.
-	if (OK != measure()) {
+	if (OKK != measure()) {
 		PX4_DEBUG("measure error sonar adress");
 	}
 

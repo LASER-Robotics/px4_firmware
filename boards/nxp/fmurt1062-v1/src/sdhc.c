@@ -116,13 +116,13 @@ int fmurt1062_usdhc_initialize(void)
 
 	ret = mmcsd_slotinitialize(CONFIG_NSH_MMCSDMINOR, sdhc);
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		PX4_ERR("ERROR: Failed to bind SDHC to the MMC/SD driver: %d\n", ret);
 		return ret;
 	}
 
 	syslog(LOG_INFO, "Successfully bound SDHC to the MMC/SD driver\n");
 
-	return OK;
+	return OKK;
 }
 #endif /* CONFIG_IMXRT_USDHC */

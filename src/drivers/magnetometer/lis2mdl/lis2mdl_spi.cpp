@@ -92,7 +92,7 @@ LIS2MDL_SPI::init()
 
 	ret = SPI::init();
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		DEVICE_DEBUG("SPI init failed");
 		return -EIO;
 	}
@@ -109,7 +109,7 @@ LIS2MDL_SPI::init()
 		return -EIO;
 	}
 
-	return OK;
+	return OKK;
 }
 
 int

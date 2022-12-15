@@ -15,7 +15,7 @@ void BlockLocalPositionEstimator::lidarInit()
 	// measure
 	Vector<float, n_y_lidar> y;
 
-	if (lidarMeasure(y) != OK) {
+	if (lidarMeasure(y) != OKK) {
 		_lidarStats.reset();
 	}
 
@@ -56,7 +56,7 @@ int BlockLocalPositionEstimator::lidarMeasure(Vector<float, n_y_lidar> &y)
 	y(0) = (d + _param_lpe_ldr_off_z.get()) *
 	       cosf(euler.phi()) *
 	       cosf(euler.theta());
-	return OK;
+	return OKK;
 }
 
 void BlockLocalPositionEstimator::lidarCorrect()
@@ -64,7 +64,7 @@ void BlockLocalPositionEstimator::lidarCorrect()
 	// measure lidar
 	Vector<float, n_y_lidar> y;
 
-	if (lidarMeasure(y) != OK) { return; }
+	if (lidarMeasure(y) != OKK) { return; }
 
 	// measurement matrix
 	Matrix<float, n_y_lidar, n_x> C;

@@ -83,7 +83,7 @@ VOXLPM::init()
 	}
 
 	/* do I2C init, it will probe the bus for two possible configurations, LTC2946 or INA231 */
-	if (I2C::init() != OK) {
+	if (I2C::init() != OKK) {
 		return ret;
 	}
 

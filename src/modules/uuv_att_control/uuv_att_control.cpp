@@ -282,7 +282,7 @@ int UUVAttitudeControl::task_spawn(int argc, char *argv[])
 		return -errno;
 	}
 
-	return OK;
+	return OKK;
 }
 
 UUVAttitudeControl *UUVAttitudeControl::instantiate(int argc, char *argv[])

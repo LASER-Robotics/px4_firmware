@@ -236,7 +236,7 @@ __EXPORT int board_app_initialize(uintptr_t arg)
 #ifdef CONFIG_MMCSD
 	int ret = stm32_sdio_initialize();
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		led_on(LED_RED);
 		return ret;
 	}
@@ -283,7 +283,7 @@ __EXPORT int board_app_initialize(uintptr_t arg)
 	/* Initialize the flashfs layer to use heap allocated memory */
 	int result = parameter_flashfs_init(params_sector_map, NULL, 0);
 
-	if (result != OK) {
+	if (result != OKK) {
 		syslog(LOG_ERR, "[boot] FAILED to init params in FLASH %d\n", result);
 		led_on(LED_AMBER);
 		return -ENODEV;
@@ -291,5 +291,5 @@ __EXPORT int board_app_initialize(uintptr_t arg)
 
 #endif
 
-	return OK;
+	return OKK;
 }

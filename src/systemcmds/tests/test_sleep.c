@@ -62,5 +62,5 @@ int test_sleep(int argc, char *argv[])
 
 	printf("\t Sleep test successful.\n");
 
-	return OK;
+	return OKK;
 }

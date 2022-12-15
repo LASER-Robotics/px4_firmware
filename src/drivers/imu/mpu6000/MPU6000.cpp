@@ -96,12 +96,12 @@ MPU6000::init()
 	int ret = probe();
 
 	/* if probe failed, bail now */
-	if (ret != OK) {
+	if (ret != OKK) {
 		PX4_DEBUG("probe init failed");
 		return ret;
 	}
 
-	if (reset() != OK) {
+	if (reset() != OKK) {
 		return ret;
 	}
 
@@ -197,7 +197,7 @@ int MPU6000::reset()
 	// Oscillator set
 	// write_reg(MPUREG_PWR_MGMT_1,MPU_CLK_SEL_PLLGYROZ);
 	px4_usleep(1000);
-	return OK;
+	return OKK;
 }
 
 int
@@ -272,7 +272,7 @@ MPU6000::probe()
 		}
 	}
 
-	return OK;
+	return OKK;
 }
 
 /*
@@ -387,7 +387,7 @@ MPU6000::factory_self_test()
 	uint8_t saved_gyro_config = read_reg(MPUREG_GYRO_CONFIG);
 	uint8_t saved_accel_config = read_reg(MPUREG_ACCEL_CONFIG);
 	const uint16_t repeats = 100;
-	int ret = OK;
+	int ret = OKK;
 
 	// gyro self test has to be done at 250DPS
 	write_reg(MPUREG_GYRO_CONFIG, BITS_FS_250DPS);
@@ -512,7 +512,7 @@ MPU6000::factory_self_test()
 
 	_in_factory_test = false;
 
-	if (ret == OK) {
+	if (ret == OKK) {
 		::printf("PASSED\n");
 	}
 
@@ -593,7 +593,7 @@ MPU6000::set_accel_range(unsigned max_g_in)
 		case MPU6000_REV_C5:
 			write_checked_reg(MPUREG_ACCEL_CONFIG, 1 << 3);
 			_px4_accel.set_scale(CONSTANTS_ONE_G / 4096.0f);
-			return OK;
+			return OKK;
 		}
 	}
 
@@ -626,7 +626,7 @@ MPU6000::set_accel_range(unsigned max_g_in)
 
 	_px4_accel.set_scale(CONSTANTS_ONE_G / lsb_per_g);
 
-	return OK;
+	return OKK;
 }
 
 void

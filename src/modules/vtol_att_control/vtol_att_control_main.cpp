@@ -330,7 +330,7 @@ VtolAttitudeControl::parameters_update()
 		_vtol_type->parameters_update();
 	}
 
-	return OK;
+	return OKK;
 }
 
 void

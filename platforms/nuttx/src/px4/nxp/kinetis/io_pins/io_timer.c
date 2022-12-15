@@ -697,7 +697,7 @@ int io_timer_set_rate(unsigned timer, unsigned rate)
 			timer_set_rate(timer, rate);
 		}
 
-		rv = OK;
+		rv = OKK;
 	}
 
 	return rv;

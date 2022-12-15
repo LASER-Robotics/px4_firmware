@@ -121,7 +121,7 @@ int PCA9685::init()
 	buf[1] = DEFAULT_MODE1_CFG;
 	ret = transfer(buf, 2, nullptr, 0);
 
-	if (OK != ret) {
+	if (OKK != ret) {
 		PX4_DEBUG("i2c::transfer returned %d", ret);
 		return ret;
 	}
@@ -130,7 +130,7 @@ int PCA9685::init()
 	buf[1] = DEFAULT_MODE2_CFG;
 	ret = transfer(buf, 2, nullptr, 0);
 
-	if (OK != ret) {
+	if (OKK != ret) {
 		PX4_DEBUG("i2c::transfer returned %d", ret);
 		return ret;
 	}
@@ -161,7 +161,7 @@ void PCA9685::setPWM(uint8_t channel, const uint16_t &value)
 
 	int ret = transfer(buf, 5, nullptr, 0);
 
-	if (OK != ret) {
+	if (OKK != ret) {
 		PX4_DEBUG("i2c::transfer returned %d", ret);
 	}
 }
@@ -186,7 +186,7 @@ void PCA9685::setPWM(uint8_t channel_count, const uint16_t *value)
 
 	int ret = transfer(buf, channel_count * PCA9685_REG_LED_INCREMENT + 1, nullptr, 0);
 
-	if (OK != ret) {
+	if (OKK != ret) {
 		PX4_DEBUG("i2c::transfer returned %d", ret);
 	}
 }
@@ -202,7 +202,7 @@ void PCA9685::disableAllOutput()
 
 	int ret = transfer(buf, 5, nullptr, 0);
 
-	if (OK != ret) {
+	if (OKK != ret) {
 		PX4_DEBUG("i2c::transfer returned %d", ret);
 	}
 }
@@ -216,7 +216,7 @@ void PCA9685::setDivider(uint8_t value)
 	buf[1] = value;
 	int ret = transfer(buf, 2, nullptr, 0);
 
-	if (OK != ret) {
+	if (OKK != ret) {
 		PX4_DEBUG("i2c::transfer returned %d", ret);
 		return;
 	}
@@ -229,7 +229,7 @@ void PCA9685::stopOscillator()
 	uint8_t buf[2] = {PCA9685_REG_MODE1};
 	int ret = transfer(buf, 1, buf, 1);
 
-	if (OK != ret) {
+	if (OKK != ret) {
 		PX4_DEBUG("i2c::transfer returned %d", ret);
 		return;
 	}
@@ -240,7 +240,7 @@ void PCA9685::stopOscillator()
 	buf[1] |= PCA9685_MODE1_SLEEP_MASK;
 	ret = transfer(buf, 2, nullptr, 0);
 
-	if (OK != ret) {
+	if (OKK != ret) {
 		PX4_DEBUG("i2c::transfer returned %d", ret);
 		return;
 	}
@@ -251,7 +251,7 @@ void PCA9685::restartOscillator()
 	uint8_t buf[2] = {PCA9685_REG_MODE1};
 	int ret = transfer(buf, 1, buf + 1, 1);
 
-	if (OK != ret) {
+	if (OKK != ret) {
 		PX4_DEBUG("i2c::transfer returned %d", ret);
 		return;
 	}
@@ -263,7 +263,7 @@ void PCA9685::restartOscillator()
 	buf[0] = PCA9685_REG_MODE1;
 	ret = transfer(buf, 2, nullptr, 0);
 
-	if (OK != ret) {
+	if (OKK != ret) {
 		PX4_DEBUG("i2c::transfer returned %d", ret);
 		return;
 	}
@@ -272,7 +272,7 @@ void PCA9685::restartOscillator()
 	buf[1] |= PCA9685_MODE1_RESTART_MASK;
 	ret = transfer(buf, 2, nullptr, 0);
 
-	if (OK != ret) {
+	if (OKK != ret) {
 		PX4_DEBUG("i2c::transfer returned %d", ret);
 		return;
 	}

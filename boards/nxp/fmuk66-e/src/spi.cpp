@@ -230,7 +230,7 @@ __EXPORT int fmuk66_spi_bus_initialize(void)
 		}
 	}
 
-	return OK;
+	return OKK;
 
 }
 

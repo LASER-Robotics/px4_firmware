@@ -67,7 +67,7 @@ I2CSPIDriverBase *BMP280::instantiate(const BusCLIArguments &cli, const BusInsta
 		return nullptr;
 	}
 
-	if (interface->init() != OK) {
+	if (interface->init() != OKK) {
 		delete interface;
 		PX4_DEBUG("no device on bus %i (devid 0x%x)", iterator.bus(), iterator.devid());
 		return nullptr;
@@ -80,7 +80,7 @@ I2CSPIDriverBase *BMP280::instantiate(const BusCLIArguments &cli, const BusInsta
 		return nullptr;
 	}
 
-	if (OK != dev->init()) {
+	if (OKK != dev->init()) {
 		delete dev;
 		return nullptr;
 	}

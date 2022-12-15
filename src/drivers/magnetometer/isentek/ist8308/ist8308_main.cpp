@@ -58,7 +58,7 @@ I2CSPIDriverBase *IST8308::instantiate(const BusCLIArguments &cli, const BusInst
 		return nullptr;
 	}
 
-	if (OK != instance->init()) {
+	if (OKK != instance->init()) {
 		delete instance;
 		return nullptr;
 	}

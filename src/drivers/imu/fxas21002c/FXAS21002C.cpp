@@ -89,7 +89,7 @@ int
 FXAS21002C::init()
 {
 	/* do SPI/I2C init (and probe) first */
-	if (_interface->init() != OK) {
+	if (_interface->init() != OKK) {
 		PX4_ERR("SPI/I2C interface init failed");
 		return PX4_ERROR;
 	}
@@ -192,7 +192,7 @@ int FXAS21002C::set_range(unsigned max_dps)
 	modify_reg(FXAS21002C_CTRL_REG0, CTRL_REG0_FS_MASK, bits);
 	set_standby(_current_rate, false);
 
-	return OK;
+	return OKK;
 }
 
 void FXAS21002C::set_standby(int rate, bool standby_true)
@@ -262,7 +262,7 @@ int FXAS21002C::set_samplerate(unsigned frequency)
 	modify_reg(FXAS21002C_CTRL_REG1, CTRL_REG1_DR_MASK, bits);
 	set_standby(_current_rate, false);
 
-	return OK;
+	return OKK;
 }
 
 void FXAS21002C::set_onchip_lowpass_filter(int frequency_hz)

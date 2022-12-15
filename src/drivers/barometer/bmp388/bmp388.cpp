@@ -94,7 +94,7 @@ BMP388::init()
 
 	start();
 
-	return OK;
+	return OKK;
 }
 
 void
@@ -142,7 +142,7 @@ BMP388::measure()
 
 	perf_end(_measure_perf);
 
-	return OK;
+	return OKK;
 }
 
 int
@@ -176,7 +176,7 @@ BMP388::collect()
 
 	perf_end(_sample_perf);
 
-	return OK;
+	return OKK;
 }
 
 /*!
@@ -196,7 +196,7 @@ BMP388::soft_reset()
 	if (status & BMP3_CMD_RDY) {
 		ret = _interface->set_reg(BPM3_CMD_SOFT_RESET, BMP3_CMD_ADDR);
 
-		if (ret == OK) {
+		if (ret == OKK) {
 			usleep(BMP3_POST_RESET_WAIT_TIME);
 			status = _interface->get_reg(BMP3_ERR_REG_ADDR);
 
@@ -337,7 +337,7 @@ BMP388::set_sensor_settings()
 
 	int ret = _interface->set_reg(pwc_ctl_reg, BMP3_PWR_CTRL_ADDR);
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		PX4_WARN("failed to set settings BMP3_PWR_CTRL_ADDR");
 		return false;
 	}
@@ -349,7 +349,7 @@ BMP388::set_sensor_settings()
 
 	ret = _interface->set_reg(osr_ctl_reg, BMP3_OSR_ADDR);
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		PX4_WARN("failed to set settings BMP3_OSR_ADDR");
 		return false;
 	}
@@ -360,7 +360,7 @@ BMP388::set_sensor_settings()
 
 	ret = _interface->set_reg(odr_ctl_reg, BMP3_ODR_ADDR);
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		PX4_WARN("failed to set output data rate register");
 		return false;
 	}
@@ -369,7 +369,7 @@ BMP388::set_sensor_settings()
 	iir_ctl_reg = BMP3_SET_BITS(iir_ctl_reg, BMP3_IIR_FILTER, iir_coef);
 	ret = _interface->set_reg(iir_ctl_reg, BMP3_IIR_ADDR);
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		PX4_WARN("failed to set IIR settings");
 		return false;
 	}
@@ -389,7 +389,7 @@ BMP388::set_op_mode(uint8_t op_mode)
 	bool    result = false;
 	uint8_t last_set_mode;
 	uint8_t op_mode_reg_val;
-	int     ret = OK;
+	int     ret = OKK;
 
 	op_mode_reg_val = _interface->get_reg(BMP3_PWR_CTRL_ADDR);
 	last_set_mode = BMP3_GET_BITS(op_mode_reg_val, BMP3_OP_MODE);
@@ -399,19 +399,19 @@ BMP388::set_op_mode(uint8_t op_mode)
 		op_mode_reg_val = op_mode_reg_val & (~(BMP3_OP_MODE_MSK));
 		ret = _interface->set_reg(op_mode_reg_val, BMP3_PWR_CTRL_ADDR);
 
-		if (ret != OK) {
+		if (ret != OKK) {
 			return false;
 		}
 
 		px4_usleep(BMP3_POST_SLEEP_WAIT_TIME);
 	}
 
-	if (ret == OK) {
+	if (ret == OKK) {
 		op_mode_reg_val = _interface->get_reg(BMP3_PWR_CTRL_ADDR);
 		op_mode_reg_val = BMP3_SET_BITS(op_mode_reg_val, BMP3_OP_MODE, op_mode);
 		ret = _interface->set_reg(op_mode_reg_val, BMP3_PWR_CTRL_ADDR);
 
-		if (ret != OK) {
+		if (ret != OKK) {
 			return false;
 		}
 
@@ -535,7 +535,7 @@ BMP388::compensate_data(uint8_t sensor_comp,
 			const struct bmp3_uncomp_data *uncomp_data,
 			struct bmp3_data *comp_data)
 {
-	int8_t rslt = OK;
+	int8_t rslt = OKK;
 	struct bmp3_calib_data calib_data = {0};
 	struct bmp3_reg_calib_data *reg_calib_data = &calib_data.reg_calib_data;
 	memcpy(reg_calib_data, _cal, 21);
@@ -572,7 +572,7 @@ BMP388::get_sensor_data(uint8_t sensor_comp, struct bmp3_data *comp_data)
 
 	rslt = _interface->get_reg_buf(BMP3_SENS_STATUS_REG_ADDR, reg_data, BMP3_P_T_DATA_LEN);
 
-	if (rslt == OK) {
+	if (rslt == OKK) {
 		uint8_t status = reg_data[0];
 
 		// check if data ready (both temp and pressure)

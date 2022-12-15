@@ -85,7 +85,7 @@ int BMI160::init()
 	int ret = SPI::init();
 
 	/* if probe/setup failed, bail now */
-	if (ret != OK) {
+	if (ret != OKK) {
 		DEVICE_DEBUG("SPI setup failed");
 		return ret;
 	}
@@ -150,7 +150,7 @@ int BMI160::reset()
 	_accel_reads = 0;
 	_gyro_reads = 0;
 
-	return OK;
+	return OKK;
 }
 
 int BMI160::probe()
@@ -165,7 +165,7 @@ int BMI160::probe()
 		memset(_checked_bad, 0, sizeof(_checked_bad));
 		_checked_values[0] = _whoami;
 		_checked_bad[0] = _whoami;
-		return OK;
+		return OKK;
 	}
 
 	DEVICE_DEBUG("unexpected whoami 0x%02x", _whoami);
@@ -235,7 +235,7 @@ int BMI160::accel_set_sample_rate(float frequency)
 
 	modify_reg(BMIREG_ACC_CONF, clearbits, setbits);
 
-	return OK;
+	return OKK;
 }
 
 int BMI160::gyro_set_sample_rate(float frequency)
@@ -285,7 +285,7 @@ int BMI160::gyro_set_sample_rate(float frequency)
 
 	modify_reg(BMIREG_GYR_CONF, clearbits, setbits);
 
-	return OK;
+	return OKK;
 }
 
 uint8_t BMI160::read_reg(uint8_t reg)
@@ -361,7 +361,7 @@ int BMI160::set_accel_range(unsigned max_g)
 
 	modify_reg(BMIREG_ACC_RANGE, clearbits, setbits);
 
-	return OK;
+	return OKK;
 }
 
 int BMI160::set_gyro_range(unsigned max_dps)
@@ -408,7 +408,7 @@ int BMI160::set_gyro_range(unsigned max_dps)
 
 	modify_reg(BMIREG_GYR_RANGE, clearbits, setbits);
 
-	return OK;
+	return OKK;
 }
 
 void BMI160::start()
@@ -492,7 +492,7 @@ void BMI160::RunImpl()
 
 	const hrt_abstime timestamp_sample = hrt_absolute_time();
 
-	if (OK != transfer((uint8_t *)&bmi_report, ((uint8_t *)&bmi_report), sizeof(bmi_report))) {
+	if (OKK != transfer((uint8_t *)&bmi_report, ((uint8_t *)&bmi_report), sizeof(bmi_report))) {
 		return;
 	}
 

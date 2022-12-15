@@ -82,7 +82,7 @@ void QMC5883::check_conf()
 	uint8_t conf_reg_in = 0;
 	int ret = read_reg(QMC5883_ADDR_CONTROL_1, conf_reg_in);
 
-	if (OK != ret) {
+	if (OKK != ret) {
 		perf_count(_comms_errors);
 		return;
 	}
@@ -91,7 +91,7 @@ void QMC5883::check_conf()
 		perf_count(_conf_errors);
 		ret = write_reg(QMC5883_ADDR_CONTROL_1, _conf_reg);
 
-		if (OK != ret) {
+		if (OKK != ret) {
 			perf_count(_comms_errors);
 		}
 	}
@@ -128,7 +128,7 @@ int QMC5883::reset()
 		    QMC5883_OUTPUT_RANGE_2G;
 	write_reg(QMC5883_ADDR_CONTROL_1, _conf_reg);
 
-	return OK;
+	return OKK;
 }
 
 void QMC5883::RunImpl()
@@ -141,7 +141,7 @@ void QMC5883::RunImpl()
 	if (_collect_phase) {
 
 		/* perform collection */
-		if (OK != collect()) {
+		if (OKK != collect()) {
 			PX4_DEBUG("collection error");
 			/* restart the measurement state machine */
 			start();
@@ -205,7 +205,7 @@ int QMC5883::collect()
 	const hrt_abstime timestamp_sample = hrt_absolute_time();
 	ret = _interface->read(QMC5883_ADDR_DATA_OUT_X_LSB, (uint8_t *)&qmc_report, sizeof(qmc_report));
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		perf_count(_comms_errors);
 		PX4_DEBUG("data/status read error");
 		goto out;
@@ -236,7 +236,7 @@ int QMC5883::collect()
 		ret = _interface->read(QMC5883_ADDR_TEMP_OUT_LSB,
 				       raw_temperature, sizeof(raw_temperature));
 
-		if (ret == OK) {
+		if (ret == OKK) {
 			int16_t temp16 = (((int16_t)raw_temperature[1]) << 8) +
 					 raw_temperature[0];
 			float temperature = QMC5883_TEMP_OFFSET + temp16 * 1.0f / 100.0f;
@@ -281,7 +281,7 @@ int QMC5883::collect()
 		check_conf();
 	}
 
-	ret = OK;
+	ret = OKK;
 
 out:
 	perf_end(_sample_perf);

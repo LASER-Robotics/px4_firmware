@@ -110,7 +110,7 @@ RGBLED_PWM::init()
 	// kick off work queue
 	ScheduleNow();
 
-	return OK;
+	return OKK;
 }
 
 int
@@ -121,7 +121,7 @@ RGBLED_PWM::status()
 
 	int ret = get(on, powersave, r, g, b);
 
-	if (ret == OK) {
+	if (ret == OKK) {
 		/* we don't care about power-save mode */
 		PX4_INFO("state: %s", on ? "ON" : "OFF");
 		PX4_INFO("red: %u, green: %u, blue: %u", (unsigned)r, (unsigned)g, (unsigned)b);
@@ -215,12 +215,12 @@ RGBLED_PWM::send_led_rgb()
 int
 RGBLED_PWM::get(bool &on, bool &powersave, uint8_t &r, uint8_t &g, uint8_t &b)
 {
-	powersave = OK;
+	powersave = OKK;
 	on = _r > 0 || _g > 0 || _b > 0;
 	r = _r;
 	g = _g;
 	b = _b;
-	return OK;
+	return OKK;
 }
 
 static void
@@ -272,7 +272,7 @@ rgbled_pwm_main(int argc, char *argv[])
 				return 1;
 			}
 
-			if (OK != g_rgbled->init()) {
+			if (OKK != g_rgbled->init()) {
 				delete g_rgbled;
 				g_rgbled = nullptr;
 				PX4_ERR("init failed");

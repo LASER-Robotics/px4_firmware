@@ -148,7 +148,7 @@ static int fmuk66_attach(FAR const struct automount_lower_s *lower, automount_ha
 	state->pending = false;
 	state->arg     = arg;
 	state->handler = isr;
-	return OK;
+	return OKK;
 }
 
 /************************************************************************************

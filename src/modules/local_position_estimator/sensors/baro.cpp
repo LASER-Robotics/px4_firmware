@@ -14,7 +14,7 @@ void BlockLocalPositionEstimator::baroInit()
 	// measure
 	Vector<float, n_y_baro> y;
 
-	if (baroMeasure(y) != OK) {
+	if (baroMeasure(y) != OKK) {
 		_baroStats.reset();
 		return;
 	}
@@ -44,7 +44,7 @@ int BlockLocalPositionEstimator::baroMeasure(Vector<float, n_y_baro> &y)
 	y(0) = _sub_airdata.get().baro_alt_meter;
 	_baroStats.update(y);
 	_time_last_baro = _sub_airdata.get().timestamp;
-	return OK;
+	return OKK;
 }
 
 void BlockLocalPositionEstimator::baroCorrect()
@@ -52,7 +52,7 @@ void BlockLocalPositionEstimator::baroCorrect()
 	// measure
 	Vector<float, n_y_baro> y;
 
-	if (baroMeasure(y) != OK) { return; }
+	if (baroMeasure(y) != OKK) { return; }
 
 	// subtract baro origin alt
 	y -= _baroAltOrigin;

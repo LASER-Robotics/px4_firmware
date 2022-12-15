@@ -197,13 +197,13 @@ PCA9685::init()
 	int ret;
 	ret = I2C::init();
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		return ret;
 	}
 
 	ret = reset();
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		return ret;
 	}
 
@@ -282,7 +282,7 @@ PCA9685::setPWM(uint8_t num, uint16_t on, uint16_t off)
 	/* try i2c transfer */
 	ret = transfer(_msg, 5, nullptr, 0);
 
-	if (OK != ret) {
+	if (OKK != ret) {
 		perf_count(_comms_errors);
 		DEVICE_LOG("i2c::transfer returned %d", ret);
 	}
@@ -331,7 +331,7 @@ PCA9685::setPin(uint8_t num, uint16_t val, bool invert)
 int
 PCA9685::setPWMFreq(float freq)
 {
-	int ret  = OK;
+	int ret  = OKK;
 	freq *= 0.9f;  /* Correct for overshoot in the frequency setting (see issue
 		https://github.com/adafruit/Adafruit-PWM-Servo-Driver-Library/issues/11). */
 	float prescaleval = 25000000;
@@ -342,7 +342,7 @@ PCA9685::setPWMFreq(float freq)
 	uint8_t oldmode;
 	ret = read8(PCA9685_MODE1, oldmode);
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		return ret;
 	}
 
@@ -350,19 +350,19 @@ PCA9685::setPWMFreq(float freq)
 
 	ret = write8(PCA9685_MODE1, newmode); // go to sleep
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		return ret;
 	}
 
 	ret = write8(PCA9685_PRESCALE, prescale); // set the prescaler
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		return ret;
 	}
 
 	ret = write8(PCA9685_MODE1, oldmode);
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		return ret;
 	}
 
@@ -370,7 +370,7 @@ PCA9685::setPWMFreq(float freq)
 
 	ret = write8(PCA9685_MODE1, oldmode | 0xa1);  //  This sets the MODE1 register to turn on auto increment.
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		return ret;
 	}
 
@@ -381,19 +381,19 @@ PCA9685::setPWMFreq(float freq)
 int
 PCA9685::read8(uint8_t addr, uint8_t &value)
 {
-	int ret = OK;
+	int ret = OKK;
 
 	/* send addr */
 	ret = transfer(&addr, sizeof(addr), nullptr, 0);
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		goto fail_read;
 	}
 
 	/* get value */
 	ret = transfer(nullptr, 0, &value, 1);
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		goto fail_read;
 	}
 
@@ -416,13 +416,13 @@ int PCA9685::reset(void)
 int
 PCA9685::write8(uint8_t addr, uint8_t value)
 {
-	int ret = OK;
+	int ret = OKK;
 	_msg[0] = addr;
 	_msg[1] = value;
 	/* send addr and value */
 	ret = transfer(_msg, 2, nullptr, 0);
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		perf_count(_comms_errors);
 		DEVICE_LOG("i2c::transfer returned %d", ret);
 	}
@@ -451,7 +451,7 @@ I2CSPIDriverBase *PCA9685::instantiate(const BusCLIArguments &cli, const BusInst
 		return nullptr;
 	}
 
-	if (OK != instance->init()) {
+	if (OKK != instance->init()) {
 		delete instance;
 		return nullptr;
 	}

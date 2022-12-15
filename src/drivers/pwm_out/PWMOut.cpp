@@ -61,7 +61,7 @@ int PWMOut::init()
 	/* do regular cdev init */
 	int ret = CDev::init();
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		return ret;
 	}
 
@@ -285,7 +285,7 @@ int PWMOut::set_mode(Mode mode)
 	}
 
 	_mode = mode;
-	return OK;
+	return OKK;
 }
 
 /* When set_pwm_rate is called from either of the 2 IOCTLs:
@@ -357,13 +357,13 @@ int PWMOut::set_pwm_rate(uint32_t rate_map, unsigned default_rate, unsigned alt_
 			} else {
 				// set it - errors here are unexpected
 				if (alt != 0) {
-					if (up_pwm_servo_set_rate_group_update(group, alt_rate) != OK) {
+					if (up_pwm_servo_set_rate_group_update(group, alt_rate) != OKK) {
 						PX4_WARN("rate group set alt failed");
 						return -EINVAL;
 					}
 
 				} else {
-					if (up_pwm_servo_set_rate_group_update(group, default_rate) != OK) {
+					if (up_pwm_servo_set_rate_group_update(group, default_rate) != OKK) {
 						PX4_WARN("rate group set default failed");
 						return -EINVAL;
 					}
@@ -391,7 +391,7 @@ int PWMOut::set_pwm_rate(uint32_t rate_map, unsigned default_rate, unsigned alt_
 
 	_current_update_rate = 0; // force update
 
-	return OK;
+	return OKK;
 }
 
 int PWMOut::set_i2c_bus_clock(unsigned bus, unsigned clock_hz)
@@ -677,7 +677,7 @@ int PWMOut::ioctl(file *filp, int cmd, unsigned long arg)
 
 int PWMOut::pwm_ioctl(file *filp, int cmd, unsigned long arg)
 {
-	int ret = OK;
+	int ret = OKK;
 
 	PX4_DEBUG("ioctl cmd: %d, arg: %ld", cmd, arg);
 
@@ -1428,7 +1428,7 @@ int PWMOut::capture_ioctl(struct file *filp, int cmd, unsigned long arg)
 		break;
 
 	case INPUT_CAP_GET_COUNT:
-		ret = OK;
+		ret = OKK;
 
 		switch (_mode) {
 		case MODE_5PWM1CAP:
@@ -1450,7 +1450,7 @@ int PWMOut::capture_ioctl(struct file *filp, int cmd, unsigned long arg)
 		break;
 
 	case INPUT_CAP_SET_COUNT:
-		ret = OK;
+		ret = OKK;
 
 		switch (_mode) {
 		case MODE_3PWM1CAP:
@@ -1627,7 +1627,7 @@ int PWMOut::fmu_new_mode(PortMode new_mode)
 		object->set_mode(servo_mode);
 	}
 
-	return OK;
+	return OKK;
 }
 
 

@@ -138,11 +138,11 @@ LidarLiteI2C::probe()
 		 * v1 and v3 don't have the unit id register while v2 has both.
 		 * It would be better if we had a proper WHOAMI register.
 		 */
-		if ((read_reg(LL40LS_HW_VERSION, _hw_version) == OK) &&
-		    (read_reg(LL40LS_SW_VERSION, _sw_version) == OK)) {
+		if ((read_reg(LL40LS_HW_VERSION, _hw_version) == OKK) &&
+		    (read_reg(LL40LS_SW_VERSION, _sw_version) == OKK)) {
 
-			if (read_reg(LL40LS_UNIT_ID_HIGH, id_high) == OK &&
-			    read_reg(LL40LS_UNIT_ID_LOW, id_low) == OK) {
+			if (read_reg(LL40LS_UNIT_ID_HIGH, id_high) == OKK &&
+			    read_reg(LL40LS_UNIT_ID_LOW, id_low) == OKK) {
 				_unit_id = (uint16_t)((id_high << 8) | id_low) & 0xFFFF;
 			}
 
@@ -168,7 +168,7 @@ LidarLiteI2C::probe()
 			}
 
 			_retries = 3;
-			return OK;
+			return OKK;
 		}
 
 		PX4_DEBUG("probe failed unit_id=0x%02x hw_version=0x%02x sw_version=0x%02x",
@@ -189,7 +189,7 @@ LidarLiteI2C::measure()
 		// we are in print_registers() and need to avoid
 		// acquisition to keep the I2C peripheral on the
 		// sensor active
-		return OK;
+		return OKK;
 	}
 
 	// Send the command to begin a measurement.
@@ -213,7 +213,7 @@ LidarLiteI2C::measure()
 	// acquisition has timed out
 	_acquire_time_usec = hrt_absolute_time();
 
-	return OK;
+	return OKK;
 }
 
 int
@@ -255,7 +255,7 @@ LidarLiteI2C::reset_sensor()
 	// wait for register write to complete
 	px4_usleep(1_ms);
 
-	return OK;
+	return OKK;
 }
 
 void
@@ -270,7 +270,7 @@ LidarLiteI2C::print_registers()
 		uint8_t val = 0;
 		int ret = lidar_transfer(&reg, 1, &val, 1);
 
-		if (ret != OK) {
+		if (ret != OKK) {
 			printf("%02x:XX ", (unsigned)reg);
 
 		} else {
@@ -435,7 +435,7 @@ LidarLiteI2C::collect()
 	_px4_rangefinder.update(timestamp_sample, distance_m, signal_quality);
 
 	perf_end(_sample_perf);
-	return OK;
+	return OKK;
 }
 
 void LidarLiteI2C::start()
@@ -453,7 +453,7 @@ void LidarLiteI2C::RunImpl()
 	if (_collect_phase) {
 
 		/* try a collection */
-		if (OK != collect()) {
+		if (OKK != collect()) {
 			PX4_DEBUG("collection error");
 
 			/* if we've been waiting more than 200ms then
@@ -481,7 +481,7 @@ void LidarLiteI2C::RunImpl()
 
 	if (_collect_phase == false) {
 		/* measurement phase */
-		if (OK != measure()) {
+		if (OKK != measure()) {
 			PX4_DEBUG("measure error");
 
 		} else {

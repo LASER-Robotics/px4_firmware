@@ -88,7 +88,7 @@ int LSM303AGR::init()
 	/* do SPI init (and probe) first */
 	int ret = SPI::init();
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		DEVICE_DEBUG("SPI init failed (%i)", ret);
 		return ret;
 	}
@@ -216,7 +216,7 @@ int LSM303AGR::probe()
 	bool success = (read_reg(WHO_AM_I_M) == LSM303AGR_WHO_AM_I_M);
 
 	if (success) {
-		return OK;
+		return OKK;
 	}
 
 	return -EIO;
@@ -261,7 +261,7 @@ void LSM303AGR::RunImpl()
 	if (_collect_phase) {
 
 		/* perform collection */
-		if (OK != collect()) {
+		if (OKK != collect()) {
 			DEVICE_DEBUG("collection error");
 			/* restart the measurement state machine */
 			start();
@@ -325,7 +325,7 @@ int LSM303AGR::collect()
 		perf_end(_mag_sample_perf);
 	}
 
-	return OK;
+	return OKK;
 }
 
 void LSM303AGR::print_status()

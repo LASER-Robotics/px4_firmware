@@ -55,7 +55,7 @@ I2CSPIDriverBase *BMI088::instantiate(const BusCLIArguments &cli, const BusInsta
 		return nullptr;
 	}
 
-	if (OK != instance->init()) {
+	if (OKK != instance->init()) {
 		delete instance;
 		return nullptr;
 	}

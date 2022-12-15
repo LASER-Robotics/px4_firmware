@@ -70,7 +70,7 @@ PAW3902::init()
 	SPI::set_lockmode(LOCK_THREADS);
 
 	/* do SPI init (and probe) first */
-	if (SPI::init() != OK) {
+	if (SPI::init() != OKK) {
 		return PX4_ERROR;
 	}
 

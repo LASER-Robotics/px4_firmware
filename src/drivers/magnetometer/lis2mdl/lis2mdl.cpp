@@ -99,7 +99,7 @@ LIS2MDL::measure()
 	 */
 	ret = _interface->read(ADDR_OUT_T_L, (uint8_t *)&buf_rx, sizeof(buf_rx));
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		perf_end(_sample_perf);
 		perf_count(_comms_errors);
 		return ret;
@@ -134,7 +134,7 @@ LIS2MDL::RunImpl()
 		return;
 	}
 
-	if (measure() != OK) {
+	if (measure() != OKK) {
 		PX4_DEBUG("measure error");
 	}
 

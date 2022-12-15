@@ -89,7 +89,7 @@ FXOS8701CQ::init()
 	// do SPI/I2C init (and probe) first
 	int ret = _interface->init();
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		PX4_ERR("SPI/I2C interface init failed");
 		return ret;
 	}
@@ -98,7 +98,7 @@ FXOS8701CQ::init()
 	// so probe here again to set proper _checked_values[0]
 	ret = probe();
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		PX4_ERR("FXOS8701CQ::probe() failed");
 		return ret;
 	}
@@ -139,7 +139,7 @@ FXOS8701CQ::probe()
 
 	if (success) {
 		_checked_values[0] = whoami;
-		return OK;
+		return OKK;
 	}
 
 	return -EIO;
@@ -198,7 +198,7 @@ FXOS8701CQ::accel_set_range(unsigned max_g)
 
 	_px4_accel.set_scale(accel_range_scale);
 
-	return OK;
+	return OKK;
 }
 
 #if !defined(BOARD_HAS_NOISY_FXOS8700_MAG)
@@ -210,7 +210,7 @@ FXOS8701CQ::mag_set_range(unsigned max_ga)
 
 	_px4_mag.set_scale(mag_range_scale);
 
-	return OK;
+	return OKK;
 }
 #endif
 
@@ -254,7 +254,7 @@ FXOS8701CQ::accel_set_samplerate(unsigned frequency)
 	modify_reg(FXOS8701CQ_CTRL_REG1, CTRL_REG1_DR_MASK, setbits);
 	modify_reg(FXOS8701CQ_CTRL_REG1, 0, active);
 
-	return OK;
+	return OKK;
 }
 
 void FXOS8701CQ::start()

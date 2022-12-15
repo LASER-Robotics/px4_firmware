@@ -104,7 +104,7 @@ LIS2MDL_I2C::probe()
 		return -EIO;
 	}
 
-	return OK;
+	return OKK;
 }
 
 int

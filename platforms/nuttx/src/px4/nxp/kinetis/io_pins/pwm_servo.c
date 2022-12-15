@@ -102,7 +102,7 @@ int up_pwm_servo_init(uint32_t channel_mask)
 		}
 	}
 
-	return OK;
+	return OKK;
 }
 
 void up_pwm_servo_deinit(void)

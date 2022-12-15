@@ -112,7 +112,7 @@ BMP280_SPI::get_data(uint8_t addr)
 {
 	_data.addr = (uint8_t)(addr | DIR_READ); // set MSB bit
 
-	if (transfer((uint8_t *)&_data, (uint8_t *)&_data, sizeof(spi_data_s)) == OK) {
+	if (transfer((uint8_t *)&_data, (uint8_t *)&_data, sizeof(spi_data_s)) == OKK) {
 		return &(_data.data);
 
 	} else {
@@ -125,7 +125,7 @@ BMP280_SPI::get_calibration(uint8_t addr)
 {
 	_cal.addr = addr | DIR_READ;
 
-	if (transfer((uint8_t *)&_cal, (uint8_t *)&_cal, sizeof(spi_calibration_s)) == OK) {
+	if (transfer((uint8_t *)&_cal, (uint8_t *)&_cal, sizeof(spi_calibration_s)) == OKK) {
 		return &(_cal.cal);
 
 	} else {

@@ -73,7 +73,7 @@ int LPS25H_SPI::init()
 {
 	int ret = SPI::init();
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		DEVICE_DEBUG("SPI init failed");
 		return -EIO;
 	}
@@ -91,7 +91,7 @@ int LPS25H_SPI::init()
 		return -EIO;
 	}
 
-	return OK;
+	return OKK;
 }
 
 int LPS25H_SPI::write(unsigned address, void *data, unsigned count)

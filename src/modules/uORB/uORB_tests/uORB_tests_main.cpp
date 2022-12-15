@@ -52,7 +52,7 @@ uorb_tests_main(int argc, char *argv[])
 		uORBTest::UnitTest &t = uORBTest::UnitTest::instance();
 		int rc = t.test();
 
-		if (rc == OK) {
+		if (rc == OKK) {
 			PX4_INFO("PASS");
 			return 0;
 

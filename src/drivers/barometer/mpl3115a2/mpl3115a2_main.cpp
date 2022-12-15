@@ -55,7 +55,7 @@ I2CSPIDriverBase *MPL3115A2::instantiate(const BusCLIArguments &cli, const BusIn
 		return nullptr;
 	}
 
-	if (OK != dev->init()) {
+	if (OKK != dev->init()) {
 		delete dev;
 		return nullptr;
 	}

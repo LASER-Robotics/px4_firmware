@@ -116,9 +116,9 @@ int up_dshot_init(uint32_t channel_mask, unsigned dshot_pwm_freq)
 	}
 
 	/* Init channels */
-	int ret_val = OK;
+	int ret_val = OKK;
 
-	for (unsigned channel = 0; (channel_mask != 0) && (channel < MAX_TIMER_IO_CHANNELS) && (OK == ret_val); channel++) {
+	for (unsigned channel = 0; (channel_mask != 0) && (channel < MAX_TIMER_IO_CHANNELS) && (OKK == ret_val); channel++) {
 		if (channel_mask & (1 << channel)) {
 			uint8_t timer = timer_io_channels[channel].timer_index;
 
@@ -133,14 +133,14 @@ int up_dshot_init(uint32_t channel_mask, unsigned dshot_pwm_freq)
 
 			ret_val = io_timer_channel_init(channel, IOTimerChanMode_Dshot, NULL, NULL);
 
-			if (OK == ret_val) {
+			if (OKK == ret_val) {
 				channel_mask &= ~(1 << channel);
 				dshot_handler[timer].init = true;
 			}
 		}
 	}
 
-	for (uint8_t timer_index = 0; (timer_index < DSHOT_TIMERS) && (OK == ret_val); timer_index++) {
+	for (uint8_t timer_index = 0; (timer_index < DSHOT_TIMERS) && (OKK == ret_val); timer_index++) {
 
 		if (true == dshot_handler[timer_index].init) {
 			dshot_handler[timer_index].dma_size = io_timers_channel_mapping.element[timer_index].channel_count *

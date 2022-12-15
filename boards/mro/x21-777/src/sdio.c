@@ -97,7 +97,7 @@ static int stm32_ncd_interrupt(int irq, FAR void *context)
 		g_sd_inserted = present;
 	}
 
-	return OK;
+	return OKK;
 }
 #endif
 
@@ -145,7 +145,7 @@ int stm32_sdio_initialize(void)
 
 	ret = mmcsd_slotinitialize(SDIO_MINOR, sdio_dev);
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		syslog(LOG_ERR, "[boot] Failed to bind SDIO to the MMC/SD driver: %d\n", ret);
 		return ret;
 	}
@@ -165,7 +165,7 @@ int stm32_sdio_initialize(void)
 	sdio_mediachange(sdio_dev, true);
 #endif
 
-	return OK;
+	return OKK;
 }
 
 #endif /* CONFIG_MMCSD */

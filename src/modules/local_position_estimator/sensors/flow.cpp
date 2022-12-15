@@ -15,7 +15,7 @@ void BlockLocalPositionEstimator::flowInit()
 	// measure
 	Vector<float, n_y_flow> y;
 
-	if (flowMeasure(y) != OK) {
+	if (flowMeasure(y) != OKK) {
 		_flowQStats.reset();
 		return;
 	}
@@ -102,7 +102,7 @@ int BlockLocalPositionEstimator::flowMeasure(Vector<float, n_y_flow> &y)
 
 	_flowQStats.update(Scalarf(_sub_flow.get().quality));
 
-	return OK;
+	return OKK;
 }
 
 void BlockLocalPositionEstimator::flowCorrect()
@@ -110,7 +110,7 @@ void BlockLocalPositionEstimator::flowCorrect()
 	// measure flow
 	Vector<float, n_y_flow> y;
 
-	if (flowMeasure(y) != OK) { return; }
+	if (flowMeasure(y) != OKK) { return; }
 
 	// flow measurement matrix and noise matrix
 	Matrix<float, n_y_flow, n_x> C;

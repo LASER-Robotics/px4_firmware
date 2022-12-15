@@ -107,7 +107,7 @@ int board_hardfault_init(int display_to_console, bool allow_prompt)
 	 */
 	hadCrash = hardfault_check_status("boot");
 
-	if (hadCrash == OK) {
+	if (hadCrash == OKK) {
 
 		syslog(LOG_ERR, "[boot] There is a hard fault logged. Hold down the SPACE BAR," \
 		       " while booting to review!\n");
@@ -218,7 +218,7 @@ read:
 
 #endif // SAVE_CRASHDUMP
 #endif // HAS_BBSRAM
-	return hadCrash == OK ? 1 : 0;
+	return hadCrash == OKK ? 1 : 0;
 }
 
 static void copy_reverse(stack_word_t *dest, stack_word_t *src, int size)

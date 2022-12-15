@@ -87,7 +87,7 @@ LED::init()
 int
 LED::ioctl(cdev::file_t *filp, int cmd, unsigned long arg)
 {
-	int result = OK;
+	int result = OKK;
 
 	switch (cmd) {
 	case LED_ON:

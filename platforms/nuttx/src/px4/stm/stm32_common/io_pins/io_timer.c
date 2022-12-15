@@ -543,7 +543,7 @@ void io_timer_update_dma_req(uint8_t timer, bool enable)
 
 int io_timer_set_dshot_mode(uint8_t timer, unsigned dshot_pwm_freq, uint8_t dma_burst_length)
 {
-	int ret_val = OK;
+	int ret_val = OKK;
 	uint32_t tim_dma_burst_length;
 
 	if (1u == dma_burst_length) {
@@ -562,7 +562,7 @@ int io_timer_set_dshot_mode(uint8_t timer, unsigned dshot_pwm_freq, uint8_t dma_
 		ret_val = ERROR;
 	}
 
-	if (OK == ret_val) {
+	if (OKK == ret_val) {
 		rARR(timer)  = DSHOT_MOTOR_PWM_BIT_WIDTH;
 		rPSC(timer)  = ((int)(io_timers[timer].clock_freq / dshot_pwm_freq) / DSHOT_MOTOR_PWM_BIT_WIDTH) - 1;
 		rEGR(timer)  = ATIM_EGR_UG;
@@ -776,7 +776,7 @@ int io_timer_set_rate(unsigned timer, unsigned rate)
 			timer_set_rate(timer, rate);
 		}
 
-		rv = OK;
+		rv = OKK;
 	}
 
 	return rv;

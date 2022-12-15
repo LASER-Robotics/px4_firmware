@@ -510,7 +510,7 @@ hrt_tim_isr(int irq, void *context, void *arg)
 		hrt_call_reschedule();
 	}
 
-	return OK;
+	return OKK;
 }
 
 /**

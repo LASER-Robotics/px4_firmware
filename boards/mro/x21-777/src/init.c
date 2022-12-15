@@ -222,12 +222,12 @@ __EXPORT int board_app_initialize(uintptr_t arg)
 #ifdef CONFIG_MMCSD
 	int ret = stm32_sdio_initialize();
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		led_on(LED_RED);
 		return ret;
 	}
 
 #endif /* CONFIG_MMCSD */
 
-	return OK;
+	return OKK;
 }

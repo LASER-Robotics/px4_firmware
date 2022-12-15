@@ -110,7 +110,7 @@ int LIS3MDL::collect()
 
 	int ret = _interface->read(ADDR_OUT_T_L, (uint8_t *)&buf_rx, sizeof(buf_rx));
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		perf_end(_sample_perf);
 		perf_count(_comms_errors);
 		return ret;
@@ -140,14 +140,14 @@ void LIS3MDL::RunImpl()
 	}
 
 	/* Collect last measurement at the start of every cycle */
-	if (collect() != OK) {
+	if (collect() != OKK) {
 		PX4_DEBUG("collection error");
 		/* restart the measurement state machine */
 		start();
 		return;
 	}
 
-	if (measure() != OK) {
+	if (measure() != OKK) {
 		PX4_DEBUG("measure error");
 	}
 
@@ -182,7 +182,7 @@ int LIS3MDL::measure()
 		_continuous_mode_set = false;
 	}
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		perf_count(_comms_errors);
 	}
 
@@ -202,13 +202,13 @@ int LIS3MDL::reset()
 {
 	int ret = set_default_register_values();
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		return PX4_ERROR;
 	}
 
 	ret = set_range(_range_ga);
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		return PX4_ERROR;
 	}
 
@@ -255,14 +255,14 @@ int LIS3MDL::set_range(unsigned range)
 	 */
 	int ret = write_reg(ADDR_CTRL_REG2, (_range_bits << 5));
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		perf_count(_comms_errors);
 	}
 
 	uint8_t range_bits_in = 0;
 	ret = read_reg(ADDR_CTRL_REG2, range_bits_in);
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		perf_count(_comms_errors);
 	}
 

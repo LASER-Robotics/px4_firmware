@@ -117,7 +117,7 @@ target_link_libraries(px4 PRIVATE
 	-nostdlib
 	-nostdinc++
 
-	-fno-exceptions
+	-fexceptions
 	-fno-rtti
 
 	-Wl,--script=${PX4_BINARY_DIR_CYG}/NuttX/nuttx-config/scripts/${SCRIPT_PREFIX}script.ld

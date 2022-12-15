@@ -52,7 +52,7 @@ LPS25H::~LPS25H()
 
 int LPS25H::init()
 {
-	if (reset() != OK) {
+	if (reset() != OKK) {
 		return PX4_ERROR;
 	}
 
@@ -93,7 +93,7 @@ void LPS25H::RunImpl()
 	if (_collect_phase) {
 
 		/* perform collection */
-		if (OK != collect()) {
+		if (OKK != collect()) {
 			PX4_DEBUG("collection error");
 			/* restart the measurement state machine */
 			start();
@@ -115,7 +115,7 @@ void LPS25H::RunImpl()
 	}
 
 	/* measurement phase */
-	if (OK != measure()) {
+	if (OKK != measure()) {
 		PX4_DEBUG("measure error");
 	}
 
@@ -133,7 +133,7 @@ int LPS25H::measure()
 	 */
 	int ret = write_reg(ADDR_CTRL_REG2, CTRL_REG2_ONE_SHOT);
 
-	if (OK != ret) {
+	if (OKK != ret) {
 		perf_count(_comms_errors);
 	}
 
@@ -156,7 +156,7 @@ int LPS25H::collect()
 	const hrt_abstime timestamp_sample = hrt_absolute_time();
 	int ret = _interface->read(ADDR_STATUS_REG | (1 << 7), (uint8_t *)&report, sizeof(report));
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		perf_count(_comms_errors);
 		perf_end(_sample_perf);
 		return ret;

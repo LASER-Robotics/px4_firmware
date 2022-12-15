@@ -84,5 +84,5 @@ int send_cmd_to_motor_main(int argc, char *argv[])
         }
         PX4_INFO("Command ended");
     }
-	return OK;
+	return OKK;
 }

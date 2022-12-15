@@ -121,7 +121,7 @@ RGBLED_NPC5623C::init()
 {
 	int ret = I2C::init();
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		return ret;
 	}
 
@@ -131,7 +131,7 @@ RGBLED_NPC5623C::init()
 
 	ScheduleNow();
 
-	return OK;
+	return OKK;
 }
 
 int

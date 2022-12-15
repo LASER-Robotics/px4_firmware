@@ -184,7 +184,7 @@ int SF1XX::init()
 	}
 
 	/* do I2C init (and probe) first */
-	if (I2C::init() != OK) {
+	if (I2C::init() != OKK) {
 		return ret;
 	}
 
@@ -192,7 +192,7 @@ int SF1XX::init()
 	int ret2 = measure();
 
 	if (ret2 == 0) {
-		ret = OK;
+		ret = OKK;
 		_sensor_ok = true;
 	}
 
@@ -212,13 +212,13 @@ int SF1XX::measure()
 	uint8_t cmd = 0;
 	int ret = transfer(&cmd, 1, nullptr, 0);
 
-	if (OK != ret) {
+	if (OKK != ret) {
 		perf_count(_comms_errors);
 		PX4_DEBUG("i2c::transfer returned %d", ret);
 		return ret;
 	}
 
-	ret = OK;
+	ret = OKK;
 
 	return ret;
 }
@@ -262,7 +262,7 @@ void SF1XX::start()
 void SF1XX::RunImpl()
 {
 	/* Collect results */
-	if (OK != collect()) {
+	if (OKK != collect()) {
 		PX4_DEBUG("collection error");
 		/* if error restart the measurement state machine */
 		start();

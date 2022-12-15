@@ -127,7 +127,7 @@ bool dsm_port_input(uint16_t *rssi, bool *dsm_updated, bool *st24_updated, bool 
 	for (unsigned i = 0; i < n_bytes; i++) {
 		/* set updated flag if one complete packet was parsed */
 		st24_rssi = RC_INPUT_RSSI_MAX;
-		*st24_updated |= (OK == st24_decode(bytes[i], &st24_rssi, &lost_count,
+		*st24_updated |= (OKK == st24_decode(bytes[i], &st24_rssi, &lost_count,
 						    &st24_channel_count, r_raw_rc_values, PX4IO_RC_INPUT_CHANNELS));
 	}
 
@@ -155,7 +155,7 @@ bool dsm_port_input(uint16_t *rssi, bool *dsm_updated, bool *st24_updated, bool 
 	for (unsigned i = 0; i < n_bytes; i++) {
 		/* set updated flag if one complete packet was parsed */
 		sumd_rssi = RC_INPUT_RSSI_MAX;
-		*sumd_updated |= (OK == sumd_decode(bytes[i], &sumd_rssi, &sumd_rx_count,
+		*sumd_updated |= (OKK == sumd_decode(bytes[i], &sumd_rssi, &sumd_rx_count,
 						    &sumd_channel_count, r_raw_rc_values, PX4IO_RC_INPUT_CHANNELS, &sumd_failsafe_state));
 	}
 

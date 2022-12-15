@@ -148,7 +148,7 @@ int RM3100::collect()
 	const hrt_abstime timestamp_sample = hrt_absolute_time();
 	int ret = _interface->read(ADDR_MX, (uint8_t *)&rm_report, sizeof(rm_report));
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		perf_end(_sample_perf);
 		perf_count(_comms_errors);
 		return ret;
@@ -168,7 +168,7 @@ int RM3100::collect()
 
 	_px4_mag.update(timestamp_sample, xraw, yraw, zraw);
 
-	ret = OK;
+	ret = OKK;
 
 
 	return ret;
@@ -190,14 +190,14 @@ void RM3100::RunImpl()
 	}
 
 	/* Collect last measurement at the start of every cycle */
-	if (collect() != OK) {
+	if (collect() != OKK) {
 		PX4_DEBUG("collection error");
 		/* restart the measurement state machine */
 		start();
 		return;
 	}
 
-	if (measure() != OK) {
+	if (measure() != OKK) {
 		PX4_DEBUG("measure error");
 	}
 
@@ -241,7 +241,7 @@ int RM3100::measure()
 			cmd = (CMM_DEFAULT | POLLING_MODE);
 			ret = _interface->write(ADDR_CMM, &cmd, 1);
 
-			if (ret != OK) {
+			if (ret != OKK) {
 				perf_count(_comms_errors);
 				return ret;
 			}
@@ -254,7 +254,7 @@ int RM3100::measure()
 	}
 
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		perf_count(_comms_errors);
 	}
 
@@ -274,7 +274,7 @@ int RM3100::reset()
 {
 	int ret = set_default_register_values();
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		return PX4_ERROR;
 	}
 

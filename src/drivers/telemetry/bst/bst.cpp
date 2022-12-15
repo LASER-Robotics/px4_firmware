@@ -217,20 +217,20 @@ int BST::probe()
 
 	_retries = retries_prev;
 
-	return OK;
+	return OKK;
 }
 
 int BST::init()
 {
 	int ret = I2C::init();
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		return ret;
 	}
 
 	ScheduleNow();
 
-	return OK;
+	return OKK;
 }
 
 void BST::RunImpl()

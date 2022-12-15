@@ -78,7 +78,7 @@ int check_user_abort(int fd)
 				warnx("Test aborted.");
 				fsync(fd);
 				close(fd);
-				return OK;
+				return OKK;
 				/* not reached */
 			}
 		}
@@ -146,7 +146,7 @@ test_file(int argc, char *argv[])
 				fsync(fd);
 
 				if (!check_user_abort(fd)) {
-					return OK;
+					return OKK;
 				}
 
 			}
@@ -184,7 +184,7 @@ test_file(int argc, char *argv[])
 				}
 
 				if (!check_user_abort(fd)) {
-					return OK;
+					return OKK;
 				}
 
 			}
@@ -208,7 +208,7 @@ test_file(int argc, char *argv[])
 				}
 
 				if (!check_user_abort(fd)) {
-					return OK;
+					return OKK;
 				}
 
 			}
@@ -239,7 +239,7 @@ test_file(int argc, char *argv[])
 					}
 
 					if (!check_user_abort(fd)) {
-						return OK;
+						return OKK;
 					}
 				}
 
@@ -285,7 +285,7 @@ test_file(int argc, char *argv[])
 					}
 
 					if (!check_user_abort(fd)) {
-						return OK;
+						return OKK;
 					}
 				}
 

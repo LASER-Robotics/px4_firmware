@@ -50,7 +50,7 @@ static int board_reset_enter_bootloader()
 {
 	uint32_t regvalue = RCM_PARAM_ESW;
 	*((uint32_t *) S32K1XX_RCM_SRS) = regvalue;
-	return OK;
+	return OKK;
 }
 
 /****************************************************************************

@@ -87,12 +87,12 @@ __EXPORT int stm32_spi_bus_initialize(void)
 #ifdef CONFIG_MMCSD
 	int ret = mmcsd_spislotinitialize(CONFIG_NSH_MMCSDMINOR, CONFIG_NSH_MMCSDSLOTNO, spi_expansion);
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		syslog(LOG_ERR, "[boot] FAILED to bind SPI port 1 to the MMCSD driver\n");
 		return -ENODEV;
 	}
 
 #endif
 
-	return OK;
+	return OKK;
 }

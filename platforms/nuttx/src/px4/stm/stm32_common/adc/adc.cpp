@@ -103,7 +103,7 @@ int px4_arch_adc_init(uint32_t base_address)
 
 			/* This one was done already */
 
-			return OK;
+			return OKK;
 		}
 
 		/* Use first free slot */

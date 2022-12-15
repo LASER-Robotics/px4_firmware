@@ -296,7 +296,7 @@ int IST8310::init()
 {
 	int ret = I2C::init();
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		DEVICE_DEBUG("I2C init failed");
 		goto out;
 	}
@@ -304,7 +304,7 @@ int IST8310::init()
 	/* reset the device configuration */
 	reset();
 
-	ret = OK;
+	ret = OKK;
 out:
 	return ret;
 }
@@ -341,7 +341,7 @@ void IST8310::check_conf()
 	uint8_t ctrl_reg_in = 0;
 	ret = read_reg(ADDR_CTRL3, ctrl_reg_in);
 
-	if (OK != ret) {
+	if (OKK != ret) {
 		perf_count(_comms_errors);
 		return;
 	}
@@ -350,14 +350,14 @@ void IST8310::check_conf()
 		perf_count(_conf_errors);
 		ret = write_reg(ADDR_CTRL3, _ctl3_reg);
 
-		if (OK != ret) {
+		if (OKK != ret) {
 			perf_count(_comms_errors);
 		}
 	}
 
 	ret = read_reg(ADDR_CTRL4, ctrl_reg_in);
 
-	if (OK != ret) {
+	if (OKK != ret) {
 		perf_count(_comms_errors);
 		return;
 	}
@@ -366,7 +366,7 @@ void IST8310::check_conf()
 		perf_count(_conf_errors);
 		ret = write_reg(ADDR_CTRL4, _ctl4_reg);
 
-		if (OK != ret) {
+		if (OKK != ret) {
 			perf_count(_comms_errors);
 		}
 	}
@@ -394,7 +394,7 @@ int IST8310::reset()
 	_ctl4_reg = CTRL4_SRPD;
 	write_reg(ADDR_CTRL4, _ctl4_reg);
 
-	return OK;
+	return OKK;
 }
 
 int IST8310::probe()
@@ -415,7 +415,7 @@ int IST8310::probe()
 		return -EIO;
 	}
 
-	return OK;
+	return OKK;
 }
 
 void IST8310::RunImpl()
@@ -424,7 +424,7 @@ void IST8310::RunImpl()
 	if (_collect_phase) {
 
 		/* perform collection */
-		if (OK != collect()) {
+		if (OKK != collect()) {
 			DEVICE_DEBUG("collection error");
 			/* restart the measurement state machine */
 			start();
@@ -447,7 +447,7 @@ void IST8310::RunImpl()
 	}
 
 	/* measurement phase */
-	if (OK != measure()) {
+	if (OKK != measure()) {
 		DEVICE_DEBUG("measure error");
 	}
 
@@ -465,7 +465,7 @@ int IST8310::measure()
 	 */
 	int ret = write_reg(ADDR_CTRL1, CTRL1_MODE_SINGLE);
 
-	if (OK != ret) {
+	if (OKK != ret) {
 		perf_count(_comms_errors);
 	}
 
@@ -506,7 +506,7 @@ int IST8310::collect()
 	const hrt_abstime timestamp_sample = hrt_absolute_time();
 	ret = read(ADDR_DATA_OUT_X_LSB, (uint8_t *)&report_buffer, sizeof(report_buffer));
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		perf_count(_comms_errors);
 		DEVICE_DEBUG("I2C read error");
 		goto out;
@@ -554,7 +554,7 @@ int IST8310::collect()
 		check_conf();
 	}
 
-	ret = OK;
+	ret = OKK;
 
 out:
 	perf_end(_sample_perf);
@@ -595,7 +595,7 @@ IST8310::instantiate(const BusCLIArguments &cli, const BusInstanceIterator &iter
 		return nullptr;
 	}
 
-	if (interface->init() != OK) {
+	if (interface->init() != OKK) {
 		delete interface;
 		PX4_DEBUG("no device on bus %i (devid 0x%x)", iterator.bus(), iterator.devid());
 		return nullptr;

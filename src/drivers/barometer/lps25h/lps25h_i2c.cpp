@@ -87,7 +87,7 @@ int LPS25H_I2C::probe()
 		return -EIO;
 	}
 
-	return OK;
+	return OKK;
 }
 
 int LPS25H_I2C::write(unsigned address, void *data, unsigned count)

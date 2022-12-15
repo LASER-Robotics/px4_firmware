@@ -273,7 +273,7 @@ DShotOutput::init()
 	/* do regular cdev init */
 	int ret = CDev::init();
 
-	if (ret != OK) {
+	if (ret != OKK) {
 		return ret;
 	}
 
@@ -462,7 +462,7 @@ DShotOutput::set_mode(Mode mode)
 	}
 
 	_mode = mode;
-	return OK;
+	return OKK;
 }
 
 int
@@ -871,7 +871,7 @@ DShotOutput::ioctl(file *filp, int cmd, unsigned long arg)
 int
 DShotOutput::pwm_ioctl(file *filp, int cmd, unsigned long arg)
 {
-	int ret = OK;
+	int ret = OKK;
 
 	PX4_DEBUG("dshot ioctl cmd: %d, arg: %ld", cmd, arg);
 
@@ -1170,7 +1170,7 @@ DShotOutput::capture_ioctl(struct file *filp, int cmd, unsigned long arg)
 		break;
 
 	case INPUT_CAP_GET_COUNT:
-		ret = OK;
+		ret = OKK;
 
 		switch (_mode) {
 		case MODE_5PWM1CAP:
@@ -1192,7 +1192,7 @@ DShotOutput::capture_ioctl(struct file *filp, int cmd, unsigned long arg)
 		break;
 
 	case INPUT_CAP_SET_COUNT:
-		ret = OK;
+		ret = OKK;
 
 		switch (_mode) {
 		case MODE_3PWM1CAP:
@@ -1370,7 +1370,7 @@ DShotOutput::module_new_mode(PortMode new_mode)
 		object->set_mode(mode);
 	}
 
-	return OK;
+	return OKK;
 }
 
 int DShotOutput::custom_command(int argc, char *argv[])

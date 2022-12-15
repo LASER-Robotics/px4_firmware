@@ -138,10 +138,10 @@ int TERARANGER::init()
 	case 1: // Autodetect - assume default Teraranger One
 		set_device_address(TERARANGER_ONE_BASEADDR);
 
-		if (I2C::init() != OK) {
+		if (I2C::init() != OKK) {
 			set_device_address(TERARANGER_EVO_BASEADDR);
 
-			if (I2C::init() != OK) {
+			if (I2C::init() != OKK) {
 				return PX4_ERROR;
 
 			} else {
@@ -160,7 +160,7 @@ int TERARANGER::init()
 	case 2: // Teraranger One.
 		set_device_address(TERARANGER_ONE_BASEADDR);
 
-		if (I2C::init() != OK) {
+		if (I2C::init() != OKK) {
 			return PX4_ERROR;
 		}
 
@@ -172,7 +172,7 @@ int TERARANGER::init()
 		set_device_address(TERARANGER_EVO_BASEADDR);
 
 		// I2C init (and probe) first.
-		if (I2C::init() != OK) {
+		if (I2C::init() != OKK) {
 			return PX4_ERROR;
 		}
 
@@ -184,7 +184,7 @@ int TERARANGER::init()
 		set_device_address(TERARANGER_EVO_BASEADDR);
 
 		// I2C init (and probe) first.
-		if (I2C::init() != OK) {
+		if (I2C::init() != OKK) {
 			return PX4_ERROR;
 		}
 
@@ -196,7 +196,7 @@ int TERARANGER::init()
 		set_device_address(TERARANGER_EVO_BASEADDR);
 
 		// I2C init (and probe) first.
-		if (I2C::init() != OK) {
+		if (I2C::init() != OKK) {
 			return PX4_ERROR;
 		}
 
@@ -235,8 +235,8 @@ int TERARANGER::probe()
 	const uint8_t cmd = TERARANGER_WHO_AM_I_REG;
 
 	// Can't use a single transfer as Teraranger needs a bit of time for internal processing.
-	if (transfer(&cmd, 1, nullptr, 0) == OK) {
-		if (transfer(nullptr, 0, &who_am_i, 1) == OK && who_am_i == TERARANGER_WHO_AM_I_REG_VAL) {
+	if (transfer(&cmd, 1, nullptr, 0) == OKK) {
+		if (transfer(nullptr, 0, &who_am_i, 1) == OKK && who_am_i == TERARANGER_WHO_AM_I_REG_VAL) {
 			return measure();
 		}
 	}

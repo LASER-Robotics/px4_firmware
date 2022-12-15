@@ -47,7 +47,7 @@ static int board_reset_enter_bootloader()
 {
 	uint32_t regvalue = 0xb007b007;
 	*((uint32_t *) KINETIS_VBATR_BASE) = regvalue;
-	return OK;
+	return OKK;
 }
 
 /****************************************************************************

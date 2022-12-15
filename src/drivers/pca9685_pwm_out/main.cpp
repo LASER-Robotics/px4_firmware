@@ -461,7 +461,7 @@ void PWMDriverWrapper::Run()
 // TODO
 int PWMDriverWrapper::ioctl(cdev::file_t *filep, int cmd, unsigned long arg)
 {
-	int ret = OK;
+	int ret = OKK;
 
 	lock();
 

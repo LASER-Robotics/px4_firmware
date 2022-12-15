@@ -239,7 +239,7 @@ __EXPORT int board_app_initialize(uintptr_t arg)
 	/* Now bind the SPI interface to the MMCSD driver */
 	int result = mmcsd_spislotinitialize(CONFIG_NSH_MMCSDMINOR, CONFIG_NSH_MMCSDSLOTNO, spi_dev);
 
-	if (result != OK) {
+	if (result != OKK) {
 		led_on(LED_BLUE);
 		syslog(LOG_ERR, "[boot] FAILED to bind SPI port 1 to the MMCSD driver\n");
 		return -ENODEV;
@@ -258,7 +258,7 @@ __EXPORT int board_app_initialize(uintptr_t arg)
 	/* Initialize the flashfs layer to use heap allocated memory */
 	result = parameter_flashfs_init(params_sector_map, NULL, 0);
 
-	if (result != OK) {
+	if (result != OKK) {
 		syslog(LOG_ERR, "[boot] FAILED to init params in FLASH %d\n", result);
 		led_on(LED_AMBER);
 		return -ENODEV;
@@ -266,5 +266,5 @@ __EXPORT int board_app_initialize(uintptr_t arg)
 
 #endif
 
-	return OK;
+	return OKK;
 }
