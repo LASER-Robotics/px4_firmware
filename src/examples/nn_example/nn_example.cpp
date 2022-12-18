@@ -85,15 +85,13 @@ int nn_example_main(int argc, char *argv[])
                     {fdeep::tensor(fdeep::tensor_shape(static_cast<std::size_t>(4)),
                     std::vector<float>{raw.control[0], raw.control[1], raw.control[2], raw.control[3]})});
 
-                // std::string str = fdeep::show_tensors(result); 
-
                 const auto values = result[0].to_vector();
 
-                PX4_INFO("Result:\t%8.4f\t%8.4f\t%8.4f\t%8.4f",
-                                (double)values[0],
-                                (double)values[1],
-                                (double)values[2],
-                                (double)values[3]);
+                // PX4_INFO("Result:\t%8.4f\t%8.4f\t%8.4f\t%8.4f",
+                //                 (double)values[0],
+                //                 (double)values[1],
+                //                 (double)values[2],
+                //                 (double)values[3]);
 
                 PX4_INFO("Errors:\t%8.4f\t%8.4f\t%8.4f\t%8.4f",
                 (double)values[0] - (double)raw_out.output[0],
