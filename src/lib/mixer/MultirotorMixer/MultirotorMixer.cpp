@@ -44,6 +44,7 @@
 #include <cstdio>
 
 #include <mathlib/mathlib.h>
+#include <fdeep/fdeep.hpp>
 
 #ifdef MIXER_MULTIROTOR_USE_MOCK_GEOMETRY
 enum class MultirotorGeometry : MultirotorGeometryUnderlyingType {
@@ -87,6 +88,7 @@ MultirotorMixer::MultirotorMixer(ControlCallback control_cb, uintptr_t cb_handle
 	_pitch_scale = pitch_scale;
 	_yaw_scale = yaw_scale;
 	_idle_speed = -1.0f + idle_speed * 2.0f;	/* shift to output range here to avoid runtime calculation */
+	_counter_loops = 1;
 }
 
 MultirotorMixer::MultirotorMixer(ControlCallback control_cb, uintptr_t cb_handle, const Rotor *rotors,
@@ -363,19 +365,53 @@ MultirotorMixer::mix(float *outputs, unsigned space)
 		break;
 	}
 
+	const auto model = fdeep::load_model("fdeep_model.json", true, fdeep::dev_null_logger);
+
+	// mount message and predict
+	// const auto result = model.predict(
+	// 	{fdeep::tensor(fdeep::tensor_shape(static_cast<std::size_t>(4)),
+	// 	std::vector<float>{get_control(0, 0), get_control(0, 1), get_control(0, 2), get_control(0, 3)})});
+	
+	const auto result = model.predict(
+		{fdeep::tensor(fdeep::tensor_shape(static_cast<std::size_t>(4)),
+		std::vector<float>{roll, pitch, yaw, thrust})});
+
+	const auto values = result[0].to_vector();
+
+	for (unsigned i = 0; i < _rotor_count; i++) {
+		outputs[i] = values[i];
+	}
+
+	// map outputs from [1000, 2000] to [-1, 1]
+	for (unsigned i = 0; i < _rotor_count; i++) {
+		outputs[i] = -1 + (outputs[i] - 1000) * 2 / 1000;
+	}
+
 	// Apply thrust model and scale outputs to range [idle_speed, 1].
 	// At this point the outputs are expected to be in [0, 1], but they can be outside, for example
 	// if a roll command exceeds the motor band limit.
-	for (unsigned i = 0; i < _rotor_count; i++) {
-		// Implement simple model for static relationship between applied motor pwm and motor thrust
-		// model: thrust = (1 - _thrust_factor) * PWM + _thrust_factor * PWM^2
-		if (_thrust_factor > 0.0f) {
-			outputs[i] = -(1.0f - _thrust_factor) / (2.0f * _thrust_factor) + sqrtf((1.0f - _thrust_factor) *
-					(1.0f - _thrust_factor) / (4.0f * _thrust_factor * _thrust_factor) + (outputs[i] < 0.0f ? 0.0f : outputs[i] /
-							_thrust_factor));
-		}
 
-		outputs[i] = math::constrain(_idle_speed + (outputs[i] * (1.0f - _idle_speed)), _idle_speed, 1.0f);
+	// for (unsigned i = 0; i < _rotor_count; i++) {
+	// 	// Implement simple model for static relationship between applied motor pwm and motor thrust
+	// 	// model: thrust = (1 - _thrust_factor) * PWM + _thrust_factor * PWM^2
+	// 	if (_thrust_factor > 0.0f) {
+	// 		outputs[i] = -(1.0f - _thrust_factor) / (2.0f * _thrust_factor) + sqrtf((1.0f - _thrust_factor) *
+	// 				(1.0f - _thrust_factor) / (4.0f * _thrust_factor * _thrust_factor) + (outputs[i] < 0.0f ? 0.0f : outputs[i] /
+	// 						_thrust_factor));
+	// 	}
+
+	// 	outputs[i] = math::constrain(_idle_speed + (outputs[i] * (1.0f - _idle_speed)), _idle_speed, 1.0f);
+	// }
+
+	if (_counter_loops % 50 == 0){
+		std::cout << "Outputs: [" << outputs[0] << ", "
+		<< outputs[1] << ", "
+		<< outputs[2] << ", "
+		<< outputs[3] << "]"
+		<< std::endl;
+		_counter_loops = 1;
+	} else {
+		_counter_loops++;
 	}
 
 	// Slew rate limiting and saturation checking

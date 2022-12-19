@@ -34,6 +34,7 @@
 #pragma once
 
 #include <mixer/MixerBase/Mixer.hpp>
+#include <fdeep/fdeep.hpp>
 
 /**
  * Supported multirotor geometries.
@@ -257,4 +258,5 @@ private:
 
 	float 				*_outputs_prev{nullptr};
 	float 				*_tmp_array{nullptr};
+	int 				_counter_loops;
 };
