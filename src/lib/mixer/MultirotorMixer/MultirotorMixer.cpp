@@ -349,70 +349,14 @@ MultirotorMixer::mix(float *outputs, unsigned space)
 	// clean out class variable used to capture saturation
 	_saturation_status.value = 0;
 
-	// Do the mixing using the strategy given by the current Airmode configuration
-	switch (_airmode) {
-	case Airmode::roll_pitch:
-		mix_airmode_rp(roll, pitch, yaw, thrust, outputs);
-		break;
+	updateValuesNN(roll, pitch, yaw, thrust, outputs);
+	// updateValuesNN(get_control(0, 0), get_control(0, 1), get_control(0, 2), get_control(0, 3), outputs);
 
-	case Airmode::roll_pitch_yaw:
-		mix_airmode_rpy(roll, pitch, yaw, thrust, outputs);
-		break;
+	// updateValues(roll, pitch, yaw, thrust, outputs);
 
-	case Airmode::disabled:
-	default: // just in case: default to disabled
-		mix_airmode_disabled(roll, pitch, yaw, thrust, outputs);
-		break;
-	}
+	float rate = 2.0f;
 
-	const auto model = fdeep::load_model("fdeep_model.json", true, fdeep::dev_null_logger);
-
-	// mount message and predict
-	// const auto result = model.predict(
-	// 	{fdeep::tensor(fdeep::tensor_shape(static_cast<std::size_t>(4)),
-	// 	std::vector<float>{get_control(0, 0), get_control(0, 1), get_control(0, 2), get_control(0, 3)})});
-	
-	const auto result = model.predict(
-		{fdeep::tensor(fdeep::tensor_shape(static_cast<std::size_t>(4)),
-		std::vector<float>{roll, pitch, yaw, thrust})});
-
-	const auto values = result[0].to_vector();
-
-	for (unsigned i = 0; i < _rotor_count; i++) {
-		outputs[i] = values[i];
-	}
-
-	// map outputs from [1000, 2000] to [-1, 1]
-	for (unsigned i = 0; i < _rotor_count; i++) {
-		outputs[i] = -1 + (outputs[i] - 1000) * 2 / 1000;
-	}
-
-	// Apply thrust model and scale outputs to range [idle_speed, 1].
-	// At this point the outputs are expected to be in [0, 1], but they can be outside, for example
-	// if a roll command exceeds the motor band limit.
-
-	// for (unsigned i = 0; i < _rotor_count; i++) {
-	// 	// Implement simple model for static relationship between applied motor pwm and motor thrust
-	// 	// model: thrust = (1 - _thrust_factor) * PWM + _thrust_factor * PWM^2
-	// 	if (_thrust_factor > 0.0f) {
-	// 		outputs[i] = -(1.0f - _thrust_factor) / (2.0f * _thrust_factor) + sqrtf((1.0f - _thrust_factor) *
-	// 				(1.0f - _thrust_factor) / (4.0f * _thrust_factor * _thrust_factor) + (outputs[i] < 0.0f ? 0.0f : outputs[i] /
-	// 						_thrust_factor));
-	// 	}
-
-	// 	outputs[i] = math::constrain(_idle_speed + (outputs[i] * (1.0f - _idle_speed)), _idle_speed, 1.0f);
-	// }
-
-	if (_counter_loops % 50 == 0){
-		std::cout << "Outputs: [" << outputs[0] << ", "
-		<< outputs[1] << ", "
-		<< outputs[2] << ", "
-		<< outputs[3] << "]"
-		<< std::endl;
-		_counter_loops = 1;
-	} else {
-		_counter_loops++;
-	}
+	printOutputs(rate, outputs);
 
 	// Slew rate limiting and saturation checking
 	for (unsigned i = 0; i < _rotor_count; i++) {
@@ -460,6 +404,77 @@ MultirotorMixer::mix(float *outputs, unsigned space)
 	_delta_out_max = 0.0f;
 
 	return _rotor_count;
+}
+
+void MultirotorMixer::updateValuesNN(float roll, float pitch, float yaw, float thrust, float *outputs){
+	// TODO: load module only once (maybe in the constructor)
+	const auto model = fdeep::load_model("fdeep_model.json", true, fdeep::dev_null_logger);
+
+	// mount message and predict
+	// const auto result = model.predict(
+	// 	{fdeep::tensor(fdeep::tensor_shape(static_cast<std::size_t>(4)),
+	// 	std::vector<float>{get_control(0, 0), get_control(0, 1), get_control(0, 2), get_control(0, 3)})});
+	
+	const auto result = model.predict(
+		{fdeep::tensor(fdeep::tensor_shape(static_cast<std::size_t>(4)),
+		std::vector<float>{roll, pitch, yaw, thrust})});
+
+	const auto values = result[0].to_vector();
+
+	for (unsigned i = 0; i < _rotor_count; i++) {
+		outputs[i] = values[i];
+	}
+
+	// map outputs from [1000, 2000] to [-1, 1]
+	for (unsigned i = 0; i < _rotor_count; i++) {
+		outputs[i] = -1 + (outputs[i] - 1000) * 2 / 1000;
+	}
+}
+
+void MultirotorMixer::updateValues(float roll, float pitch, float yaw, float thrust, float *outputs){
+	// Do the mixing using the strategy given by the current Airmode configuration
+	switch (_airmode) {
+	case Airmode::roll_pitch:
+		mix_airmode_rp(roll, pitch, yaw, thrust, outputs);
+		break;
+
+	case Airmode::roll_pitch_yaw:
+		mix_airmode_rpy(roll, pitch, yaw, thrust, outputs);
+		break;
+
+	case Airmode::disabled:
+	default: // just in case: default to disabled
+		mix_airmode_disabled(roll, pitch, yaw, thrust, outputs);
+		break;
+	}
+
+	// Apply thrust model and scale outputs to range [idle_speed, 1].
+	// At this point the outputs are expected to be in [0, 1], but they can be outside, for example
+	// if a roll command exceeds the motor band limit.
+	for (unsigned i = 0; i < _rotor_count; i++) {
+		// Implement simple model for static relationship between applied motor pwm and motor thrust
+		// model: thrust = (1 - _thrust_factor) * PWM + _thrust_factor * PWM^2
+		if (_thrust_factor > 0.0f) {
+			outputs[i] = -(1.0f - _thrust_factor) / (2.0f * _thrust_factor) + sqrtf((1.0f - _thrust_factor) *
+					(1.0f - _thrust_factor) / (4.0f * _thrust_factor * _thrust_factor) + (outputs[i] < 0.0f ? 0.0f : outputs[i] /
+							_thrust_factor));
+		}
+
+		outputs[i] = math::constrain(_idle_speed + (outputs[i] * (1.0f - _idle_speed)), _idle_speed, 1.0f);
+	}
+}
+
+void MultirotorMixer::printOutputs(float rate, float *outputs){
+	if (_counter_loops % (int)ceil(200/rate) == 0){
+		std::cout << "Outputs: [" << outputs[0] << ", "
+		<< outputs[1] << ", "
+		<< outputs[2] << ", "
+		<< outputs[3] << "]"
+		<< std::endl;
+		_counter_loops = 1;
+	} else {
+		_counter_loops++;
+	}
 }
 
 /*

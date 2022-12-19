@@ -240,6 +240,10 @@ private:
 	 */
 	inline void mix_yaw(float yaw, float *outputs);
 
+	inline void updateValues(float roll, float pitch, float yaw, float thrust, float *outputs);
+	inline void updateValuesNN(float roll, float pitch, float yaw, float thrust, float *outputs);
+	inline void printOutputs(float rate, float *outputs);
+
 	void update_saturation_status(unsigned index, bool clipping_high, bool clipping_low_roll_pitch, bool clipping_low_yaw);
 
 	float				_roll_scale{1.0f};
