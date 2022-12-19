@@ -349,6 +349,7 @@ MultirotorMixer::mix(float *outputs, unsigned space)
 	// clean out class variable used to capture saturation
 	_saturation_status.value = 0;
 
+	// types of mixing
 	updateValuesNN(roll, pitch, yaw, thrust, outputs);
 	// updateValuesNN(get_control(0, 0), get_control(0, 1), get_control(0, 2), get_control(0, 3), outputs);
 
@@ -407,8 +408,9 @@ MultirotorMixer::mix(float *outputs, unsigned space)
 }
 
 void MultirotorMixer::updateValuesNN(float roll, float pitch, float yaw, float thrust, float *outputs){
-	// TODO: load module only once (maybe in the constructor)
-	const auto model = fdeep::load_model("fdeep_model.json", true, fdeep::dev_null_logger);
+
+	// chat-gpt says this is safe :)
+	static const auto model = fdeep::load_model("fdeep_model.json");
 
 	// mount message and predict
 	// const auto result = model.predict(
