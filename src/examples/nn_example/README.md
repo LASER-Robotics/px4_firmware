@@ -14,7 +14,7 @@ This app intends to replicate this [paper](https://ieeexplore.ieee.org/document/
 4) Use [this colab](https://colab.research.google.com/drive/1l2LvvcQPKEvTFkvrn5yN9LBuI5YN_f72?usp=sharing) to train the model and save it as a .h5 file.
 5) Install the [frugally deep library](https://github.com/Dobiasd/frugally-deep#requirements-and-installation)
 6) Use the command
-    - python3 keras_export/convert_model.py *path_to_h5_file* modelo.json
+    - python3 keras_export/convert_model.py *path_to_h5_file* ~/.ros/sitl_uav1/fdeep_model.json
     
     to convert the h5 file to an approate format for fdeep use.
 7) Compile this rep, and run nn_test in the PX4 console to run this APP.
