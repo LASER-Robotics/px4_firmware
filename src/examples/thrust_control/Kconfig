@@ -1,0 +1,5 @@
+menuconfig EXAMPLES_THRUST_CONTROL
+	bool "thrust_control"
+	default n
+	---help---
+		Implements thrust control for px4
