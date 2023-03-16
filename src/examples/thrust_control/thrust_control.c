@@ -47,6 +47,7 @@
 #include <poll.h>
 #include <string.h>
 #include <math.h>
+#include <time.h>
 
 #include <uORB/uORB.h>
 #include <uORB/topics/vehicle_acceleration.h>
@@ -55,8 +56,90 @@
 
 __EXPORT int thrust_control_main(int argc, char *argv[]);
 
+double c[] = {0.0724, 6.1490 * pow(10, -5), 0.2993, 1.2998 * pow(10,-8), 0};
+double d[] = {4.2959, -1.7154 * pow(10, 5)};
+double K_q[2] = {0.242, 0.0014};
+double mass = 8.2 * pow(10,3);
+double radius = 11 * pow(10, -2);
+double I_r;
+
+double Delta = pow(10, -1);
+int N = 20;
+double epsilon;
+
+double old_lambda_s_k;
+
+double w, w_old, w_dot_hat;
+clock_t begin, now;
+
+/******************** NOTATION ********************/
+// P_am_hat 	-> aerodynamic mechanical power input into the air
+// C_P_am   	-> aerodynamic mechanical power coefficient computed base on the guess of lambda_s
+// C_P_am_t	-> aerodynamic mechanical power coefficient measured at t
+// i_hat    	-> estimated current given by esc
+// w        	-> rotor RPM given by esc
+// v        	-> estimated voltage given by esc
+// lambda_i 	-> induced inflow ratio
+// lambda_s 	-> stream inflow ratio
+// lambda	-> vertical inflow ratio (lambda_i + lambda_s)
+// Delta	-> small offset for stream inflow ratio
+// I_r 		-> rotor moment of inertia
+
+double compute_lambda_i(double lambda_s){
+	double a = c[4];
+	double b = c[4]*lambda_s + c[1];
+	double _c = c[1]*(lambda_s - c[2]);
+	double delta = pow(b,2) - 4*a*_c;
+	double x[2];
+	x[0] = (-b + sqrt(delta))/2*a;
+	x[1] = (-b - sqrt(delta))/2*a;
+	return x[0];
+}
+
+double compute_C_T(double lambda_i, double lambda_s){
+	double lambda = lambda_i + lambda_s;
+	return c[1]*(c[2] - lambda);
+}
+
+double compute_kappa(double C_T){
+	return d[0] + d[1]*C_T;
+}
+
+double compute_C_P_am_hat(double lambda_i, double lambda_s, double C_T, double kappa){
+	return c[3] + C_T*(kappa*lambda_i + lambda_s)*c[0];
+}
+
+double update_f(double v1, double v2){
+	return v2 - v1;
+}
+
+// iterative algorithm to converge to the optimum lambda_s
+double thrust_computation(double i_hat){
+	double P_am_hat = (K_q[0] - ((K_q[1] * i_hat))) * i_hat * w - (I_r * w * w_dot_hat);
+	double C_P_am_t = P_am_hat / pow(i_hat, 3);
+	double lambda_s[N+1];
+	double f[N+1];
+	lambda_s[0] = old_lambda_s_k - Delta;
+	int k;
+	double C_T = 0;
+	for(k = 0; k < N; k++){
+		if(k == 1) {lambda_s[k] = old_lambda_s_k;}
+		double lambda_i = compute_lambda_i(lambda_s[k]);
+		C_T = compute_C_T(lambda_i, lambda_s[k]);
+		double kappa = compute_kappa(C_T);
+		double C_P_am_hat = compute_C_P_am_hat(lambda_i, lambda_s[0], C_T, kappa);
+		f[k] = C_P_am_t - C_P_am_hat;
+		if((k > 2) && (fabs(f[k] - f[k-1]) < epsilon)){break;}
+		lambda_s[k+1] = lambda_s[k] - f[k]*((lambda_s[k] - lambda_s[k-1])/(f[k] - f[k-1]));
+	}
+	old_lambda_s_k = lambda_s[k];
+	return C_T*pow(w,2);
+}
+
 int thrust_control_main(int argc, char *argv[])
 {
+	begin = clock();
+	I_r = mass * pow(radius,2);
 	PX4_INFO("Hello Sky!");
 
 	/* subscribe to vehicle_acceleration topic */
@@ -74,7 +157,8 @@ int thrust_control_main(int argc, char *argv[])
 
 	int error_counter = 0;
 
-	for (int i = 0; i < 20; i++) {
+	for (int i = 0; i < 200; i++) {
+
 		/* wait for sensor update of 1 file descriptor for 1000 ms (1 second) */
 		int poll_ret = px4_poll(fds, 1, 1000);
 
@@ -99,15 +183,23 @@ int thrust_control_main(int argc, char *argv[])
 				struct esc_status_s esc;
 				/* copy sensors raw data into local buffer */
 				orb_copy(ORB_ID(esc_status), sensor_sub_fd, &esc);
-				PX4_INFO("RPM: %8.4f\t VOLTAGE: %8.4f\t CURRENT: %8.4f",
-					 (double)esc.esc[0].esc_rpm,
-					 (double)esc.esc[0].esc_voltage,
-					 (double)esc.esc[0].esc_current);
-			}
 
-			/* there could be more file descriptors here, in the form like:
-			 * if (fds[1..n].revents & POLLIN) {}
-			 */
+				w_old = w;
+				now = clock();
+				double time_elapsed = ((double) now - begin) / CLOCKS_PER_SEC;
+
+				w = (double)esc.esc[0].esc_rpm;
+				begin = clock();
+				double i_hat = (double)esc.esc[0].esc_current;
+				// double v_hat = (double)esc.esc[0].esc_voltage;
+
+				w_dot_hat = (w - w_old)/time_elapsed;
+
+				double thrust = thrust_computation(i_hat);
+
+				PX4_INFO("ESTIMATED THRUST IS: %8.4f",
+						(double)thrust);
+			}
 		}
 	}
 
