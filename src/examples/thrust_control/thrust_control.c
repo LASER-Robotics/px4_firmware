@@ -69,10 +69,15 @@ double Delta = pow(10, -1);
 int N = 20;
 double epsilon = pow(10, -5);
 
-double old_lambda_s_k;
+double old_lambda_s_k[4];
 
-double w, w_old, w_dot_hat;
-clock_t begin, now;
+double w[4];
+double w_old[4];
+double w_dot_hat[4];
+clock_t begin[4];
+clock_t now[4];
+double thrust[4];
+double i_hat[4];
 
 /******************** NOTATION ********************/
 // P_am_hat 	-> aerodynamic mechanical power input into the air
@@ -117,16 +122,16 @@ double compute_C_P_am_hat(double lambda_i, double lambda_s, double C_T, double k
 }
 
 // iterative algorithm to converge to the optimum lambda_s
-double thrust_computation(double i_hat, double _w, double _w_dot_hat){
-	double P_am_hat = (K_q[0] - ((K_q[1] * i_hat))) * i_hat * _w - (I_r * _w * _w_dot_hat);
-	double C_P_am_t = P_am_hat / (i_hat * i_hat * i_hat);
+double thrust_computation(double _i_hat, double _w, double _w_dot_hat, int index){
+	double P_am_hat = (K_q[0] - ((K_q[1] * _i_hat))) * _i_hat * _w - (I_r * _w * _w_dot_hat);
+	double C_P_am_t = P_am_hat / (_i_hat * _i_hat * _i_hat);
 	double lambda_s[N+1];
 	double f[N+1];
-	lambda_s[0] = old_lambda_s_k - Delta;
+	lambda_s[0] = old_lambda_s_k[index] - Delta;
 	int k;
 	double C_T = 0;
 	for(k = 0; k < N; k++){
-		if(k == 1) {lambda_s[k] = old_lambda_s_k;}
+		if(k == 1) {lambda_s[k] = old_lambda_s_k[index];}
 		double lambda_i = compute_lambda_i(lambda_s[k]);
 		C_T = compute_C_T(lambda_i, lambda_s[k]);
 		double kappa = compute_kappa(C_T);
@@ -135,21 +140,28 @@ double thrust_computation(double i_hat, double _w, double _w_dot_hat){
 		if((k > 1) && (fabs(f[k] - f[k-1]) < epsilon)){break;}
 		lambda_s[k+1] = lambda_s[k] - f[k]*((lambda_s[k] - lambda_s[k-1])/(f[k] - f[k-1]));
 	}
-	old_lambda_s_k = lambda_s[k];
+	old_lambda_s_k[index] = lambda_s[k];
 	return C_T * _w * _w;
+}
+
+void initialize_parameters(void){
+	for(int i = 0; i < 4; i++){
+		begin[i] = clock();
+	}
+	I_r = mass * radius * radius;
+	c[4] = 2 * rho * (double) M_PI_F * c[0] * c[0];
 }
 
 int thrust_control_main(int argc, char *argv[])
 {
-	begin = clock();
-	I_r = mass * radius * radius;
-	c[4] = 2 * rho * (double) M_PI_F * c[0] * c[0];
+	initialize_parameters();
+
 	PX4_INFO("Hello Sky!");
 
 	/* subscribe to vehicle_acceleration topic */
 	int sensor_sub_fd = orb_subscribe(ORB_ID(esc_status));
 	/* limit the update rate to 5 Hz */
-	orb_set_interval(sensor_sub_fd, 1/200);
+	orb_set_interval(sensor_sub_fd, 1/250);
 
 	/* one could wait for multiple topics with this technique, just using one here */
 	px4_pollfd_struct_t fds[] = {
@@ -188,22 +200,29 @@ int thrust_control_main(int argc, char *argv[])
 				/* copy sensors raw data into local buffer */
 				orb_copy(ORB_ID(esc_status), sensor_sub_fd, &esc);
 
-				w_old = w;
-				now = clock();
-				double time_elapsed = (double)(now - begin) / CLOCKS_PER_SEC;
+				for(int j = 0; j < 4; j++){
+					w_old[j] = w[j];
+					now[j] = clock();
+					double time_elapsed = (double)(now[j] - begin[j]) / CLOCKS_PER_SEC;
 
-				w = (double)esc.esc[0].esc_rpm;
-				begin = clock();
-				double i_hat = (double)esc.esc[0].esc_current;
-				// double v_hat = (double)esc.esc[0].esc_voltage;
+					w[j] = (double)esc.esc[0].esc_rpm;
+					begin[j] = clock();
+					i_hat[j] = (double)esc.esc[0].esc_current;
+					// double v_hat = (double)esc.esc[0].esc_voltage;
 
-				w_dot_hat = (double)(w - w_old) / time_elapsed;
+					w_dot_hat[j] = (double)(w[j] - w_old[j]) / time_elapsed;
 
-				double thrust = thrust_computation(i_hat, w, w_dot_hat);
+					thrust[j] = thrust_computation(i_hat[j], w[j], w_dot_hat[j], j);
 
-				PX4_INFO("ESTIMATED THRUST IS: %8.4f, %8.4f",
-						(double)thrust,
-						time_elapsed);
+					PX4_INFO("THRUST, DOT, TIME OF %d IS: %8.0f, %8.0f, %8.4f, %8.0f, %8.0f, %8.2f",
+						j,
+						thrust[j],
+						w_dot_hat[j],
+						time_elapsed,
+						(double)w[j],
+						(double)w_old[j],
+						(double)I_r);
+				}
 			}
 		}
 	}
