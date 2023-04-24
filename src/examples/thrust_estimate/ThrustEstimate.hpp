@@ -125,6 +125,7 @@ private:
 	clock_t begin[4];
 	clock_t now[4];
 	double thrust[4];
+	double old_thrust[4];
 	double i_hat[4];
 
 	uint32_t _sensor_interval_us{1250};

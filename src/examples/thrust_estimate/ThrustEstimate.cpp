@@ -102,6 +102,7 @@ void ThrustEstimate::Run()
 		_esc_status_sub.copy(&esc);
 
 		for(int j = 0; j < 4; j++){
+			old_thrust[j] = thrust[j];
 			w_old[j] = w[j];
 			now[j] = clock();
 			double time_elapsed = (double)(now[j] - begin[j]) / CLOCKS_PER_SEC;
@@ -220,6 +221,9 @@ double ThrustEstimate::thrust_computation(double _i_hat, double _w, double _w_do
 	double C_P_am_t = P_am_hat / (_i_hat * _i_hat * _i_hat);
 	double lambda_s[N+1];
 	double f[N+1];
+	if (isnan(fabs(old_lambda_s_k[index]))){
+		old_lambda_s_k[index] = 0;
+	}
 	lambda_s[0] = old_lambda_s_k[index] - Delta;
 	int k;
 	double C_T = 0;
@@ -234,7 +238,11 @@ double ThrustEstimate::thrust_computation(double _i_hat, double _w, double _w_do
 		lambda_s[k+1] = lambda_s[k] - f[k]*((lambda_s[k] - lambda_s[k-1])/(f[k] - f[k-1]));
 	}
 	old_lambda_s_k[index] = lambda_s[k];
-	return C_T * _w * _w;
+	double _thrust = C_T * _w * _w;
+	if ((isnan(fabs(_thrust))) || (_thrust < -100000)){
+		_thrust = old_thrust[index];
+	}
+	return _thrust;
 }
 
 void ThrustEstimate::initialize_parameters(void){

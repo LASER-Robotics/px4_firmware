@@ -78,6 +78,7 @@ double w_dot_hat[4];
 clock_t begin[4];
 clock_t now[4];
 double thrust[4];
+double old_thrust[4];
 double i_hat[4];
 
 /******************** NOTATION ********************/
@@ -128,6 +129,9 @@ double thrust_computation(double _i_hat, double _w, double _w_dot_hat, int index
 	double C_P_am_t = P_am_hat / (_i_hat * _i_hat * _i_hat);
 	double lambda_s[N+1];
 	double f[N+1];
+	if (isnan(fabs(old_lambda_s_k[index]))){
+		old_lambda_s_k[index] = 0;
+	}
 	lambda_s[0] = old_lambda_s_k[index] - Delta;
 	int k;
 	double C_T = 0;
@@ -142,7 +146,13 @@ double thrust_computation(double _i_hat, double _w, double _w_dot_hat, int index
 		lambda_s[k+1] = lambda_s[k] - f[k]*((lambda_s[k] - lambda_s[k-1])/(f[k] - f[k-1]));
 	}
 	old_lambda_s_k[index] = lambda_s[k];
-	return C_T * _w * _w;
+	double _thrust = C_T * _w * _w;
+	if (isnan(fabs(_thrust))){
+		_thrust = 0;
+	} else if (_thrust < -100000) {
+		_thrust = old_thrust[index];
+	}
+	return _thrust;
 }
 
 void initialize_parameters(void){
@@ -179,7 +189,7 @@ int thrust_control_main(int argc, char *argv[])
 
 	int error_counter = 0;
 
-	while(1) {
+	for(int i = 0; i < 1000; i++) {
 
 		/* wait for sensor update of 1 file descriptor for 1000 ms (1 second) */
 		int poll_ret = px4_poll(fds, 1, 1000);
@@ -207,6 +217,7 @@ int thrust_control_main(int argc, char *argv[])
 				orb_copy(ORB_ID(esc_status), sensor_sub_fd, &esc);
 
 				for(int j = 0; j < 4; j++){
+					old_thrust[j] = thrust[j];
 					w_old[j] = w[j];
 					now[j] = clock();
 					double time_elapsed = (double)(now[j] - begin[j]) / CLOCKS_PER_SEC;
@@ -220,14 +231,14 @@ int thrust_control_main(int argc, char *argv[])
 
 					thrust[j] = thrust_computation(i_hat[j], w[j], w_dot_hat[j], j);
 
-					// PX4_INFO("THRUST, DOT, TIME OF %d IS: %8.0f, %8.0f, %8.4f, %8.0f, %8.0f, %8.2f",
-					// 	j,
-					// 	thrust[j],
-					// 	w_dot_hat[j],
-					// 	time_elapsed,
-					// 	(double)w[j],
-					// 	(double)w_old[j],
-					// 	(double)I_r);
+					PX4_INFO("THRUST, DOT, TIME OF %d IS: %8.0f, %8.0f, %8.4f, %8.0f, %8.0f, %8.2f",
+						j,
+						thrust[j],
+						old_lambda_s_k[j],
+						time_elapsed,
+						(double)w[j],
+						(double)w_old[j],
+						(double)I_r);
 				}
 			}
 		}
