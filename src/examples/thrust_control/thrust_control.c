@@ -50,6 +50,7 @@
 #include <time.h>
 
 #include <uORB/uORB.h>
+#include <uORB/topics/vehicle_thrust_estimate.h>
 #include <uORB/topics/vehicle_acceleration.h>
 #include <uORB/topics/vehicle_attitude.h>
 #include <uORB/topics/esc_status.h>
@@ -156,12 +157,17 @@ int thrust_control_main(int argc, char *argv[])
 {
 	initialize_parameters();
 
-	PX4_INFO("Hello Sky!");
+	PX4_INFO("Initializing thrust estimate");
 
 	/* subscribe to vehicle_acceleration topic */
 	int sensor_sub_fd = orb_subscribe(ORB_ID(esc_status));
 	/* limit the update rate to 5 Hz */
 	orb_set_interval(sensor_sub_fd, 1/250);
+
+	/* advertise to actuator_control topic */
+	struct vehicle_thrust_estimate_s thrust_estimate;
+	memset(&thrust_estimate, 0, sizeof(thrust_estimate));
+	orb_advert_t thrust_estimate_pub = orb_advertise(ORB_ID(vehicle_thrust_estimate), &thrust_estimate);
 
 	/* one could wait for multiple topics with this technique, just using one here */
 	px4_pollfd_struct_t fds[] = {
@@ -173,7 +179,7 @@ int thrust_control_main(int argc, char *argv[])
 
 	int error_counter = 0;
 
-	for (int i = 0; i < 100; i++) {
+	while(1) {
 
 		/* wait for sensor update of 1 file descriptor for 1000 ms (1 second) */
 		int poll_ret = px4_poll(fds, 1, 1000);
@@ -214,17 +220,23 @@ int thrust_control_main(int argc, char *argv[])
 
 					thrust[j] = thrust_computation(i_hat[j], w[j], w_dot_hat[j], j);
 
-					PX4_INFO("THRUST, DOT, TIME OF %d IS: %8.0f, %8.0f, %8.4f, %8.0f, %8.0f, %8.2f",
-						j,
-						thrust[j],
-						w_dot_hat[j],
-						time_elapsed,
-						(double)w[j],
-						(double)w_old[j],
-						(double)I_r);
+					// PX4_INFO("THRUST, DOT, TIME OF %d IS: %8.0f, %8.0f, %8.4f, %8.0f, %8.0f, %8.2f",
+					// 	j,
+					// 	thrust[j],
+					// 	w_dot_hat[j],
+					// 	time_elapsed,
+					// 	(double)w[j],
+					// 	(double)w_old[j],
+					// 	(double)I_r);
 				}
 			}
 		}
+		// publish thrust estimate
+		thrust_estimate.thrust[0] = thrust[0];
+		thrust_estimate.thrust[1] = thrust[1];
+		thrust_estimate.thrust[2] = thrust[2];
+		thrust_estimate.thrust[3] = thrust[3];
+		orb_publish(ORB_ID(vehicle_thrust_estimate), thrust_estimate_pub, &thrust_estimate);
 	}
 
 	PX4_INFO("exiting");

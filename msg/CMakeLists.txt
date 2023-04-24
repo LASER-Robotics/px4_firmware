@@ -197,6 +197,7 @@ set(msg_files
 	vehicle_roi.msg
 	vehicle_status.msg
 	vehicle_status_flags.msg
+	vehicle_thrust_estimate.msg
 	vehicle_thrust_setpoint.msg
 	vehicle_torque_setpoint.msg
 	vehicle_trajectory_bezier.msg
