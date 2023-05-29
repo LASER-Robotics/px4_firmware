@@ -57,7 +57,7 @@ ThrustEstimate::ThrustEstimate() :
 	K_q[1] = 0.0014;
 	mass = 8.2 * pow(10, -3);
 	radius = 11 * pow(10, -2);
-	rho = 1.293;	
+	rho = 1.293;
 	Delta = pow(10, -1);
 	N = 20;
 	epsilon = pow(10, -5);
@@ -121,11 +121,11 @@ void ThrustEstimate::Run()
 	// Example
 	//  publish some data
 	vehicle_thrust_estimate_s data;
+	data.timestamp = hrt_absolute_time();
 	data.thrust[0] = thrust[0];
 	data.thrust[1] = thrust[1];
 	data.thrust[2] = thrust[2];
 	data.thrust[3] = thrust[3];
-	data.timestamp = hrt_absolute_time();
 	_thrust_estimate_pub.publish(data);
 
 	perf_end(_loop_perf);
