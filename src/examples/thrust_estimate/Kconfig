@@ -1,0 +1,5 @@
+menuconfig EXAMPLES_THRUST_ESTIMATE
+	bool "thrust_estimate"
+	default n
+	---help---
+		Implements thrust estimate for px4

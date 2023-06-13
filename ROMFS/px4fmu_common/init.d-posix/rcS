@@ -237,6 +237,8 @@ sensors start
 commander start
 navigator start
 
+thrust_estimate start
+
 
 if ! param compare -s MNT_MODE_IN -1
 then

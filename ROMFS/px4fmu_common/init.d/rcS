@@ -385,6 +385,7 @@ else
 		fi
 
 		commander start
+		thrust_estimate start
 	fi
 
 	# Sensors on the PWM interface bank.
