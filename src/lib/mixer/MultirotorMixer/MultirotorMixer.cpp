@@ -344,6 +344,15 @@ MultirotorMixer::mix(float *outputs, unsigned space)
 		break;
 	}
 
+	// publish outputs after mixing (thrust setpoint for each rotor)
+	actuator_outputs_s actuator_outputs{};
+	for(int i = 0; i < 8; i++){
+		actuator_outputs.output[i] = outputs[i];
+	}
+	actuator_outputs.timestamp = hrt_absolute_time();
+	publishRotorThrustSetpoint(actuator_outputs);
+
+
 	// Apply thrust model and scale outputs to range [idle_speed, 1].
 	// At this point the outputs are expected to be in [0, 1], but they can be outside, for example
 	// if a roll command exceeds the motor band limit.
@@ -405,6 +414,11 @@ MultirotorMixer::mix(float *outputs, unsigned space)
 	_delta_out_max = 0.0f;
 
 	return _rotor_count;
+}
+
+void
+MultirotorMixer::publishRotorThrustSetpoint(const actuator_outputs_s &actuator_outputs){
+	_outputs_thrust_pub.publish(actuator_outputs);
 }
 
 /*

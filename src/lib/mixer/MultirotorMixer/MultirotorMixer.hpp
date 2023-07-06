@@ -34,6 +34,9 @@
 #pragma once
 
 #include <mixer/MixerBase/Mixer.hpp>
+#include <uORB/Publication.hpp>
+#include <uORB/PublicationMulti.hpp>
+#include <uORB/topics/actuator_outputs.h>
 
 /**
  * Supported multirotor geometries.
@@ -240,6 +243,8 @@ private:
 
 	void update_saturation_status(unsigned index, bool clipping_high, bool clipping_low_roll_pitch, bool clipping_low_yaw);
 
+	void publishRotorThrustSetpoint(const actuator_outputs_s &actuator_outputs);
+
 	float 				_delta_out_max{0.0f};
 	float 				_thrust_factor{0.0f};
 
@@ -252,4 +257,6 @@ private:
 
 	float 				*_outputs_prev{nullptr};
 	float 				*_tmp_array{nullptr};
+
+	uORB::PublicationMulti<actuator_outputs_s> _outputs_thrust_pub{ORB_ID(actuator_outputs_thrust)};
 };
