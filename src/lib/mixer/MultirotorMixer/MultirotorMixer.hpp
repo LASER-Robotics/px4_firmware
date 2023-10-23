@@ -36,7 +36,13 @@
 #include <mixer/MixerBase/Mixer.hpp>
 #include <uORB/Publication.hpp>
 #include <uORB/PublicationMulti.hpp>
+#include <uORB/Subscription.hpp>
+#include <uORB/SubscriptionCallback.hpp>
+#include <px4_platform_common/px4_work_queue/ScheduledWorkItem.hpp>
+
 #include <uORB/topics/actuator_outputs.h>
+#include <uORB/topics/vehicle_thrust_estimate.h>
+#include <lib/pid/pid.h>
 
 /**
  * Supported multirotor geometries.
@@ -245,6 +251,8 @@ private:
 
 	void publishRotorThrustSetpoint(const actuator_outputs_s &actuator_outputs);
 
+	void initialize_parameters(void);
+
 	float 				_delta_out_max{0.0f};
 	float 				_thrust_factor{0.0f};
 
@@ -259,4 +267,21 @@ private:
 	float 				*_tmp_array{nullptr};
 
 	uORB::PublicationMulti<actuator_outputs_s> _outputs_thrust_pub{ORB_ID(actuator_outputs_thrust)};
+
+	// PID_t _thrust_ctrl{};
+
+	// DEFINE_PARAMETERS(
+
+	// 	(ParamFloat<px4::params::THRUST_SPEED_P>) _param_thrust_p,
+	// 	(ParamFloat<px4::params::THRUST_SPEED_I>) _param_thrust_i,
+	// 	(ParamFloat<px4::params::THRUST_SPEED_D>) _param_thrust_d,
+	// 	(ParamFloat<px4::params::THRUST_SPEED_IMAX>) _param_thrust_imax
+
+	// )
+
+	clock_t begin[4];
+	clock_t now[4];
+
+	// uORB::SubscriptionCallbackWorkItem _thrust_estimate_sub{ORB_ID(vehicle_thrust_estimate)};
+	// vehicle_thrust_estimate_s thrust_estimate;
 };

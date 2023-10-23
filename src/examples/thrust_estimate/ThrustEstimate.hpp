@@ -110,6 +110,7 @@ private:
 	double mass;
 	double radius;
 	double rho;
+	double thrust_scale;
 
 	double I_r;
 

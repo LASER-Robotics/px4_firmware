@@ -61,6 +61,9 @@ ThrustEstimate::ThrustEstimate() :
 	Delta = pow(10, -1);
 	N = 20;
 	epsilon = pow(10, -5);
+
+	thrust_scale = 1;
+
 	initialize_parameters();
 }
 
@@ -115,6 +118,7 @@ void ThrustEstimate::Run()
 			w_dot_hat[j] = (double)(w[j] - w_old[j]) / time_elapsed;
 
 			thrust[j] = thrust_computation(i_hat[j], w[j], w_dot_hat[j], j);
+			thrust[j] = thrust[j] * thrust_scale;
 		}
 	}
 

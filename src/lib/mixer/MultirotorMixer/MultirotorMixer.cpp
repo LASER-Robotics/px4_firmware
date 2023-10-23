@@ -82,6 +82,7 @@ const char *_config_key[] = {"4x"};
 MultirotorMixer::MultirotorMixer(ControlCallback control_cb, uintptr_t cb_handle, MultirotorGeometry geometry) :
 	MultirotorMixer(control_cb, cb_handle, _config_index[(int)geometry], _config_rotor_count[(int)geometry])
 {
+	initialize_parameters();
 }
 
 MultirotorMixer::MultirotorMixer(ControlCallback control_cb, uintptr_t cb_handle, const Rotor *rotors,
@@ -95,12 +96,19 @@ MultirotorMixer::MultirotorMixer(ControlCallback control_cb, uintptr_t cb_handle
 	for (unsigned i = 0; i < _rotor_count; ++i) {
 		_outputs_prev[i] = -1.f;
 	}
+
+	initialize_parameters();
 }
 
 MultirotorMixer::~MultirotorMixer()
 {
 	delete[] _outputs_prev;
 	delete[] _tmp_array;
+}
+
+void
+MultirotorMixer::initialize_parameters(){
+
 }
 
 MultirotorMixer *
@@ -352,6 +360,28 @@ MultirotorMixer::mix(float *outputs, unsigned space)
 	actuator_outputs.timestamp = hrt_absolute_time();
 	publishRotorThrustSetpoint(actuator_outputs);
 
+	// SUBSCREVE NO TOPICO DE CURRENT THRUST
+	// TRANSOFRMA DE THRUST ABSOLUTO PARA THRUST RELATIVO [0,1]
+
+	// if (_thrust_estimate_sub.updated()) {
+	// 	_thrust_estimate_sub.copy(&thrust_estimate);
+	// }
+
+	// pid_calculate(&_thrust_ctrl, target_thrust, current_thrust, current_thrust_dot, dt);
+
+	// for (unsigned i = 0; i < _rotor_count; i++) {
+	// 	pid_calculate(&_thrust_ctrl[i], target_thrust[i], current_thrust[i], current_thrust_dot[i], dt[i]);
+	// 	outputs[i] = math::constrain((2.f * outputs[i] - 1.f), -1.f, 1.f);
+	// }
+
+	// FLUXO DO CONTROLE DE PROPULSAO
+	// INICIALIZA OS OBJETOS PID PARA CADA MOTOR
+	// PEGA A PROPULSAO ESTIMADA ATUAL (DE UM TOPICO)
+	// CONVERTE A PROPULSAO DO TOPICO PARA UMA PROPULSAO RELATIVA [0,1]
+	// PEGA A PROPULSAO DESEJADA RELATIVA
+	// JOGA NO PID
+	// JOGA NO OUTPUTS[I]
+	// REZA
 
 	// Apply thrust model and scale outputs to range [idle_speed, 1].
 	// At this point the outputs are expected to be in [0, 1], but they can be outside, for example
