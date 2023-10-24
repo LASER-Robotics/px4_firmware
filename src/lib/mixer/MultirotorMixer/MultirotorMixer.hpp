@@ -44,6 +44,8 @@
 #include <uORB/topics/vehicle_thrust_estimate.h>
 #include <lib/pid/pid.h>
 
+// #include <px4_platform_common/module_params.h>
+
 /**
  * Supported multirotor geometries.
  *
@@ -251,7 +253,7 @@ private:
 
 	void publishRotorThrustSetpoint(const actuator_outputs_s &actuator_outputs);
 
-	void initialize_parameters(void);
+	float map(float x, float in_min, float in_max, float out_min, float out_max);
 
 	float 				_delta_out_max{0.0f};
 	float 				_thrust_factor{0.0f};
@@ -268,20 +270,23 @@ private:
 
 	uORB::PublicationMulti<actuator_outputs_s> _outputs_thrust_pub{ORB_ID(actuator_outputs_thrust)};
 
-	// PID_t _thrust_ctrl{};
+	PID_t _thrust_ctrl[4]{PID_MODE_DERIVATIV_CALC};
 
-	// DEFINE_PARAMETERS(
+	float _kp = 10;
+	float _ki = 0.05;
+	float _kd = 0.05;
+	float _integral_limit = 100.0;
+	float _output_limit = 100.0;
 
-	// 	(ParamFloat<px4::params::THRUST_SPEED_P>) _param_thrust_p,
-	// 	(ParamFloat<px4::params::THRUST_SPEED_I>) _param_thrust_i,
-	// 	(ParamFloat<px4::params::THRUST_SPEED_D>) _param_thrust_d,
-	// 	(ParamFloat<px4::params::THRUST_SPEED_IMAX>) _param_thrust_imax
+	float _thrust_min = 5.0;
+	float _thrust_max = 1000.0;
 
-	// )
+	float _val_dot[4];
 
-	clock_t begin[4];
-	clock_t now[4];
+	hrt_abstime _last_called[4];
 
-	// uORB::SubscriptionCallbackWorkItem _thrust_estimate_sub{ORB_ID(vehicle_thrust_estimate)};
-	// vehicle_thrust_estimate_s thrust_estimate;
+	float _outputs_mock[4];
+
+	uORB::Subscription _thrust_estimate_sub{ORB_ID(vehicle_thrust_estimate)};
+	vehicle_thrust_estimate_s thrust_estimate;
 };

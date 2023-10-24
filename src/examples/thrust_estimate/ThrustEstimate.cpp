@@ -55,15 +55,21 @@ ThrustEstimate::ThrustEstimate() :
 
 	K_q[0] = 0.242;
 	K_q[1] = 0.0014;
-	mass = 8.2 * pow(10, -3);
-	radius = 11 * pow(10, -2);
+
+	// X250
+	mass = 5 * pow(10, -3);
+	radius = 6.5 * pow(10, -2);
+	thrust_scale = 0.085896145;
+
+	// X500
+	// mass = 14 * pow(10, -3);
+	// radius = 16 * pow(10, -2);
+	// thrust_scale = 1;
+
 	rho = 1.293;
 	Delta = pow(10, -1);
 	N = 20;
 	epsilon = pow(10, -5);
-
-	thrust_scale = 1;
-
 	initialize_parameters();
 }
 
