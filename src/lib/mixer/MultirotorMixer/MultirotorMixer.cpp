@@ -376,16 +376,16 @@ MultirotorMixer::mix(float *outputs, unsigned space)
 	actuator_outputs.timestamp = hrt_absolute_time();
 	publishRotorThrustSetpoint(actuator_outputs);
 
-	for (unsigned i = 0; i < 4; i++) {
-		outputs[i] = _outputs_mock[i];
-	}
+	// for (unsigned i = 0; i < 4; i++) {
+	// 	outputs[i] = _outputs_mock[i];
+	// }
 
 	// Apply thrust model and scale outputs to range [idle_speed, 1].
 	// At this point the outputs are expected to be in [0, 1], but they can be outside, for example
 	// if a roll command exceeds the motor band limit.
 	// for (unsigned i = 0; i < _rotor_count; i++) {
-	// 	// Implement simple model for static relationship between applied motor pwm and motor thrust
-	// 	// model: thrust = (1 - _thrust_factor) * PWM + _thrust_factor * PWM^2
+		// Implement simple model for static relationship between applied motor pwm and motor thrust
+		// model: thrust = (1 - _thrust_factor) * PWM + _thrust_factor * PWM^2
 	// 	if (_thrust_factor > 0.0f) {
 	// 		outputs[i] = -(1.0f - _thrust_factor) / (2.0f * _thrust_factor) + sqrtf((1.0f - _thrust_factor) *
 	// 				(1.0f - _thrust_factor) / (4.0f * _thrust_factor * _thrust_factor) + (outputs[i] < 0.0f ? 0.0f : outputs[i] /
