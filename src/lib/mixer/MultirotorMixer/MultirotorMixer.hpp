@@ -272,9 +272,9 @@ private:
 
 	PID_t _thrust_ctrl[4]{PID_MODE_DERIVATIV_CALC};
 
-	float _kp = 10;
-	float _ki = 0.05;
-	float _kd = 0.05;
+	float _kp = 1;
+	float _ki = 0.005;
+	float _kd = 0.005;
 	float _integral_limit = 100.0;
 	float _output_limit = 100.0;
 

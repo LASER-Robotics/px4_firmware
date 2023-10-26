@@ -357,8 +357,8 @@ MultirotorMixer::mix(float *outputs, unsigned space)
 		_thrust_estimate_sub.copy(&thrust_estimate);
 	}
 
-	for (unsigned i = 0; i < 4; i++) {
-		_outputs_mock[i] = map(outputs[i], 0, 1, _thrust_min, _thrust_max);
+	for (unsigned i = 0; i < _rotor_count; i++) {
+		_outputs_mock[i] = math::constrain(map(outputs[i], 0, 1, _thrust_min, _thrust_max), _thrust_min, _thrust_max);
 	}
 
 	for (unsigned i = 0; i < _rotor_count; i++) {
@@ -370,15 +370,15 @@ MultirotorMixer::mix(float *outputs, unsigned space)
 
 	// publish outputs after mixing (thrust setpoint for each rotor)
 	actuator_outputs_s actuator_outputs{};
-	for(int i = 0; i < 4; i++){
+	for(unsigned i = 0; i < _rotor_count; i++){
 		actuator_outputs.output[i] = _outputs_mock[i];
 	}
 	actuator_outputs.timestamp = hrt_absolute_time();
 	publishRotorThrustSetpoint(actuator_outputs);
 
-	// for (unsigned i = 0; i < 4; i++) {
-	// 	outputs[i] = _outputs_mock[i];
-	// }
+	for (unsigned i = 0; i < _rotor_count; i++) {
+		outputs[i] = _outputs_mock[i];
+	}
 
 	// Apply thrust model and scale outputs to range [idle_speed, 1].
 	// At this point the outputs are expected to be in [0, 1], but they can be outside, for example
