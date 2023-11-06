@@ -57,9 +57,9 @@ ThrustEstimate::ThrustEstimate() :
 	K_q[1] = 0.0014;
 
 	// X250
-	mass = 5 * pow(10, -3);
-	radius = 6.5 * pow(10, -2);
-	thrust_scale = 0.085896145;
+	// mass = 5 * pow(10, -3);
+	// radius = 6.5 * pow(10, -2);
+	// thrust_scale = 0.085896145;
 
 	// X500
 	// mass = 14 * pow(10, -3);
@@ -122,6 +122,8 @@ void ThrustEstimate::Run()
 			// double v_hat = (double)esc.esc[0].esc_voltage;
 
 			w_dot_hat[j] = (double)(w[j] - w_old[j]) / time_elapsed;
+
+			parameters_update();
 
 			thrust[j] = thrust_computation(i_hat[j], w[j], w_dot_hat[j], j);
 			thrust[j] = thrust[j] * thrust_scale;
@@ -261,6 +263,22 @@ void ThrustEstimate::initialize_parameters(void){
 	}
 	I_r = mass * radius * radius;
 	c[4] = 2 * rho * (double) M_PI_F * c[0] * c[0];
+}
+
+void ThrustEstimate::parameters_update()
+{
+	if (_parameter_update_sub.updated()) {
+		parameter_update_s param_update;
+		_parameter_update_sub.copy(&param_update);
+
+		// If any parameter updated, call updateParams() to check if
+		// this class attributes need updating (and do so).
+		updateParams();
+	}
+
+	mass = (double)_param_rot_prop_weight.get();
+	radius = (double)_param_rot_prop_size.get();
+	thrust_scale = (double)_param_rot_thrust_scale.get();
 }
 
 extern "C" __EXPORT int thrust_estimate_main(int argc, char *argv[])

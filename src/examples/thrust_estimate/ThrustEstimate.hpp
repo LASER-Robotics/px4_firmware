@@ -49,6 +49,9 @@
 #include <uORB/topics/vehicle_thrust_estimate.h>
 #include <uORB/topics/esc_status.h>
 
+#include <uORB/topics/parameter_update.h>
+#include <px4_platform_common/module_params.h>
+
 using namespace time_literals;
 
 class ThrustEstimate : public ModuleBase<ThrustEstimate>, public ModuleParams, public px4::ScheduledWorkItem
@@ -85,9 +88,15 @@ public:
 private:
 	void Run() override;
 
+	void parameters_update();
+
 	// Publications
 	uORB::Publication<vehicle_thrust_estimate_s> _thrust_estimate_pub{ORB_ID(vehicle_thrust_estimate)};
+
+
+	// Subscriptions
 	uORB::SubscriptionCallbackWorkItem _esc_status_sub{this, ORB_ID(esc_status)};        			// subscription that schedules WorkItemExample when updated
+	uORB::SubscriptionInterval _parameter_update_sub{ORB_ID(parameter_update), 1_s};
 	// uORB::SubscriptionCallbackWorkItem _sensor_accel_sub{this, ORB_ID(sensor_accel)};
 
 	// Performance (perf) counters
@@ -120,4 +129,10 @@ private:
 	double i_hat[4];
 
 	uint32_t _sensor_interval_us{1250};
+
+	DEFINE_PARAMETERS(
+		(ParamFloat<px4::params::ROT_THRUST_SCALE>) _param_rot_thrust_scale,
+		(ParamFloat<px4::params::ROT_PROP_SIZE>) _param_rot_prop_size,
+		(ParamFloat<px4::params::ROT_PROP_WEIGHT>) _param_rot_prop_weight
+	)
 };
