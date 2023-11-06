@@ -165,6 +165,21 @@ public:
 
 	void				set_rotor_control(Mixer::RotorControl rotor_control);
 
+	/**
+	 * @brief      Sets the thrust control P.
+	 *
+	 * @param[in]  val   The value
+	 */
+	void				set_rotor_control_p(float val);
+
+	void				set_rotor_control_i(float val);
+
+	void				set_rotor_control_d(float val);
+
+	void				set_rotor_control_pid_max(float val);
+
+	void				set_rotor_thrust_max(float val);
+
 	unsigned			get_multirotor_count();
 
 	void 				set_dt_once(float dt);

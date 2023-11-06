@@ -349,7 +349,12 @@ private:
 		(ParamFloat<px4::params::MOT_SLEW_MAX>) _param_mot_slew_max,
 		(ParamFloat<px4::params::THR_MDL_FAC>) _param_thr_mdl_fac, ///< thrust to motor control signal modelling factor
 		(ParamInt<px4::params::MOT_ORDERING>) _param_mot_ordering,
-		(ParamInt<px4::params::ROT_CTRL>) _param_rot_ctrl,
+		(ParamInt<px4::params::ROT_CTRL_TYPE>) _param_rot_ctrl_type,
+		(ParamFloat<px4::params::ROT_CTRL_THRST_P>) _param_rot_ctrl_p,
+		(ParamFloat<px4::params::ROT_CTRL_THRST_I>) _param_rot_ctrl_i,
+		(ParamFloat<px4::params::ROT_CTRL_THRST_D>) _param_rot_ctrl_d,
+		(ParamFloat<px4::params::ROT_CTRL_PID_MAX>) _param_rot_ctrl_pid_max,
+		(ParamFloat<px4::params::ROT_THRUST_MAX>) _param_rot_thrust_max,
 		(ParamBool<px4::params::SYS_CTRL_ALLOC>) _param_sys_ctrl_alloc
 
 	)

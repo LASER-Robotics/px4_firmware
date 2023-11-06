@@ -45,4 +45,51 @@ PARAM_DEFINE_INT32(MOT_ORDERING, 0);
  *
  * @group Mixer Output
  */
-PARAM_DEFINE_INT32(ROT_CTRL, 0);
+PARAM_DEFINE_INT32(ROT_CTRL_TYPE, 0);
+
+/**
+ * Rotor thrust control P gain.
+ *
+ * @decimal 5
+ *
+ * @group Mixer Output
+ */
+PARAM_DEFINE_FLOAT(ROT_CTRL_THRST_P, 1.0f);
+
+/**
+ * Rotor thrust control I gain
+ *
+ * @decimal 5
+ *
+ * @group Mixer Output
+ */
+PARAM_DEFINE_FLOAT(ROT_CTRL_THRST_I, 0.005f);
+
+/**
+ * Rotor thrust control D gain
+ *
+ * @decimal 5
+ *
+ * @group Mixer Output
+ */
+PARAM_DEFINE_FLOAT(ROT_CTRL_THRST_D, 0.005f);
+
+/**
+ * Rotor control PID max output
+ *
+ * @decimal 2
+ *
+ * @group Mixer Output
+ */
+PARAM_DEFINE_FLOAT(ROT_CTRL_PID_MAX, 100.0f);
+
+/**
+ * Rotor thrust max value
+ *
+ * Max thrust. Used as an uper bound for the thrust estimate to real mapping.
+ *
+ * @decimal 2
+ *
+ * @group Mixer Output
+ */
+PARAM_DEFINE_FLOAT(ROT_THRUST_MAX, 1000.0f);

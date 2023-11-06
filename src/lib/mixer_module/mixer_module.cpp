@@ -189,7 +189,12 @@ void MixingOutput::updateParams()
 
 		_mixers->set_thrust_factor(_param_thr_mdl_fac.get());
 		_mixers->set_airmode((Mixer::Airmode)_param_mc_airmode.get());
-		_mixers->set_rotor_control((Mixer::RotorControl)_param_rot_ctrl.get());
+		_mixers->set_rotor_control((Mixer::RotorControl)_param_rot_ctrl_type.get());
+		_mixers->set_rotor_control_p(_param_rot_ctrl_p.get());
+		_mixers->set_rotor_control_i(_param_rot_ctrl_i.get());
+		_mixers->set_rotor_control_d(_param_rot_ctrl_d.get());
+		_mixers->set_rotor_control_pid_max(_param_rot_ctrl_pid_max.get());
+		_mixers->set_rotor_thrust_max(_param_rot_thrust_max.get());
 	}
 
 	if (_use_dynamic_mixing) {

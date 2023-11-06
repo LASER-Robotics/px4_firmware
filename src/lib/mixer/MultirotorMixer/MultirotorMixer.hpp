@@ -160,6 +160,16 @@ public:
 
 	void 			set_rotor_control(RotorControl rotor_control) override { _rotor_control = rotor_control; }
 
+	void			set_rotor_control_p(float val) override { _rotor_control_p = math::constrain(val, 0.0f, 100.0f); }
+
+	void			set_rotor_control_i(float val) override { _rotor_control_i = math::constrain(val, 0.0f, 1.0f); }
+
+	void			set_rotor_control_d(float val) override { _rotor_control_d = math::constrain(val, 0.0f, 1.0f); }
+
+	void			set_rotor_control_pid_max(float val) override { _rotor_control_pid_max = math::constrain(val, 0.0f, 1000.0f); }
+
+	void			set_rotor_thrust_max(float val) override { _rotor_thrust_max = math::constrain(val, 0.0f, 2000.0f); }
+
 	unsigned		get_multirotor_count() override { return _rotor_count; }
 
 	union saturation_status {
@@ -281,6 +291,12 @@ private:
 	float _kd = 0.005;
 	float _integral_limit = 100.0;
 	float _output_limit = 100.0;
+
+	float _rotor_control_p;
+	float _rotor_control_i;
+	float _rotor_control_d;
+	float _rotor_control_pid_max;
+	float _rotor_thrust_max;
 
 	float _thrust_min = 5.0;
 	float _thrust_max = 1000.0;

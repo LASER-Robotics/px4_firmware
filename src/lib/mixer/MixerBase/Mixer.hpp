@@ -239,6 +239,16 @@ public:
 	 */
 	virtual void			set_rotor_control(RotorControl rotor_conrol) {};
 
+	virtual void 			set_rotor_control_p(float val) {}
+
+	virtual void 			set_rotor_control_i(float val) {}
+
+	virtual void 			set_rotor_control_d(float val) {}
+
+	virtual void 			set_rotor_control_pid_max(float val) {}
+
+	virtual void 			set_rotor_thrust_max(float val) {}
+
 	virtual unsigned		get_multirotor_count()  { return 0; }
 
 	virtual void 			set_dt_once(float dt) {}

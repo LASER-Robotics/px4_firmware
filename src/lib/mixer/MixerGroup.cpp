@@ -143,6 +143,46 @@ MixerGroup::set_rotor_control(Mixer::RotorControl rotor_control)
 	}
 }
 
+void
+MixerGroup::set_rotor_control_p(float val)
+{
+	for (auto mixer : _mixers) {
+		mixer->set_rotor_control_p(val);
+	}
+}
+
+void
+MixerGroup::set_rotor_control_i(float val)
+{
+	for (auto mixer : _mixers) {
+		mixer->set_rotor_control_i(val);
+	}
+}
+
+void
+MixerGroup::set_rotor_control_d(float val)
+{
+	for (auto mixer : _mixers) {
+		mixer->set_rotor_control_d(val);
+	}
+}
+
+void
+MixerGroup::set_rotor_control_pid_max(float val)
+{
+	for (auto mixer : _mixers) {
+		mixer->set_rotor_control_pid_max(val);
+	}
+}
+
+void
+MixerGroup::set_rotor_thrust_max(float val)
+{
+	for (auto mixer : _mixers) {
+		mixer->set_rotor_thrust_max(val);
+	}
+}
+
 unsigned
 MixerGroup::get_multirotor_count()
 {
