@@ -46,16 +46,6 @@
 #include <uORB/Subscription.hpp>
 #include <uORB/SubscriptionCallback.hpp>
 
-// #include <px4_platform_common/px4_config.h>
-// #include <px4_platform_common/log.h>
-// #include <px4_platform_common/tasks.h>
-// #include <unistd.h>
-// #include <stdio.h>
-// #include <poll.h>
-// #include <string.h>
-// #include <math.h>
-// #include <time.h>
-
 #include <uORB/topics/vehicle_thrust_estimate.h>
 #include <uORB/topics/esc_status.h>
 

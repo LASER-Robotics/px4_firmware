@@ -135,6 +135,14 @@ MixerGroup::set_airmode(Mixer::Airmode airmode)
 	}
 }
 
+void
+MixerGroup::set_rotor_control(Mixer::RotorControl rotor_control)
+{
+	for (auto mixer : _mixers) {
+		mixer->set_rotor_control(rotor_control);
+	}
+}
+
 unsigned
 MixerGroup::get_multirotor_count()
 {

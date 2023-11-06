@@ -33,3 +33,16 @@ PARAM_DEFINE_INT32(MC_AIRMODE, 0);
  * @group Mixer Output
  */
 PARAM_DEFINE_INT32(MOT_ORDERING, 0);
+
+/**
+ * Rotor control
+ *
+ * Determines the rotor control type.
+ *
+ *
+ * @value 0 Simple
+ * @value 1 Thrust Control
+ *
+ * @group Mixer Output
+ */
+PARAM_DEFINE_INT32(ROT_CTRL, 0);

@@ -142,6 +142,11 @@ public:
 		roll_pitch_yaw = 2
 	};
 
+	enum class RotorControl : int32_t {
+		simple = 0,
+		thrust_control = 1
+	};
+
 	/**
 	 * Fetch a control value.
 	 *
@@ -226,6 +231,13 @@ public:
 	 * @param[in]  airmode   Select airmode type (0 = disabled, 1 = roll/pitch, 2 = roll/pitch/yaw)
 	 */
 	virtual void			set_airmode(Airmode airmode) {};
+
+	/**
+	 * @brief Set rotor control type. Allows the mixer know which control use for the rotor.
+	 *
+	 * @param[in]  rotor_control   Select rotor control type (0 = simple, 1 = thrust)
+	 */
+	virtual void			set_rotor_control(RotorControl rotor_conrol) {};
 
 	virtual unsigned		get_multirotor_count()  { return 0; }
 

@@ -158,6 +158,8 @@ public:
 
 	void 			set_airmode(Airmode airmode) override { _airmode = airmode; }
 
+	void 			set_rotor_control(RotorControl rotor_control) override { _rotor_control = rotor_control; }
+
 	unsigned		get_multirotor_count() override { return _rotor_count; }
 
 	union saturation_status {
@@ -259,6 +261,8 @@ private:
 	float 				_thrust_factor{0.0f};
 
 	Airmode				_airmode{Airmode::disabled};
+
+	RotorControl 			_rotor_control{RotorControl::simple};
 
 	saturation_status		_saturation_status{};
 

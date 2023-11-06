@@ -353,47 +353,59 @@ MultirotorMixer::mix(float *outputs, unsigned space)
 	// JOGA NO OUTPUTS[I]
 	// REZA
 
-	if (_thrust_estimate_sub.updated()) {
-		_thrust_estimate_sub.copy(&thrust_estimate);
+	switch (_rotor_control) {
+
+		case RotorControl::thrust_control:
+		{
+			if (_thrust_estimate_sub.updated()) {
+				_thrust_estimate_sub.copy(&thrust_estimate);
+			}
+
+			for (unsigned i = 0; i < _rotor_count; i++) {
+				_outputs_mock[i] = math::constrain(map(outputs[i], 0, 1, _thrust_min, _thrust_max), _thrust_min, _thrust_max);
+			}
+
+			for (unsigned i = 0; i < _rotor_count; i++) {
+				float dt = hrt_elapsed_time(&_last_called[i]) * 1e-6f;
+				pid_calculate(&_thrust_ctrl[i], _outputs_mock[i], thrust_estimate.thrust[i], 0, dt);
+				_outputs_mock[i] = math::constrain(map(_outputs_mock[i], _thrust_min, _thrust_max, -1.f, 1.f), -1.f, 1.f);
+				_last_called[i] = hrt_absolute_time();
+			}
+
+			// publish outputs after mixing (thrust setpoint for each rotor)
+			actuator_outputs_s actuator_outputs{};
+			for(unsigned i = 0; i < _rotor_count; i++){
+				actuator_outputs.output[i] = _outputs_mock[i];
+			}
+			actuator_outputs.timestamp = hrt_absolute_time();
+			publishRotorThrustSetpoint(actuator_outputs);
+
+			for (unsigned i = 0; i < _rotor_count; i++) {
+				outputs[i] = _outputs_mock[i];
+			}
+			break;
+		}
+
+		case RotorControl::simple:
+		default:
+		{
+			// Apply thrust model and scale outputs to range [idle_speed, 1].
+			// At this point the outputs are expected to be in [0, 1], but they can be outside, for example
+			// if a roll command exceeds the motor band limit.
+			for (unsigned i = 0; i < _rotor_count; i++) {
+				// Implement simple model for static relationship between applied motor pwm and motor thrust
+				// model: thrust = (1 - _thrust_factor) * PWM + _thrust_factor * PWM^2
+				if (_thrust_factor > 0.0f) {
+					outputs[i] = -(1.0f - _thrust_factor) / (2.0f * _thrust_factor) + sqrtf((1.0f - _thrust_factor) *
+							(1.0f - _thrust_factor) / (4.0f * _thrust_factor * _thrust_factor) + (outputs[i] < 0.0f ? 0.0f : outputs[i] /
+									_thrust_factor));
+				}
+
+				outputs[i] = math::constrain((2.f * outputs[i] - 1.f), -1.f, 1.f);
+			}
+			break;
+		}
 	}
-
-	for (unsigned i = 0; i < _rotor_count; i++) {
-		_outputs_mock[i] = math::constrain(map(outputs[i], 0, 1, _thrust_min, _thrust_max), _thrust_min, _thrust_max);
-	}
-
-	for (unsigned i = 0; i < _rotor_count; i++) {
-		float dt = hrt_elapsed_time(&_last_called[i]) * 1e-6f;
-		pid_calculate(&_thrust_ctrl[i], _outputs_mock[i], thrust_estimate.thrust[i], 0, dt);
-		_outputs_mock[i] = math::constrain(map(_outputs_mock[i], _thrust_min, _thrust_max, -1.f, 1.f), -1.f, 1.f);
-		_last_called[i] = hrt_absolute_time();
-	}
-
-	// publish outputs after mixing (thrust setpoint for each rotor)
-	actuator_outputs_s actuator_outputs{};
-	for(unsigned i = 0; i < _rotor_count; i++){
-		actuator_outputs.output[i] = _outputs_mock[i];
-	}
-	actuator_outputs.timestamp = hrt_absolute_time();
-	publishRotorThrustSetpoint(actuator_outputs);
-
-	for (unsigned i = 0; i < _rotor_count; i++) {
-		outputs[i] = _outputs_mock[i];
-	}
-
-	// Apply thrust model and scale outputs to range [idle_speed, 1].
-	// At this point the outputs are expected to be in [0, 1], but they can be outside, for example
-	// if a roll command exceeds the motor band limit.
-	// for (unsigned i = 0; i < _rotor_count; i++) {
-		// Implement simple model for static relationship between applied motor pwm and motor thrust
-		// model: thrust = (1 - _thrust_factor) * PWM + _thrust_factor * PWM^2
-	// 	if (_thrust_factor > 0.0f) {
-	// 		outputs[i] = -(1.0f - _thrust_factor) / (2.0f * _thrust_factor) + sqrtf((1.0f - _thrust_factor) *
-	// 				(1.0f - _thrust_factor) / (4.0f * _thrust_factor * _thrust_factor) + (outputs[i] < 0.0f ? 0.0f : outputs[i] /
-	// 						_thrust_factor));
-	// 	}
-
-	// 	outputs[i] = math::constrain((2.f * outputs[i] - 1.f), -1.f, 1.f);
-	// }
 
 	// Slew rate limiting and saturation checking
 	for (unsigned i = 0; i < _rotor_count; i++) {
