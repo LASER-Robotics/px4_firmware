@@ -247,6 +247,8 @@ public:
 
 	virtual void 			set_rotor_control_pid_max(float val) {}
 
+	virtual void 			set_rotor_control_i_max(float val) {}
+
 	virtual void 			set_rotor_thrust_max(float val) {}
 
 	virtual unsigned		get_multirotor_count()  { return 0; }

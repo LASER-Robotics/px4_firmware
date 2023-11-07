@@ -354,6 +354,7 @@ private:
 		(ParamFloat<px4::params::ROT_CTRL_THRST_I>) _param_rot_ctrl_i,
 		(ParamFloat<px4::params::ROT_CTRL_THRST_D>) _param_rot_ctrl_d,
 		(ParamFloat<px4::params::ROT_CTRL_PID_MAX>) _param_rot_ctrl_pid_max,
+		(ParamFloat<px4::params::ROT_CTRL_I_MAX>) _param_rot_ctrl_i_max,
 		(ParamFloat<px4::params::ROT_THRUST_MAX>) _param_rot_thrust_max,
 		(ParamBool<px4::params::SYS_CTRL_ALLOC>) _param_sys_ctrl_alloc
 

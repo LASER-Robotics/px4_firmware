@@ -168,6 +168,8 @@ public:
 
 	void			set_rotor_control_pid_max(float val) override { _rotor_control_pid_max = math::constrain(val, 0.0f, 1000.0f); }
 
+	void			set_rotor_control_i_max(float val) override { _rotor_control_i_max = math::constrain(val, 0.0f, 1.0f); }
+
 	void			set_rotor_thrust_max(float val) override { _rotor_thrust_max = math::constrain(val, 0.0f, 2000.0f); }
 
 	unsigned		get_multirotor_count() override { return _rotor_count; }
@@ -283,8 +285,10 @@ private:
 	float 				*_tmp_array{nullptr};
 
 	uORB::PublicationMulti<actuator_outputs_s> _outputs_thrust_pub{ORB_ID(actuator_outputs_thrust)};
+	uORB::PublicationMulti<actuator_outputs_s> _outputs_pid_pub{ORB_ID(actuator_outputs_pid)};
+	uORB::PublicationMulti<actuator_outputs_s> _outputs_simple_pub{ORB_ID(actuator_outputs_simple)};
 
-	PID_t _thrust_ctrl[4]{PID_MODE_DERIVATIV_CALC};
+	PID_t _thrust_ctrl[4]{PID_MODE_DERIVATIV_CALC, 0.001f};
 
 	float _kp = 1;
 	float _ki = 0.005;
@@ -296,6 +300,7 @@ private:
 	float _rotor_control_i;
 	float _rotor_control_d;
 	float _rotor_control_pid_max;
+	float _rotor_control_i_max;
 	float _rotor_thrust_max;
 
 	float _thrust_min = 5.0;
@@ -306,6 +311,8 @@ private:
 	hrt_abstime _last_called[4];
 
 	float _outputs_mock[4];
+	float _outputs_pid[4];
+	float _outputs_simple[4];
 
 	uORB::Subscription _thrust_estimate_sub{ORB_ID(vehicle_thrust_estimate)};
 	vehicle_thrust_estimate_s thrust_estimate;

@@ -178,6 +178,8 @@ public:
 
 	void				set_rotor_control_pid_max(float val);
 
+	void				set_rotor_control_i_max(float val);
+
 	void				set_rotor_thrust_max(float val);
 
 	unsigned			get_multirotor_count();

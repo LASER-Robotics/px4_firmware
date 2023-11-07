@@ -122,6 +122,8 @@ void LoggedTopics::add_default_topics()
 	// multi topics
 	add_optional_topic_multi("actuator_outputs", 100, 3);
 	add_optional_topic_multi("actuator_outputs_thrust", 100, 3);
+	add_optional_topic_multi("actuator_outputs_pid", 100, 3);
+	add_optional_topic_multi("actuator_outputs_simple", 100, 3);
 	add_optional_topic_multi("airspeed_wind", 1000, 4);
 	add_optional_topic_multi("control_allocator_status", 200, 2);
 	add_optional_topic_multi("rate_ctrl_status", 200, 2);

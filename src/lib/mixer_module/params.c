@@ -81,7 +81,16 @@ PARAM_DEFINE_FLOAT(ROT_CTRL_THRST_D, 0.005f);
  *
  * @group Mixer Output
  */
-PARAM_DEFINE_FLOAT(ROT_CTRL_PID_MAX, 100.0f);
+PARAM_DEFINE_FLOAT(ROT_CTRL_PID_MAX, 1.0f);
+
+/**
+ * Rotor control I max output
+ *
+ * @decimal 2
+ *
+ * @group Mixer Output
+ */
+PARAM_DEFINE_FLOAT(ROT_CTRL_I_MAX, 0.1f);
 
 /**
  * Rotor thrust max value

@@ -95,6 +95,10 @@ MultirotorMixer::MultirotorMixer(ControlCallback control_cb, uintptr_t cb_handle
 	for (unsigned i = 0; i < _rotor_count; ++i) {
 		_outputs_prev[i] = -1.f;
 	}
+
+	for (unsigned i = 0; i < _rotor_count; ++i) {
+		pid_init(&_thrust_ctrl[i], PID_MODE_DERIVATIV_CALC, 0.001f);
+	}
 }
 
 MultirotorMixer::~MultirotorMixer()
@@ -357,32 +361,46 @@ MultirotorMixer::mix(float *outputs, unsigned space)
 
 		case RotorControl::thrust_control:
 		{
+			// get thrust estimate value from topic
 			if (_thrust_estimate_sub.updated()) {
 				_thrust_estimate_sub.copy(&thrust_estimate);
 			}
 
-			for (unsigned i = 0; i < _rotor_count; i++) {
-				_outputs_mock[i] = math::constrain(map(outputs[i], 0, 1, _thrust_min, _thrust_max), _thrust_min, _thrust_max);
-			}
-
+			// apply pid control to each rotor and map outputs from absolute thrust to relative [-1,1]
 			for (unsigned i = 0; i < _rotor_count; i++) {
 				float dt = hrt_elapsed_time(&_last_called[i]) * 1e-6f;
-				pid_calculate(&_thrust_ctrl[i], _outputs_mock[i], thrust_estimate.thrust[i], 0, dt);
-				_outputs_mock[i] = math::constrain(map(_outputs_mock[i], _thrust_min, _thrust_max, -1.f, 1.f), -1.f, 1.f);
+
+				pid_set_parameters(&_thrust_ctrl[i],
+				   _rotor_control_p,
+				   _rotor_control_i,
+				   _rotor_control_d,
+				   _rotor_control_i_max,
+				   _rotor_control_pid_max);
+
+				float relative_thrust = math::constrain(map(thrust_estimate.thrust[i], 0.f, _rotor_thrust_max, 0.f, 1.f), 0.f, 1.f);
+				outputs[i] = pid_calculate(&_thrust_ctrl[i], outputs[i], relative_thrust, 0, dt);
 				_last_called[i] = hrt_absolute_time();
 			}
 
-			// publish outputs after mixing (thrust setpoint for each rotor)
+			// publish pid outputs
 			actuator_outputs_s actuator_outputs{};
 			for(unsigned i = 0; i < _rotor_count; i++){
-				actuator_outputs.output[i] = _outputs_mock[i];
+				actuator_outputs.output[i] = outputs[i];
+			}
+			actuator_outputs.timestamp = hrt_absolute_time();
+			_outputs_pid_pub.publish(actuator_outputs);
+
+			for(unsigned i = 0; i < _rotor_count; i++){
+				outputs[i] = math::constrain((2.f * outputs[i] - 1.f), -1.f, 1.f);
+			}
+
+			// publish outputs after mixing (thrust setpoint for each rotor)
+			// actuator_outputs_s actuator_outputs{};
+			for(unsigned i = 0; i < _rotor_count; i++){
+				actuator_outputs.output[i] = outputs[i];
 			}
 			actuator_outputs.timestamp = hrt_absolute_time();
 			publishRotorThrustSetpoint(actuator_outputs);
-
-			for (unsigned i = 0; i < _rotor_count; i++) {
-				outputs[i] = _outputs_mock[i];
-			}
 			break;
 		}
 
@@ -403,6 +421,15 @@ MultirotorMixer::mix(float *outputs, unsigned space)
 
 				outputs[i] = math::constrain((2.f * outputs[i] - 1.f), -1.f, 1.f);
 			}
+
+			// publish outputs after mixing (thrust setpoint for each rotor)
+			// actuator_outputs_s actuator_outputs{};
+			// for(unsigned i = 0; i < _rotor_count; i++){
+			// 	actuator_outputs.output[i] = outputs[i];
+			// }
+			// actuator_outputs.timestamp = hrt_absolute_time();
+			// _outputs_simple_pub.publish(actuator_outputs);
+
 			break;
 		}
 	}
