@@ -423,12 +423,12 @@ MultirotorMixer::mix(float *outputs, unsigned space)
 			}
 
 			// publish outputs after mixing (thrust setpoint for each rotor)
-			// actuator_outputs_s actuator_outputs{};
-			// for(unsigned i = 0; i < _rotor_count; i++){
-			// 	actuator_outputs.output[i] = outputs[i];
-			// }
-			// actuator_outputs.timestamp = hrt_absolute_time();
-			// _outputs_simple_pub.publish(actuator_outputs);
+			actuator_outputs_s actuator_outputs{};
+			for(unsigned i = 0; i < _rotor_count; i++){
+				actuator_outputs.output[i] = outputs[i];
+			}
+			actuator_outputs.timestamp = hrt_absolute_time();
+			_outputs_simple_pub.publish(actuator_outputs);
 
 			break;
 		}

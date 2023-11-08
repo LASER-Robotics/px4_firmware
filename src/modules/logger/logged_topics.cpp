@@ -60,7 +60,7 @@ void LoggedTopics::add_default_topics()
 	add_topic("cellular_status", 200);
 	add_topic("commander_state");
 	add_topic("cpuload");
-	add_optional_topic("esc_status", 250);
+	add_optional_topic("esc_status", 10);
 	add_topic("failure_detector_status", 100);
 	add_optional_topic("follow_target", 500);
 	add_optional_topic("generator_status");
@@ -121,9 +121,9 @@ void LoggedTopics::add_default_topics()
 
 	// multi topics
 	add_optional_topic_multi("actuator_outputs", 100, 3);
-	add_optional_topic_multi("actuator_outputs_thrust", 100, 3);
-	add_optional_topic_multi("actuator_outputs_pid", 100, 3);
-	add_optional_topic_multi("actuator_outputs_simple", 100, 3);
+	add_optional_topic_multi("actuator_outputs_thrust", 10, 3);
+	add_optional_topic_multi("actuator_outputs_pid", 10, 3);
+	add_optional_topic_multi("actuator_outputs_simple", 10, 3);
 	add_optional_topic_multi("airspeed_wind", 1000, 4);
 	add_optional_topic_multi("control_allocator_status", 200, 2);
 	add_optional_topic_multi("rate_ctrl_status", 200, 2);

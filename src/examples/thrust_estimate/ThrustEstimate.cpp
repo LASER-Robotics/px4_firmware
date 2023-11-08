@@ -57,9 +57,9 @@ ThrustEstimate::ThrustEstimate() :
 	K_q[1] = 0.0014;
 
 	// X250
-	// mass = 5 * pow(10, -3);
-	// radius = 6.5 * pow(10, -2);
-	// thrust_scale = 0.085896145;
+	mass = 5 * pow(10, -3);
+	radius = 6.5 * pow(10, -2);
+	thrust_scale = 0.085896145;
 
 	// X500
 	// mass = 14 * pow(10, -3);
@@ -123,7 +123,7 @@ void ThrustEstimate::Run()
 
 			w_dot_hat[j] = (double)(w[j] - w_old[j]) / time_elapsed;
 
-			parameters_update();
+			// parameters_update();
 
 			thrust[j] = thrust_computation(i_hat[j], w[j], w_dot_hat[j], j);
 			thrust[j] = thrust[j] * thrust_scale;
@@ -251,7 +251,7 @@ double ThrustEstimate::thrust_computation(double _i_hat, double _w, double _w_do
 	}
 	old_lambda_s_k[index] = lambda_s[k];
 	double _thrust = C_T * _w * _w;
-	if ((isnan(fabs(_thrust))) || (_thrust < -100000)){
+	if ((isnan(fabs(_thrust))) || (_thrust < -100000) || (_thrust > 2000)){
 		_thrust = old_thrust[index];
 	}
 	return _thrust;
