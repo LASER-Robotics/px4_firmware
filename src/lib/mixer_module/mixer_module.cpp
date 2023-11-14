@@ -193,6 +193,7 @@ void MixingOutput::updateParams()
 		_mixers->set_rotor_control_p(_param_rot_ctrl_p.get());
 		_mixers->set_rotor_control_i(_param_rot_ctrl_i.get());
 		_mixers->set_rotor_control_d(_param_rot_ctrl_d.get());
+		_mixers->set_rotor_control_ff(_param_rot_ctrl_ff.get());
 		_mixers->set_rotor_control_pid_max(_param_rot_ctrl_pid_max.get());
 		_mixers->set_rotor_control_i_max(_param_rot_ctrl_i_max.get());
 		_mixers->set_rotor_thrust_max(_param_rot_thrust_max.get());

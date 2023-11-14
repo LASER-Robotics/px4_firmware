@@ -100,6 +100,7 @@ void RoverPositionControl::parameters_update(bool force)
 				   _param_speed_p.get(),
 				   _param_speed_i.get(),
 				   _param_speed_d.get(),
+				   0.f,
 				   _param_speed_imax.get(),
 				   _param_gndspeed_max.get());
 	}

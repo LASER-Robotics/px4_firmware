@@ -176,6 +176,8 @@ public:
 
 	void				set_rotor_control_d(float val);
 
+	void				set_rotor_control_ff(float val);
+
 	void				set_rotor_control_pid_max(float val);
 
 	void				set_rotor_control_i_max(float val);

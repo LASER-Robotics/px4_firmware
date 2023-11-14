@@ -357,6 +357,14 @@ MultirotorMixer::mix(float *outputs, unsigned space)
 	// JOGA NO OUTPUTS[I]
 	// REZA
 
+	// publish outputs after mixing (thrust setpoint for each rotor)
+	actuator_outputs_s actuator_outputs{};
+	for(unsigned i = 0; i < _rotor_count; i++){
+		actuator_outputs.output[i] = outputs[i];
+	}
+	actuator_outputs.timestamp = hrt_absolute_time();
+	publishRotorThrustSetpoint(actuator_outputs);
+
 	switch (_rotor_control) {
 
 		case RotorControl::thrust_control:
@@ -374,33 +382,25 @@ MultirotorMixer::mix(float *outputs, unsigned space)
 				   _rotor_control_p,
 				   _rotor_control_i,
 				   _rotor_control_d,
+				   _rotor_control_ff,
 				   _rotor_control_i_max,
 				   _rotor_control_pid_max);
 
 				float relative_thrust = math::constrain(map(thrust_estimate.thrust[i], 0.f, _rotor_thrust_max, 0.f, 1.f), 0.f, 1.f);
+				outputs[i+4] = relative_thrust;
 				outputs[i] = pid_calculate(&_thrust_ctrl[i], outputs[i], relative_thrust, 0, dt);
+				outputs[i+8] = get_pid_integral(&_thrust_ctrl[i]);
 				_last_called[i] = hrt_absolute_time();
 			}
 
 			// publish pid outputs
-			actuator_outputs_s actuator_outputs{};
-			for(unsigned i = 0; i < _rotor_count; i++){
+			// actuator_outputs_s actuator_outputs{};
+			for(unsigned i = 0; i < _rotor_count+8; i++){
 				actuator_outputs.output[i] = outputs[i];
 			}
+			// actuator_outputs.output[10] = outputs[10];
 			actuator_outputs.timestamp = hrt_absolute_time();
 			_outputs_pid_pub.publish(actuator_outputs);
-
-			for(unsigned i = 0; i < _rotor_count; i++){
-				outputs[i] = math::constrain((2.f * outputs[i] - 1.f), -1.f, 1.f);
-			}
-
-			// publish outputs after mixing (thrust setpoint for each rotor)
-			// actuator_outputs_s actuator_outputs{};
-			for(unsigned i = 0; i < _rotor_count; i++){
-				actuator_outputs.output[i] = outputs[i];
-			}
-			actuator_outputs.timestamp = hrt_absolute_time();
-			publishRotorThrustSetpoint(actuator_outputs);
 			break;
 		}
 
@@ -418,20 +418,20 @@ MultirotorMixer::mix(float *outputs, unsigned space)
 							(1.0f - _thrust_factor) / (4.0f * _thrust_factor * _thrust_factor) + (outputs[i] < 0.0f ? 0.0f : outputs[i] /
 									_thrust_factor));
 				}
-
-				outputs[i] = math::constrain((2.f * outputs[i] - 1.f), -1.f, 1.f);
 			}
 
-			// publish outputs after mixing (thrust setpoint for each rotor)
-			actuator_outputs_s actuator_outputs{};
+			// publish simple outputs
 			for(unsigned i = 0; i < _rotor_count; i++){
 				actuator_outputs.output[i] = outputs[i];
 			}
 			actuator_outputs.timestamp = hrt_absolute_time();
 			_outputs_simple_pub.publish(actuator_outputs);
-
 			break;
 		}
+	}
+
+	for(unsigned i = 0; i < _rotor_count; i++){
+		outputs[i] = math::constrain((2.f * outputs[i] - 1.f), -1.f, 1.f);
 	}
 
 	// Slew rate limiting and saturation checking

@@ -74,6 +74,7 @@ typedef struct {
 	float kp;
 	float ki;
 	float kd;
+	float kff;
 	float integral;
 	float integral_limit;
 	float output_limit;
@@ -82,9 +83,10 @@ typedef struct {
 } PID_t;
 
 __EXPORT void pid_init(PID_t *pid, pid_mode_t mode, float dt_min);
-__EXPORT int pid_set_parameters(PID_t *pid, float kp, float ki, float kd, float integral_limit, float output_limit);
+__EXPORT int pid_set_parameters(PID_t *pid, float kp, float ki, float kd, float kff, float integral_limit, float output_limit);
 __EXPORT float pid_calculate(PID_t *pid, float sp, float val, float val_dot, float dt);
 __EXPORT void pid_reset_integral(PID_t *pid);
+__EXPORT float get_pid_integral(PID_t *pid);
 
 __END_DECLS
 

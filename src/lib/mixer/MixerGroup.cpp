@@ -168,6 +168,14 @@ MixerGroup::set_rotor_control_d(float val)
 }
 
 void
+MixerGroup::set_rotor_control_ff(float val)
+{
+	for (auto mixer : _mixers) {
+		mixer->set_rotor_control_ff(val);
+	}
+}
+
+void
 MixerGroup::set_rotor_control_pid_max(float val)
 {
 	for (auto mixer : _mixers) {

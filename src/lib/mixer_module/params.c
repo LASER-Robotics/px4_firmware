@@ -75,6 +75,15 @@ PARAM_DEFINE_FLOAT(ROT_CTRL_THRST_I, 0.005f);
 PARAM_DEFINE_FLOAT(ROT_CTRL_THRST_D, 0.005f);
 
 /**
+ * Rotor thrust control FF gain
+ *
+ * @decimal 5
+ *
+ * @group Mixer Output
+ */
+PARAM_DEFINE_FLOAT(ROT_CTRL_THRST_F, 0.0f);
+
+/**
  * Rotor control PID max output
  *
  * @decimal 2

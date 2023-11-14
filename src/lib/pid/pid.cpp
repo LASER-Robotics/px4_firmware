@@ -61,6 +61,7 @@ __EXPORT void pid_init(PID_t *pid, pid_mode_t mode, float dt_min)
 	pid->kp = 0.0f;
 	pid->ki = 0.0f;
 	pid->kd = 0.0f;
+	pid->kff = 0.0f;
 	pid->integral = 0.0f;
 	pid->integral_limit = 0.0f;
 	pid->output_limit = 0.0f;
@@ -68,7 +69,7 @@ __EXPORT void pid_init(PID_t *pid, pid_mode_t mode, float dt_min)
 	pid->last_output = 0.0f;
 }
 
-__EXPORT int pid_set_parameters(PID_t *pid, float kp, float ki, float kd, float integral_limit, float output_limit)
+__EXPORT int pid_set_parameters(PID_t *pid, float kp, float ki, float kd, float kff, float integral_limit, float output_limit)
 {
 	int ret = 0;
 
@@ -90,6 +91,13 @@ __EXPORT int pid_set_parameters(PID_t *pid, float kp, float ki, float kd, float 
 		pid->kd = kd;
 
 	} else {
+		ret = 1;
+	}
+
+	if (PX4_ISFINITE(kff)) {
+		pid->kff = kff;
+
+	}  else {
 		ret = 1;
 	}
 
@@ -161,6 +169,11 @@ __EXPORT float pid_calculate(PID_t *pid, float sp, float val, float val_dot, flo
 		output += pid->integral * pid->ki;
 	}
 
+	if (pid->kff > SIGMA) {
+		/* apply feedforward*/
+		output += pid->kff * sp;
+	}
+
 	/* limit output */
 	if (PX4_ISFINITE(output)) {
 		if (pid->output_limit > SIGMA) {
@@ -182,4 +195,9 @@ __EXPORT float pid_calculate(PID_t *pid, float sp, float val, float val_dot, flo
 __EXPORT void pid_reset_integral(PID_t *pid)
 {
 	pid->integral = 0.0f;
+}
+
+__EXPORT float get_pid_integral(PID_t *pid)
+{
+	return pid->integral;
 }
