@@ -49,10 +49,13 @@
 #include <uORB/topics/vehicle_thrust_estimate.h>
 #include <uORB/topics/esc_status.h>
 
-#include <uORB/topics/parameter_update.h>
-#include <px4_platform_common/module_params.h>
-
 using namespace time_literals;
+
+class currentData : public ListNode<currentData *>
+{
+public:
+	double data{0};
+};
 
 class ThrustEstimate : public ModuleBase<ThrustEstimate>, public ModuleParams, public px4::ScheduledWorkItem
 {
@@ -85,19 +88,16 @@ public:
 
 	void initialize_parameters(void);
 
+	double updateMeanFilter(double currentMean, double newDataPoint, int windowSize, List<currentData *>& buffer);
+
 private:
 	void Run() override;
-
-	void parameters_update();
 
 	// Publications
 	uORB::Publication<vehicle_thrust_estimate_s> _thrust_estimate_pub{ORB_ID(vehicle_thrust_estimate)};
 
-
 	// Subscriptions
 	uORB::SubscriptionCallbackWorkItem _esc_status_sub{this, ORB_ID(esc_status)};        			// subscription that schedules WorkItemExample when updated
-	uORB::SubscriptionInterval _parameter_update_sub{ORB_ID(parameter_update), 1_s};
-	// uORB::SubscriptionCallbackWorkItem _sensor_accel_sub{this, ORB_ID(sensor_accel)};
 
 	// Performance (perf) counters
 	perf_counter_t	_loop_perf{perf_alloc(PC_ELAPSED, MODULE_NAME": cycle")};
@@ -130,9 +130,13 @@ private:
 
 	uint32_t _sensor_interval_us{1250};
 
-	DEFINE_PARAMETERS(
-		(ParamFloat<px4::params::ROT_THRUST_SCALE>) _param_rot_thrust_scale,
-		(ParamFloat<px4::params::ROT_PROP_SIZE>) _param_rot_prop_size,
-		(ParamFloat<px4::params::ROT_PROP_WEIGHT>) _param_rot_prop_weight
-	)
+	List<currentData *> _filterListCurrent[4];
+	double _currentMean[4];
+
+	List<currentData *> _filterListRpm[4];
+	double _rpmMean[4];
+	double _rpmMean_old[4];
+	double _rpmMean_dot[4];
+	int _windowSize = 10;
+
 };

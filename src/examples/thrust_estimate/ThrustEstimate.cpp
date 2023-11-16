@@ -113,15 +113,21 @@ void ThrustEstimate::Run()
 		for(int j = 0; j < 4; j++){
 			old_thrust[j] = thrust[j];
 			w_old[j] = w[j];
+
 			now[j] = clock();
 			double time_elapsed = (double)(now[j] - begin[j]) / CLOCKS_PER_SEC;
 
 			w[j] = (double)esc.esc[0].esc_rpm;
 			begin[j] = clock();
 			i_hat[j] = (double)esc.esc[0].esc_current;
+			// _currentMean[j] = updateMeanFilter(_currentMean[j], i_hat[j], _windowSize, _filterListCurrent[j]);
+			// _rpmMean[j] = updateMeanFilter(_rpmMean[j], w[j], _windowSize, &_filterListRpm[j]);
+
+			// _rpmMean_old[j] = _rpmMean[j];
 			// double v_hat = (double)esc.esc[0].esc_voltage;
 
 			w_dot_hat[j] = (double)(w[j] - w_old[j]) / time_elapsed;
+			// _rpmMean_dot[j] = (double)(_rpmMean[j] - _rpmMean_old[j]) / time_elapsed;
 
 			// parameters_update();
 
@@ -141,6 +147,29 @@ void ThrustEstimate::Run()
 	_thrust_estimate_pub.publish(data);
 
 	perf_end(_loop_perf);
+}
+
+// Function to update the mean filter for a new data point
+double ThrustEstimate::updateMeanFilter(double currentMean, double newDataPoint, int windowSize, List<currentData *>& buffer) {
+	currentData *newDataNode = new currentData();
+	newDataNode->data = newDataPoint;
+
+	// Update buffer with the new data point
+	buffer.add(newDataNode);
+
+	// If the buffer size exceeds the window size, remove the oldest element
+	if (static_cast<int>(buffer.size()) > windowSize) {
+		currentMean -= buffer.getHead()->data;
+		buffer.deleteNode(buffer.getHead());
+	}
+
+	double sum = 0.0;
+	for (currentData* element : buffer) {
+		sum += element->data;
+	}
+	currentMean = sum / static_cast<int>(buffer.size());
+
+	return currentMean;
 }
 
 int ThrustEstimate::task_spawn(int argc, char *argv[])
@@ -251,7 +280,7 @@ double ThrustEstimate::thrust_computation(double _i_hat, double _w, double _w_do
 	}
 	old_lambda_s_k[index] = lambda_s[k];
 	double _thrust = C_T * _w * _w;
-	if ((isnan(fabs(_thrust))) || (_thrust < -100000) || (_thrust > 2000)){
+	if ((isnan(fabs(_thrust))) || (_thrust < -100000) || (_thrust > 100000)){
 		_thrust = old_thrust[index];
 	}
 	return _thrust;
@@ -263,22 +292,6 @@ void ThrustEstimate::initialize_parameters(void){
 	}
 	I_r = mass * radius * radius;
 	c[4] = 2 * rho * (double) M_PI_F * c[0] * c[0];
-}
-
-void ThrustEstimate::parameters_update()
-{
-	if (_parameter_update_sub.updated()) {
-		parameter_update_s param_update;
-		_parameter_update_sub.copy(&param_update);
-
-		// If any parameter updated, call updateParams() to check if
-		// this class attributes need updating (and do so).
-		updateParams();
-	}
-
-	mass = (double)_param_rot_prop_weight.get();
-	radius = (double)_param_rot_prop_size.get();
-	thrust_scale = (double)_param_rot_thrust_scale.get();
 }
 
 extern "C" __EXPORT int thrust_estimate_main(int argc, char *argv[])
