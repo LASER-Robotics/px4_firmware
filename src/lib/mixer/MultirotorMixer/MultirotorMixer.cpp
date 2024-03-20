@@ -407,6 +407,11 @@ MultirotorMixer::mix(float *outputs, unsigned space)
 		case RotorControl::simple:
 		default:
 		{
+			// get thrust estimate value from topic
+			if (_thrust_estimate_sub.updated()) {
+				_thrust_estimate_sub.copy(&thrust_estimate);
+			}
+
 			// Apply thrust model and scale outputs to range [idle_speed, 1].
 			// At this point the outputs are expected to be in [0, 1], but they can be outside, for example
 			// if a roll command exceeds the motor band limit.
@@ -418,10 +423,12 @@ MultirotorMixer::mix(float *outputs, unsigned space)
 							(1.0f - _thrust_factor) / (4.0f * _thrust_factor * _thrust_factor) + (outputs[i] < 0.0f ? 0.0f : outputs[i] /
 									_thrust_factor));
 				}
+				float relative_thrust = math::constrain(map(thrust_estimate.thrust[i], 0.f, _rotor_thrust_max, 0.f, 1.f), 0.f, 1.f);
+				outputs[i+4] = relative_thrust;
 			}
 
 			// publish simple outputs
-			for(unsigned i = 0; i < _rotor_count; i++){
+			for(unsigned i = 0; i < _rotor_count + 4; i++){
 				actuator_outputs.output[i] = outputs[i];
 			}
 			actuator_outputs.timestamp = hrt_absolute_time();
