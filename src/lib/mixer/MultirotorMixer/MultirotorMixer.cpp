@@ -348,15 +348,6 @@ MultirotorMixer::mix(float *outputs, unsigned space)
 		break;
 	}
 
-	// FLUXO DO CONTROLE DE PROPULSAO
-	// INICIALIZA OS OBJETOS PID PARA CADA MOTOR
-	// PEGA A PROPULSAO ESTIMADA ATUAL (DE UM TOPICO)
-	// CONVERTE A PROPULSAO DO TOPICO PARA UMA PROPULSAO RELATIVA [0,1]
-	// PEGA A PROPULSAO DESEJADA RELATIVA
-	// JOGA NO PID
-	// JOGA NO OUTPUTS[I]
-	// REZA
-
 	// publish outputs after mixing (thrust setpoint for each rotor)
 	actuator_outputs_s actuator_outputs{};
 	for(unsigned i = 0; i < _rotor_count; i++){
