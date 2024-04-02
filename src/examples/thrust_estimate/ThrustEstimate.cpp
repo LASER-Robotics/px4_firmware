@@ -259,7 +259,9 @@ double ThrustEstimate::compute_C_P_am_hat(double lambda_i, double lambda_s, doub
 // iterative algorithm to converge to the optimum lambda_s
 double ThrustEstimate::thrust_computation(double _i_hat, double _w, double _w_dot_hat, int index){
 	double P_am_hat = (K_q[0] - ((K_q[1] * _i_hat))) * _i_hat * _w - (I_r * _w * _w_dot_hat);
-	double C_P_am_t = P_am_hat / (_i_hat * _i_hat * _i_hat);
+	// in the original algorithm it should be p_am_hat / _w^3
+	// double C_P_am_t = P_am_hat / (_i_hat * _i_hat * _i_hat);
+	double C_P_am_t = P_am_hat / (_w * _w * _w);
 	double lambda_s[N+1];
 	double f[N+1];
 	if (isnan(fabs(old_lambda_s_k[index]))){
