@@ -356,6 +356,8 @@ MultirotorMixer::mix(float *outputs, unsigned space)
 	actuator_outputs.timestamp = hrt_absolute_time();
 	publishRotorThrustSetpoint(actuator_outputs);
 
+	_begin_all = hrt_absolute_time();
+
 	switch (_rotor_control) {
 
 		case RotorControl::thrust_control:
@@ -391,6 +393,7 @@ MultirotorMixer::mix(float *outputs, unsigned space)
 			}
 			// actuator_outputs.output[10] = outputs[10];
 			actuator_outputs.timestamp = hrt_absolute_time();
+			actuator_outputs.time_elapsed = hrt_elapsed_time(&_begin_all);
 			_outputs_pid_pub.publish(actuator_outputs);
 			break;
 		}
@@ -423,6 +426,7 @@ MultirotorMixer::mix(float *outputs, unsigned space)
 				actuator_outputs.output[i] = outputs[i];
 			}
 			actuator_outputs.timestamp = hrt_absolute_time();
+			actuator_outputs.time_elapsed = hrt_elapsed_time(&_begin_all);
 			_outputs_simple_pub.publish(actuator_outputs);
 			break;
 		}

@@ -122,8 +122,10 @@ private:
 	double w[4];
 	double w_old[4];
 	double w_dot_hat[4];
-	clock_t begin[4];
-	clock_t now[4];
+	hrt_abstime begin[4];
+	// hrt_abstime now[4];
+	clock_t begin_all;
+	clock_t end_all;
 	double thrust[4];
 	double old_thrust[4];
 	double i_hat[4];
@@ -138,5 +140,7 @@ private:
 	double _rpmMean_old[4];
 	double _rpmMean_dot[4];
 	int _windowSize = 10;
+
+	hrt_abstime _begin_all;
 
 };

@@ -312,6 +312,7 @@ private:
 	float _val_dot[4];
 
 	hrt_abstime _last_called[4];
+	hrt_abstime _begin_all;
 
 	float _outputs_mock[4];
 	float _outputs_pid[4];
@@ -319,4 +320,6 @@ private:
 
 	uORB::Subscription _thrust_estimate_sub{ORB_ID(vehicle_thrust_estimate)};
 	vehicle_thrust_estimate_s thrust_estimate;
+
+	// clock_t begin_all, end_all;
 };

@@ -106,6 +106,7 @@ void ThrustEstimate::Run()
 
 	// Check if parameters have changed
 	if (_esc_status_sub.updated()) {
+		_begin_all = hrt_absolute_time();
 		// clear update
 		esc_status_s esc;
 		_esc_status_sub.copy(&esc);
@@ -114,11 +115,11 @@ void ThrustEstimate::Run()
 			old_thrust[j] = thrust[j];
 			w_old[j] = w[j];
 
-			now[j] = clock();
-			double time_elapsed = (double)(now[j] - begin[j]) / CLOCKS_PER_SEC;
+			// now[j] = hrt_absolute_time();
+			double time_elapsed = (double)(hrt_elapsed_time(&begin[j]) * 1e-6f);
 
 			w[j] = (double)esc.esc[j].esc_rpm;
-			begin[j] = clock();
+			begin[j] = hrt_absolute_time();
 			i_hat[j] = (double)esc.esc[j].esc_current;
 			// _currentMean[j] = updateMeanFilter(_currentMean[j], i_hat[j], _windowSize, _filterListCurrent[j]);
 			// _rpmMean[j] = updateMeanFilter(_rpmMean[j], w[j], _windowSize, &_filterListRpm[j]);
@@ -134,6 +135,7 @@ void ThrustEstimate::Run()
 			thrust[j] = thrust_computation(i_hat[j], w[j], w_dot_hat[j], j);
 			// thrust[j] = thrust[j];
 		}
+		end_all = clock();
 	}
 
 	// Example
@@ -144,6 +146,7 @@ void ThrustEstimate::Run()
 	data.thrust[1] = thrust[1] * thrust_scale;
 	data.thrust[2] = thrust[2] * thrust_scale;
 	data.thrust[3] = thrust[3] * thrust_scale;
+	data.time_elapsed = hrt_elapsed_time(&_begin_all);
 	_thrust_estimate_pub.publish(data);
 
 	perf_end(_loop_perf);
@@ -259,8 +262,8 @@ double ThrustEstimate::compute_C_P_am_hat(double lambda_i, double lambda_s, doub
 // iterative algorithm to converge to the optimum lambda_s
 double ThrustEstimate::thrust_computation(double _i_hat, double _w, double _w_dot_hat, int index){
 	double P_am_hat = (K_q[0] - ((K_q[1] * _i_hat))) * _i_hat * _w - (I_r * _w * _w_dot_hat);
-	// double C_P_am_t = P_am_hat / (_i_hat * _i_hat * _i_hat);
-	double C_P_am_t = P_am_hat / (_w * _w * _w);
+	double C_P_am_t = P_am_hat / (_i_hat * _i_hat * _i_hat);
+	// double C_P_am_t = P_am_hat / (_w * _w * _w);
 	double lambda_s[N+1];
 	double f[N+1];
 	if (isnan(fabs(old_lambda_s_k[index]))){
