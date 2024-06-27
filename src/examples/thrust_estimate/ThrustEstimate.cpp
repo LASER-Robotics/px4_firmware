@@ -120,12 +120,12 @@ void ThrustEstimate::Run()
 		_vx = double(linvel_body(0));
 		_vy = double(linvel_body(1));
 
-		// vehicle_linear_velocity_s data;
-		// data.timestamp = hrt_absolute_time();
-		// data.xyz[0] = linvel_body(0);
-		// data.xyz[1] = linvel_body(1);
-		// data.xyz[2] = linvel_body(2);
-		// _linear_velocity_pub.publish(data);
+		vehicle_linear_velocity_s data;
+		data.timestamp = hrt_absolute_time();
+		data.xyz[0] = linvel_body(0);
+		data.xyz[1] = linvel_body(1);
+		data.xyz[2] = linvel_body(2);
+		_linear_velocity_pub.publish(data);
 	}
 
 	// Check if parameters have changed

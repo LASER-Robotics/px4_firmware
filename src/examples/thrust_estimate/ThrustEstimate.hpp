@@ -49,6 +49,7 @@
 #include <uORB/topics/vehicle_thrust_estimate.h>
 #include <uORB/topics/esc_status.h>
 #include <uORB/topics/vehicle_odometry.h>
+#include <uORB/topics/vehicle_linear_velocity.h>
 
 using namespace time_literals;
 
@@ -108,6 +109,7 @@ private:
 
 	// Publications
 	uORB::Publication<vehicle_thrust_estimate_s> _thrust_estimate_pub{ORB_ID(vehicle_thrust_estimate)};
+	uORB::Publication<vehicle_linear_velocity_s> _linear_velocity_pub{ORB_ID(vehicle_linear_velocity)};
 
 	// Subscriptions
 	uORB::SubscriptionCallbackWorkItem _esc_status_sub{this, ORB_ID(esc_status)};
