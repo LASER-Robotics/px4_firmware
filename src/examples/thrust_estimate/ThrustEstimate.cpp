@@ -57,14 +57,16 @@ ThrustEstimate::ThrustEstimate() :
 	K_q[1] = 0.0014;
 
 	// X250
-	// mass = 5 * pow(10, -3);
-	// radius = 6.5 * pow(10, -2);
-	// thrust_scale = 0.085896145;
+	mass = 5 * pow(10, -3);
+	radius = 6.5 * pow(10, -2);
+	thrust_scale = 0.085896145;
+	N_b = 3;
 
 	// X500
-	mass = 14 * pow(10, -3);
-	radius = 16 * pow(10, -2);
-	thrust_scale = 1.575164103;
+	// mass = 14 * pow(10, -3);
+	// radius = 16 * pow(10, -2);
+	// thrust_scale = 1.575164103;
+	// N_b = 2;
 
 	rho = 1.293;
 	Delta = pow(10, -1);
@@ -257,6 +259,47 @@ double ThrustEstimate::compute_kappa(double C_T){
 
 double ThrustEstimate::compute_C_P_am_hat(double lambda_i, double lambda_s, double C_T, double kappa){
 	return c[3] + C_T * ((kappa * lambda_i) + lambda_s) * c[0];
+}
+
+double ThrustEstimate::compute_mu(double vx, double vy, double _w){
+	// TODO use the wind estimation
+	// e_hor[0] = vx/V_h;
+	// e_hor[1] = vy/V_h;
+	// e_hor[2] = 0;
+	return sqrt(vx*vx + vy*vy)/(_w*radius);
+}
+
+double ThrustEstimate::compute_gamma(){
+	return (2*c[0]*c[1])/(N_b*I_r);
+}
+
+double ThrustEstimate::compute_azero(double lambda_i, double lambda_s, double _mu){
+	double gamma = compute_gamma();
+	double lambda = lambda_i + lambda_s;
+	return (gamma * (c[2] * (1 + _mu*_mu) - (4 * lambda / 3))) / 8;
+}
+
+double ThrustEstimate::compute_aum(double lambda_i, double lambda_s, double _mu){
+	double lambda = lambda_i + lambda_s;
+	double num = 2 * _mu * ((4 * c[2])/(3 - lambda));
+	double den = 1 - ((_mu*_mu)/2);
+	return num/den;
+}
+
+double ThrustEstimate::compute_bum(double _mu, double azero){
+	double num = (4 * _mu * azero)/3;
+	double den = 1 + ((_mu*_mu)/2);
+	return num/den;
+}
+
+double ThrustEstimate::compute_C_H(double lambda_i, double lambda_s, double _mu, double _azero, double _bum){
+	double lambda = lambda_i + lambda_s;
+	double a = c[3]/c[0];
+	double b = c[2] * (lambda - _bum + (lambda * _azero));
+	double _c = 2 * lambda * ((4*c[2]/3) - lambda);
+	double _d = 2 * lambda * _bum;
+	double e = (c[1]/2) * (b + _c - _d);
+	return _mu * (a + e);
 }
 
 // iterative algorithm to converge to the optimum lambda_s

@@ -90,6 +90,18 @@ public:
 
 	double updateMeanFilter(double currentMean, double newDataPoint, int windowSize, List<currentData *>& buffer);
 
+	double compute_azero(double lambda_i, double lambda_s, double _mu);
+
+	double compute_aum(double lambda_i, double lambda_s, double _mu);
+
+	double compute_bum(double _mu, double azero);
+
+	double compute_C_H(double lambda_i, double lambda_s, double _mu, double _azero, double _bum);
+
+	double compute_mu(double vx, double vy, double _w);
+
+	double compute_gamma();
+
 private:
 	void Run() override;
 
@@ -114,7 +126,7 @@ private:
 	double I_r;
 
 	double Delta;
-	int N;
+	int N, N_b;
 	double epsilon;
 
 	double old_lambda_s_k[4];
