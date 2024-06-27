@@ -84,7 +84,7 @@ ThrustEstimate::~ThrustEstimate()
 bool ThrustEstimate::init()
 {
 	// execute Run() on every sensor_accel publication
-	if (!_esc_status_sub.registerCallback()) {
+	if (!_esc_status_sub.registerCallback() && !_vehicle_odom_sub.registerCallback()) {
 		PX4_ERR("callback registration failed");
 		return false;
 	}
@@ -272,16 +272,17 @@ double ThrustEstimate::compute_lambda_i(double lambda_s){
 
 double ThrustEstimate::compute_C_T(double lambda_i, double lambda_s, double mu){
 	double lambda = lambda_i + lambda_s;
-	return c[1]*(c[2] - lambda);
-	// return (c[1]*((c[2] * (2 + mu*mu)) - 2*lambda))/2;
+	return (c[1]*((c[2] * (2 + mu*mu)) - 2*lambda))/2;
 }
 
 double ThrustEstimate::compute_kappa(double C_T){
 	return d[0] + (d[1] * C_T);
 }
 
-double ThrustEstimate::compute_C_P_am_hat(double lambda_i, double lambda_s, double C_T, double kappa){
-	return c[3] + C_T * ((kappa * lambda_i) + lambda_s) * c[0];
+double ThrustEstimate::compute_C_P_am_hat(double lambda_i, double lambda_s, double C_T, double kappa, double mu, double C_H){
+	double a = (c[3]/2) * (2 + (5 * mu * mu));
+	double b = c[0] * (C_T * ((kappa * lambda_i) + lambda_s) + (C_H * mu));
+	return a + b;
 }
 
 double ThrustEstimate::compute_mu(double vx, double vy, double _w){
@@ -344,11 +345,10 @@ double ThrustEstimate::thrust_computation(double _i_hat, double _w, double _w_do
 		double mu = compute_mu(_vx, _vy, _w);
 		C_T = compute_C_T(lambda_i, lambda_s[k], mu);
 		double kappa = compute_kappa(C_T);
-		double C_P_am_hat = compute_C_P_am_hat(lambda_i, lambda_s[k], C_T, kappa);
 		double azero = compute_azero(lambda_i, lambda_s[k], mu);
 		double bum = compute_bum(mu, azero);
 		double C_H = compute_C_H(lambda_i, lambda_s[k], mu, azero, bum);
-		if(C_H > 10){}
+		double C_P_am_hat = compute_C_P_am_hat(lambda_i, lambda_s[k], C_T, kappa, mu, C_H);
 		f[k] = C_P_am_t - C_P_am_hat;
 		if((k > 1) && (fabs(f[k] - f[k-1]) < epsilon)){break;}
 		lambda_s[k+1] = lambda_s[k] - f[k]*((lambda_s[k] - lambda_s[k-1])/(f[k] - f[k-1]));
@@ -363,7 +363,7 @@ double ThrustEstimate::thrust_computation(double _i_hat, double _w, double _w_do
 
 void ThrustEstimate::initialize_parameters(void){
 	for(int i = 0; i < 4; i++){
-		begin[i] = clock();
+		begin[i] = hrt_absolute_time();
 	}
 	I_r = mass * radius * radius;
 	c[4] = 2 * rho * (double) M_PI_F * c[0] * c[0];

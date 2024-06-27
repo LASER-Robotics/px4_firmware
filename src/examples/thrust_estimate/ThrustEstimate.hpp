@@ -83,7 +83,7 @@ public:
 
 	double compute_kappa(double C_T);
 
-	double compute_C_P_am_hat(double lambda_i, double lambda_s, double C_T, double kappa);
+	double compute_C_P_am_hat(double lambda_i, double lambda_s, double C_T, double kappa, double mu, double C_H);
 
 	double thrust_computation(double _i_hat, double _w, double _w_dot_hat, int index);
 
