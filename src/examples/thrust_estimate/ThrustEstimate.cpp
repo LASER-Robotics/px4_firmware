@@ -270,9 +270,10 @@ double ThrustEstimate::compute_lambda_i(double lambda_s){
 	return root;
 }
 
-double ThrustEstimate::compute_C_T(double lambda_i, double lambda_s){
+double ThrustEstimate::compute_C_T(double lambda_i, double lambda_s, double mu){
 	double lambda = lambda_i + lambda_s;
 	return c[1]*(c[2] - lambda);
+	// return (c[1]*((c[2] * (2 + mu*mu)) - 2*lambda))/2;
 }
 
 double ThrustEstimate::compute_kappa(double C_T){
@@ -340,9 +341,14 @@ double ThrustEstimate::thrust_computation(double _i_hat, double _w, double _w_do
 	for(k = 0; k < N; k++){
 		if(k == 1) {lambda_s[k] = old_lambda_s_k[index];}
 		double lambda_i = compute_lambda_i(lambda_s[k]);
-		C_T = compute_C_T(lambda_i, lambda_s[k]);
+		double mu = compute_mu(_vx, _vy, _w);
+		C_T = compute_C_T(lambda_i, lambda_s[k], mu);
 		double kappa = compute_kappa(C_T);
 		double C_P_am_hat = compute_C_P_am_hat(lambda_i, lambda_s[k], C_T, kappa);
+		double azero = compute_azero(lambda_i, lambda_s[k], mu);
+		double bum = compute_bum(mu, azero);
+		double C_H = compute_C_H(lambda_i, lambda_s[k], mu, azero, bum);
+		if(C_H > 10){}
 		f[k] = C_P_am_t - C_P_am_hat;
 		if((k > 1) && (fabs(f[k] - f[k-1]) < epsilon)){break;}
 		lambda_s[k+1] = lambda_s[k] - f[k]*((lambda_s[k] - lambda_s[k-1])/(f[k] - f[k-1]));

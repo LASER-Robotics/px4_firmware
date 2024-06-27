@@ -79,7 +79,7 @@ public:
 
 	double compute_lambda_i(double lambda_s);
 
-	double compute_C_T(double lambda_i, double lambda_s);
+	double compute_C_T(double lambda_i, double lambda_s, double mu);
 
 	double compute_kappa(double C_T);
 
