@@ -107,6 +107,28 @@ void ThrustEstimate::Run()
 	perf_count(_loop_interval_perf);
 
 	// Check if parameters have changed
+	if (_vehicle_odom_sub.updated()) {
+		vehicle_odometry_s odom;
+		_vehicle_odom_sub.copy(&odom);
+
+		// Body frame to local frame
+		const matrix::Dcmf R_body_to_local(matrix::Quatf(odom.q));
+
+		// Rotate linear velocity from local to body frame
+		const matrix::Vector3f linvel_body(R_body_to_local.transpose() * matrix::Vector3f(odom.vx, odom.vy, odom.vz));
+
+		_vx = double(linvel_body(0));
+		_vy = double(linvel_body(1));
+
+		// vehicle_linear_velocity_s data;
+		// data.timestamp = hrt_absolute_time();
+		// data.xyz[0] = linvel_body(0);
+		// data.xyz[1] = linvel_body(1);
+		// data.xyz[2] = linvel_body(2);
+		// _linear_velocity_pub.publish(data);
+	}
+
+	// Check if parameters have changed
 	if (_esc_status_sub.updated()) {
 		_begin_all = hrt_absolute_time();
 		// clear update

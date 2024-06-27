@@ -48,6 +48,7 @@
 
 #include <uORB/topics/vehicle_thrust_estimate.h>
 #include <uORB/topics/esc_status.h>
+#include <uORB/topics/vehicle_odometry.h>
 
 using namespace time_literals;
 
@@ -109,7 +110,8 @@ private:
 	uORB::Publication<vehicle_thrust_estimate_s> _thrust_estimate_pub{ORB_ID(vehicle_thrust_estimate)};
 
 	// Subscriptions
-	uORB::SubscriptionCallbackWorkItem _esc_status_sub{this, ORB_ID(esc_status)};        			// subscription that schedules WorkItemExample when updated
+	uORB::SubscriptionCallbackWorkItem _esc_status_sub{this, ORB_ID(esc_status)};
+	uORB::SubscriptionCallbackWorkItem _vehicle_odom_sub{this, ORB_ID(vehicle_odometry)};
 
 	// Performance (perf) counters
 	perf_counter_t	_loop_perf{perf_alloc(PC_ELAPSED, MODULE_NAME": cycle")};
@@ -128,6 +130,8 @@ private:
 	double Delta;
 	int N, N_b;
 	double epsilon;
+
+	double _vx, _vy;
 
 	double old_lambda_s_k[4];
 
